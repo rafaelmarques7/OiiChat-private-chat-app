@@ -1,9 +1,7 @@
 {
     "Header": {
-
-        "title": "We are a Landing Page",
-        "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam sed commodo nibh ante facilisis bibendum."
-
+        "title": "Be in control",
+        "paragraph": "This is a truly private chat app. Here, you control the encryption. And you can also set a self-destruct on each message."
     },
     "About": {
         "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -20,7 +18,8 @@
             "Lorem ipsum dolor"
         ]
     },
-    "Services": [{
+    "Services": [
+        {
             "icon": "fa fa-wordpress",
             "name": "Lorem ipsum dolor",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam sedasd commodo nibh ante facilisis bibendum dolor feugiat at."
@@ -50,10 +49,9 @@
             "name": "Consectetur adipiscing",
             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam sedasd commodo nibh ante facilisis bibendum dolor feugiat at."
         }
-
-
     ],
-    "Testimonials": [{
+    "Testimonials": [
+        {
             "img": "img/testimonials/01.jpg",
             "text": "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam sedasd commodo nibh ante facilisis bibendum dolor feugiat at.\"",
             "name": "John Doe"
@@ -84,7 +82,8 @@
             "name": "Johnathan Doe"
         }
     ],
-    "Team": [{
+    "Team": [
+        {
             "img": "img/team/01.jpg",
             "name": "John Doe",
             "job": "Director"
@@ -93,7 +92,8 @@
             "img": "img/team/02.jpg",
             "name": "Mike Doe",
             "job": "Senior Designer"
-        }, {
+        },
+        {
             "img": "img/team/03.jpg",
             "name": "Jane Doe",
             "job": "Senior Designer"
@@ -112,24 +112,20 @@
         "twitter": "twitter.com",
         "youtube": "youtube.com"
     },
-    "Features": [{
+    "Features": [
+        {
             "icon": "fa fa-comments-o",
-            "title": "Lorem ipsum",
-            "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
-        },
-        {
-            "icon": "fa fa-bullhorn",
-            "title": "Lorem ipsum",
-            "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
-        },
-        {
-            "icon": "fa fa-group",
-            "title": "Lorem ipsum",
-            "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
+            "title": "Truly private chat",
+            "text": "Guarantee end-to-end encryption by selecting your own secret password. This password has to be shared with friends so that they can decrypt the messages. We, the chat service provider, only store encrypted messages."
         },
         {
             "icon": "fa fa-magic",
-            "title": "Lorem ipsum",
+            "title": "Self destruct",
+            "text": "Users have an option to destroy messages after a specified amount of time. The data will also be destroyed from the server, and can never be recovered."
+        },
+        {
+            "icon": "fa fa-group",
+            "title": "Share with friends",
             "text": "Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam."
         }
     ]
