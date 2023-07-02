@@ -5,10 +5,14 @@ export const Footer = (props) => {
       <div id='footer'>
         <div className='container text-center'>
           <p>
-            &copy; 2023 Developed by Rafael Marques. See the code and get in contract via {' '}
+            &copy; 2023 Developed by Rafael Marques. Get in contract via {' '}
             <a href='https://github.com/rafaelmarques7/chat-app' target="_blank">
-              Github.
+              Github
             </a>
+            {' '}or{' '}
+            <a href='https://www.linkedin.com/in/rafael-da-silva-marques-a9595b161/' target="_blank">
+              LinkedIn.
+            </a> 
           </p>
         </div>
       </div>
