@@ -4,18 +4,11 @@
         "paragraph": "This is a truly private chat app. Here, you control the encryption. And you can also set a self-destruct on each message."
     },
     "About": {
-        "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "paragraph": "In the background, we will encrypt the message directly on your phone or computer, and our servers will only store the encrypted message. We also do not store the room private password. All this is transparent and can be inspected in the browsers console. This way, you are in control of your privacy.",
         "Why": [
-            "Lorem ipsum dolor",
-            "Tempor incididunt",
-            "Lorem ipsum dolor",
-            "Incididunt ut labore"
-        ],
-        "Why2": [
-            "Aliquip ex ea commodo",
-            "Lorem ipsum dolor",
-            "Exercitation ullamco",
-            "Lorem ipsum dolor"
+            "1. you create a room",
+            "2. select a password",
+            "3. and share it with friends"
         ]
     },
     "Services": [

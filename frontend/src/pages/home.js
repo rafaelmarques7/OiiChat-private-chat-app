@@ -28,9 +28,9 @@ export const HomePage = () => {
       <Header data={landingPageData.Header} />
       <Features data={landingPageData.Features} />
       <About data={landingPageData.About} />
-      <Services data={landingPageData.Services} />
-      <Gallery />
-      <Testimonials data={landingPageData.Testimonials} />
+      {/* <Services data={landingPageData.Services} /> */}
+      {/* <Gallery /> */}
+      {/* <Testimonials data={landingPageData.Testimonials} /> */}
       <Footer />
     </div>
   );
