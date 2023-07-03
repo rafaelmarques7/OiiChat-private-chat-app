@@ -15,7 +15,7 @@ export const scroll = new SmoothScroll('a[href*="#"]', {
   speedAsDuration: true,
 });
 
-export const HomePage = () => {
+export const PageHome = () => {
   const [landingPageData, setLandingPageData] = useState({});
 
   useEffect(() => {
