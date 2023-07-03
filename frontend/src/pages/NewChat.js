@@ -5,6 +5,7 @@ import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
 import { decryptSafe } from "../lib/utils";
+import MessageList from "../components/messages/MessageList";
 
 export const PageNewChat = () => {
   const [password, setPassword] = useState("");
@@ -52,6 +53,13 @@ export const PageNewChat = () => {
       <p>password: {password}</p>
       <Events events={events} />
       <FormInputWithButton callback={onMessageSubmit} resetOnSubmit={true} />
+      <MessageList
+        userId="Rafa"
+        messages={[
+          { text: "Ola", author: { username: "Rafa", id: "Rafa" } },
+          { text: "Entao!", author: { username: "Miguel", id: "Miguel" } },
+        ]}
+      />
     </div>
   );
 };
