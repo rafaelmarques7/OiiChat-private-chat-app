@@ -656,6 +656,8 @@ label {
 }
 
 .author-text {
+  display: flex;
+  justify-content: flex-end;
   font-size: 0.75rem;
   color: grey;
   margin: 0 1rem 0.25rem 1rem;
@@ -678,7 +680,7 @@ label {
   background-color: #007bff;
   color: white;
   border-radius: 10px;
-  max-width: 100%;
+  max-width: 80%;
 }
 
 .avatar {
