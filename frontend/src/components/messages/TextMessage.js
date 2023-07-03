@@ -1,6 +1,6 @@
 import Avatar from "./Avatar";
 
-export default ({ direction, text, author }) => (
+export default ({ direction, text, author, timestamp }) => (
   <div className={direction === "incoming" ? "message-container" : ""}>
     <div className="flex-container">
       <div className="flex-items">
@@ -9,7 +9,7 @@ export default ({ direction, text, author }) => (
             direction === "incoming" ? "flex-items-left" : "flex-items-right"
           }
         >
-          {author}
+          {`${author}, ${timestamp}`}
         </div>
         <div className="author-text">
           <div

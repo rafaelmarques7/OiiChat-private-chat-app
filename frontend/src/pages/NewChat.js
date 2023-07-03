@@ -6,6 +6,8 @@ import SimpleCrypto from "simple-crypto-js";
 import { decryptSafe } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
+// import userIcon from "public/img/username.svg"; // Replace with the path to your SVG file
+// import passwordIcon from "./icons/password.svg"; // Replace with the path to your SVG file
 
 export const PageNewChat = () => {
   const [username, setUsername] = useState("John Doe");
@@ -83,8 +85,16 @@ export const PageNewChat = () => {
     <div>
       <Navigation />
 
-      <FormInput placeholder="Username" callback={(val) => setUsername(val)} />
-      <FormInput placeholder="Password" callback={(val) => setPassword(val)} />
+      <FormInput
+        icon={"./img/username.svg"}
+        placeholder="Username"
+        callback={(val) => setUsername(val)}
+      />
+      <FormInput
+        icon={"./img/lock.svg"}
+        placeholder="Password"
+        callback={(val) => setPassword(val)}
+      />
 
       <MessageList userId={username} messages={events} />
 

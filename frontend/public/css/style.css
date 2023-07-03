@@ -644,6 +644,7 @@ label {
 .flex-items {
   display: flex;
   flex-direction: column;
+  font-size: 2rem;
   /* align-items: flex-end; */
   justify-content: flex-end;
   /* width: 60%; */
@@ -652,6 +653,7 @@ label {
 .flex-items-left {
   transform: scaleX(-1);
   background-color: light-gray;
+  padding-left: 1rem;
 }
 
 .flex-items-right {
@@ -674,7 +676,7 @@ label {
   font-size: 0.75rem;
   color: grey;
   margin: 0 1rem 0.25rem 1rem;
-  max-width: 100vw;
+  max-width: 80vw;
   word-wrap: break-word;
   /* or use overflow-wrap for better browser compatibility */
   overflow-wrap: break-word;
@@ -731,4 +733,33 @@ label {
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
+}
+
+.form-input-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px; /* Limit the width on large screens */
+  margin: 0 auto; /* Center the form */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-input-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.form-input-field {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+}
+
+.message-list-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5vh;
 }
