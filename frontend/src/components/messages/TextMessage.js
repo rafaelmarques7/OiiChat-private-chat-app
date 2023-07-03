@@ -1,7 +1,7 @@
 import Avatar from "./Avatar";
 
 export default ({ direction, text, author }) => (
-  <div className={direction === "incoming" ? "container" : ""}>
+  <div className={direction === "incoming" ? "message-container" : ""}>
     <div className="flex-container">
       <div className="flex-items">
         <div
@@ -15,7 +15,7 @@ export default ({ direction, text, author }) => (
           <div
             className={
               direction === "incoming"
-                ? "message-incoming container"
+                ? "message-incoming message-container"
                 : "message-outgoing"
             }
           >

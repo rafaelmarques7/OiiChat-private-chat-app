@@ -3,6 +3,8 @@ const http = require("http");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
 const mongojs = require("mongojs");
+const cors = require("cors");
+
 const messagesRouter = require("./messagesRouter");
 const { writeMessageToDb } = require("./lib");
 
@@ -16,6 +18,7 @@ const io = new Server(server, {
   },
 });
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {

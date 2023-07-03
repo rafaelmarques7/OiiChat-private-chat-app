@@ -631,7 +631,7 @@ label {
 
 /* styles.css */
 
-.container {
+.message-container {
   transform: scaleX(-1);
 }
 
@@ -674,7 +674,10 @@ label {
   font-size: 0.75rem;
   color: grey;
   margin: 0 1rem 0.25rem 1rem;
-  max-width: 100%;
+  max-width: 100vw;
+  word-wrap: break-word;
+  /* or use overflow-wrap for better browser compatibility */
+  overflow-wrap: break-word;
 }
 
 .message-incoming {
@@ -706,4 +709,5 @@ label {
   width: 100%;
   display: flex;
   justify-content: center;
+  background-color: white;
 }

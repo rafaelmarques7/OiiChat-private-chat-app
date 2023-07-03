@@ -13,6 +13,20 @@ export const PageNewChat = () => {
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
 
   useEffect(() => {
+    console.log("this should only run once");
+
+    const fetchData = async () => {
+      const response = await fetch("http://localhost:5001/messages", {
+        mode: "cors",
+      });
+      const data = await response.json();
+      setEvents(data);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     const newSimpleCrypto = new SimpleCrypto(password);
     setSimpleCrypto(newSimpleCrypto);
 
