@@ -659,6 +659,7 @@ label {
   font-size: 0.75rem;
   color: grey;
   margin: 0 1rem 0.25rem 1rem;
+  max-width: 100%;
 }
 
 .message-incoming {
@@ -667,6 +668,7 @@ label {
   font-size: 2.5rem;
   background-color: #f8f9fa;
   border-radius: 10px;
+  max-width: 100%;
 }
 
 .message-outgoing {
@@ -676,6 +678,7 @@ label {
   background-color: #007bff;
   color: white;
   border-radius: 10px;
+  max-width: 100%;
 }
 
 .avatar {
