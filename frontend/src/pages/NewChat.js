@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
-import { Events } from "../components/Events";
 import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
@@ -8,29 +7,34 @@ import { decryptSafe } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 
 export const PageNewChat = () => {
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("John Doe");
+  const [password, setPassword] = useState("default-encryption-key");
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
 
   useEffect(() => {
-    console.log("useEffect: password: ", password);
     const newSimpleCrypto = new SimpleCrypto(password);
     setSimpleCrypto(newSimpleCrypto);
 
     // update the events using the new encryption key
     const decryptedEvents = events.map((event) => {
-      return decryptSafe(newSimpleCrypto, event);
+      const newEvent = {
+        username: event.username,
+        text: decryptSafe(newSimpleCrypto, event.text),
+        timestamp: event.timestamp,
+      };
+      return newEvent;
     });
     setEvents(decryptedEvents);
-  }, [password]);
 
-  useEffect(() => {
-    function onChatMessageEvent(value) {
-      console.log("onChatMessageEvent: ", value);
+    function onChatMessageEvent(event) {
+      const newEvent = {
+        username: event.username,
+        text: decryptSafe(newSimpleCrypto, event.text),
+        timestamp: event.timestamp,
+      };
 
-      // decrypt the message
-      const decryptedValue = decryptSafe(simpleCrypto, value);
-      setEvents((previous) => [...previous, decryptedValue]);
+      setEvents((previous) => [...previous, newEvent]);
     }
 
     socket.on("eventChatMessage", onChatMessageEvent);
@@ -38,32 +42,45 @@ export const PageNewChat = () => {
     return () => {
       socket.off("eventChatMessage", onChatMessageEvent);
     };
-  }, []);
+  }, [password]);
 
   const onMessageSubmit = (value) => {
     const encryptedValue = simpleCrypto.encrypt(value);
-    console.log("onMessageSubmit: ", value, encryptedValue);
 
-    socket.timeout(10).emit("eventChatMessage", encryptedValue);
+    const payload = {
+      username,
+      text: encryptedValue,
+      timestamp: Date.now(),
+    };
+
+    console.log("onMessageSubmit: ", { value, payload, password });
+
+    socket.timeout(10).emit("eventChatMessage", payload);
   };
+
+  console.log("rendering chat page with events: ", {
+    username,
+    password,
+    events,
+  });
 
   return (
     <div className="App">
-      <FormInput callback={(val) => setPassword(val)} />
-      <p>password: {password}</p>
-      <Events events={events} />
-      <FormInputWithButton callback={onMessageSubmit} resetOnSubmit={true} />
-      <MessageList
-        userId="Rafa"
-        messages={[
-          { text: "Ola", author: { username: "Rafa", id: "Rafa" } },
-          { text: "Entao!", author: { username: "Miguel", id: "Miguel" } },
-          {
-            text: "AJDHAKJHDKJAHD KAHJDH AKJH KJAHKJDHAKJ HDKJAHD JKAHD KJAHDKJ AHKDHAKJ DHKAJHD KAHDK HKAHD KAJHDK JAH",
-            author: { username: "Rafa", id: "Rafa" },
-          },
-        ]}
-      />
+      <div>
+        <FormInput
+          placeholder="Username"
+          callback={(val) => setUsername(val)}
+        />
+      </div>
+      <FormInput placeholder="Password" callback={(val) => setPassword(val)} />
+      <MessageList userId={username} messages={events} />
+      <div className="submit-message-container">
+        <FormInputWithButton
+          placeholder={"Type a message..."}
+          callback={onMessageSubmit}
+          resetOnSubmit={true}
+        />
+      </div>
     </div>
   );
 };

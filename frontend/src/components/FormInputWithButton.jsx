@@ -4,6 +4,7 @@ export const FormInputWithButton = ({
   callback,
   buttonLabel = "Submit",
   resetOnSubmit = false,
+  placeholder = "",
 }) => {
   const [value, setValue] = useState("");
 
@@ -16,8 +17,12 @@ export const FormInputWithButton = ({
     }
   }
   return (
-    <form onSubmit={onSubmit}>
-      <input onChange={(e) => setValue(e.target.value)} value={value} />
+    <form onSubmit={onSubmit} className="submit-message-form">
+      <input
+        placeholder={placeholder}
+        onChange={(e) => setValue(e.target.value)}
+        value={value}
+      />
 
       <button type="submit" disabled={!value}>
         {buttonLabel}

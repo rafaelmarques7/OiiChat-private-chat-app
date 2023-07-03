@@ -4,10 +4,10 @@ export default ({ messages, userId }) => (
   <div>
     {messages.map((message) => (
       <TextMessage
-        key={message?.id}
+        key={message?._id}
         text={message?.text}
-        author={message?.author?.username}
-        direction={message?.author?.id === userId ? "outgoing" : "incoming"}
+        author={message?.username}
+        direction={message?.username === userId ? "outgoing" : "incoming"}
       />
     ))}
   </div>

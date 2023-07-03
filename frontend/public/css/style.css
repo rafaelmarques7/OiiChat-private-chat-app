@@ -699,3 +699,11 @@ label {
 .avatar {
   margin-right: 0.5rem;
 }
+
+.submit-message-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
