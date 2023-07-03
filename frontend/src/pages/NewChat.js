@@ -58,6 +58,10 @@ export const PageNewChat = () => {
         messages={[
           { text: "Ola", author: { username: "Rafa", id: "Rafa" } },
           { text: "Entao!", author: { username: "Miguel", id: "Miguel" } },
+          {
+            text: "AJDHAKJHDKJAHD KAHJDH AKJH KJAHKJDHAKJ HDKJAHD JKAHD KJAHDKJ AHKDHAKJ DHKAJHD KAHDK HKAHD KAJHDK JAH",
+            author: { username: "Rafa", id: "Rafa" },
+          },
         ]}
       />
     </div>

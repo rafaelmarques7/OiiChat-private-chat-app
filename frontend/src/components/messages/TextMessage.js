@@ -1,38 +1,24 @@
 import Avatar from "./Avatar";
 
 export default ({ direction, text, author }) => (
-  <div
-    style={{
-      transform: direction === "incoming" && "scaleX(-1)",
-    }}
-  >
-    <div className="flex justify-end my-4">
-      <div className="flex items-end justify-end md:w-3/5 lg:2/5">
-        <div className="mr-3">
-          <div
-            className="text-xs text-grey mb-1 mx-3"
-            style={{
-              transform: direction === "incoming" && "scaleX(-1)",
-            }}
-          >
+  <div className={direction === "incoming" ? "container" : ""}>
+    <div className="flex-container">
+      <div className="flex-items">
+        <div className="author-text">
+          <div className={direction === "incoming" ? "container" : ""}>
             {author}
           </div>
           <div
-            className={[
-              "p-3 py-2 leading-normal text-sm",
+            className={
               direction === "incoming"
-                ? "bg-grey-lighter"
-                : "gradient-primary text-white",
-            ].join(" ")}
-            style={{
-              borderRadius: 10,
-              transform: direction === "incoming" && "scaleX(-1)",
-            }}
+                ? "message-incoming container"
+                : "message-outgoing"
+            }
           >
             {text}
           </div>
         </div>
-        <div className="mr-2">
+        <div className="avatar">
           <Avatar
             initials={author}
             style={{
