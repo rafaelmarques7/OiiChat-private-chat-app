@@ -1,19 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
-import { MyForm } from "../components/MyForm";
 import { Events } from "../components/Events";
 import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
+import { decryptSafe } from "../lib/utils";
 
 export const PageNewChat = () => {
   const [password, setPassword] = useState("");
-  const [fooEvents, setFooEvents] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
+
+  useEffect(() => {
+    console.log("useEffect: password: ", password);
+    const newSimpleCrypto = new SimpleCrypto(password);
+    setSimpleCrypto(newSimpleCrypto);
+
+    // update the events using the new encryption key
+    const decryptedEvents = events.map((event) => {
+      return decryptSafe(newSimpleCrypto, event);
+    });
+    setEvents(decryptedEvents);
+  }, [password]);
 
   useEffect(() => {
     function onChatMessageEvent(value) {
       console.log("onChatMessageEvent: ", value);
-      setFooEvents((previous) => [...previous, value]);
+
+      // decrypt the message
+      const decryptedValue = decryptSafe(simpleCrypto, value);
+      setEvents((previous) => [...previous, decryptedValue]);
     }
 
     socket.on("eventChatMessage", onChatMessageEvent);
@@ -24,10 +40,8 @@ export const PageNewChat = () => {
   }, []);
 
   const onMessageSubmit = (value) => {
-    console.log("onMessageSubmit: ", value);
-
-    const simpleCrypto = new SimpleCrypto(password);
     const encryptedValue = simpleCrypto.encrypt(value);
+    console.log("onMessageSubmit: ", value, encryptedValue);
 
     socket.timeout(10).emit("eventChatMessage", encryptedValue);
   };
@@ -36,7 +50,7 @@ export const PageNewChat = () => {
     <div className="App">
       <FormInput callback={(val) => setPassword(val)} />
       <p>password: {password}</p>
-      <Events events={fooEvents} />
+      <Events events={events} />
       <FormInputWithButton callback={onMessageSubmit} resetOnSubmit={true} />
     </div>
   );
