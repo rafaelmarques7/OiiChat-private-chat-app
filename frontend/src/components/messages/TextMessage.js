@@ -4,10 +4,14 @@ export default ({ direction, text, author }) => (
   <div className={direction === "incoming" ? "container" : ""}>
     <div className="flex-container">
       <div className="flex-items">
+        <div
+          className={
+            direction === "incoming" ? "flex-items-left" : "flex-items-right"
+          }
+        >
+          {author}
+        </div>
         <div className="author-text">
-          <div className={direction === "incoming" ? "container" : ""}>
-            {author}
-          </div>
           <div
             className={
               direction === "incoming"
@@ -17,14 +21,6 @@ export default ({ direction, text, author }) => (
           >
             {text}
           </div>
-        </div>
-        <div className="avatar">
-          <Avatar
-            initials={author}
-            style={{
-              transform: direction === "incoming" && "scaleX(-1)",
-            }}
-          />
         </div>
       </div>
     </div>
