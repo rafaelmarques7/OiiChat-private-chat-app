@@ -1,7 +1,7 @@
 import TextMessage from "./TextMessage";
 
 export default ({ messages, userId }) => (
-  <div className="message-list-container">
+  <div>
     {messages.map((message) => (
       <TextMessage
         key={message?.id}
