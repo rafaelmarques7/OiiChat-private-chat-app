@@ -699,10 +699,6 @@ label {
   max-width: 80%;
 }
 
-.avatar {
-  margin-right: 0.5rem;
-}
-
 .submit-message-container {
   position: fixed;
   bottom: 0;
@@ -710,4 +706,29 @@ label {
   display: flex;
   justify-content: center;
   background-color: white;
+}
+
+.avatar {
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.avatar-small {
+  width: 24px;
+  height: 24px;
+}
+
+.avatar-large {
+  width: 4rem;
+  height: 4rem;
+}
+
+.avatar-initials {
+  background-color: lightgrey;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
 }

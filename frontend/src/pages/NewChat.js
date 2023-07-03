@@ -5,6 +5,7 @@ import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
 import { decryptSafe } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
+import { Navigation } from "../components/navigation";
 
 export const PageNewChat = () => {
   const [username, setUsername] = useState("John Doe");
@@ -79,15 +80,14 @@ export const PageNewChat = () => {
   });
 
   return (
-    <div className="App">
-      <div>
-        <FormInput
-          placeholder="Username"
-          callback={(val) => setUsername(val)}
-        />
-      </div>
+    <div>
+      <Navigation />
+
+      <FormInput placeholder="Username" callback={(val) => setUsername(val)} />
       <FormInput placeholder="Password" callback={(val) => setPassword(val)} />
+
       <MessageList userId={username} messages={events} />
+
       <div className="submit-message-container">
         <FormInputWithButton
           placeholder={"Type a message..."}
