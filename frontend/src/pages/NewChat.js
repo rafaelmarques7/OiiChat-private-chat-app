@@ -6,6 +6,7 @@ import SimpleCrypto from "simple-crypto-js";
 import { decryptEvent, decryptEvents } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
+import { URL_MESSAGES } from "../config";
 
 export const PageNewChat = () => {
   const [username, setUsername] = useState(
@@ -34,7 +35,7 @@ export const PageNewChat = () => {
 
     // 2 - fetch events from server and decrypt data
     const fetchData = async () => {
-      const response = await fetch("http://localhost:5001/messages", {
+      const response = await fetch(URL_MESSAGES, {
         mode: "cors",
       });
       const data = await response.json();
