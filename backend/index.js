@@ -6,10 +6,7 @@ const { MongoClient } = require("mongodb");
 const cors = require("cors");
 
 const messagesRouter = require("./messagesRouter");
-
-const url = "mongodb://localhost:27017";
-const client = new MongoClient(url);
-const dbName = "ChatApp";
+const { insertMessageToDb } = require("./lib");
 
 const app = express();
 const server = http.createServer(app);
@@ -41,7 +38,7 @@ io.on("connection", (socket) => {
     // Write the message to the database
     try {
       console.log("writing message to database");
-      await insertMessage(msg);
+      await insertMessageToDb(msg);
 
       console.log("broadcasting eventChatMessage to everyone");
       io.emit("eventChatMessage", msg);

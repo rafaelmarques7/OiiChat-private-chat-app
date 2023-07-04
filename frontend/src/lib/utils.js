@@ -14,7 +14,8 @@ export const decryptEvents = (simpleCrypto, events) => {
 };
 
 export const decryptEvent = (simpleCrypto, event) => ({
+  ...event,
   text: decryptSafe(simpleCrypto, event?.text),
-  username: event?.username,
-  timestamp: event?.timestamp,
+  // username: event?.username,
+  // timestamp: event?.timestamp,
 });

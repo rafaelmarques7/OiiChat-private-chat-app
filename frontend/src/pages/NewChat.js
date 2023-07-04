@@ -21,6 +21,7 @@ export const PageNewChat = () => {
   useEffect(() => {
     console.log("running page load effect");
 
+    // 1 - get username and password from local storage
     const savedUser = localStorage.getItem("username");
     const savedPass = localStorage.getItem("password");
     console.log("getting user preferences from local storage", {
@@ -31,6 +32,7 @@ export const PageNewChat = () => {
     if (savedUser) setUsername(savedUser);
     if (savedPass) setPassword(savedPass);
 
+    // 2 - fetch events from server and decrypt data
     const fetchData = async () => {
       const response = await fetch("http://localhost:5001/messages", {
         mode: "cors",
@@ -40,6 +42,17 @@ export const PageNewChat = () => {
     };
 
     fetchData();
+
+    // 3 - listen for events:
+    function onChatMessageEvent(event) {
+      setEvents((previous) => [...previous, decryptEvent(simpleCrypto, event)]);
+    }
+
+    socket.on("eventChatMessage", onChatMessageEvent);
+
+    return () => {
+      socket.off("eventChatMessage", onChatMessageEvent);
+    };
   }, []);
 
   // run when password or username changes
@@ -60,19 +73,6 @@ export const PageNewChat = () => {
     setSimpleCrypto(newSimpleCrypto);
 
     setEvents(decryptEvents(newSimpleCrypto, events));
-
-    function onChatMessageEvent(event) {
-      setEvents((previous) => [
-        ...previous,
-        decryptEvent(newSimpleCrypto, event),
-      ]);
-    }
-
-    socket.on("eventChatMessage", onChatMessageEvent);
-
-    return () => {
-      socket.off("eventChatMessage", onChatMessageEvent);
-    };
   }, [password]);
 
   const onMessageSubmit = (value) => {
