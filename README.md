@@ -1,5 +1,10 @@
 # (Private!) Chat app
 
+Let's try to deploy this:
+s3 static website
+ECS container
+mongodb atlas
+
 Today we're building a private chat app.
 
 It works as follows:

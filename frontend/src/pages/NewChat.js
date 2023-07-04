@@ -42,17 +42,6 @@ export const PageNewChat = () => {
     };
 
     fetchData();
-
-    // 3 - listen for events:
-    function onChatMessageEvent(event) {
-      setEvents((previous) => [...previous, decryptEvent(simpleCrypto, event)]);
-    }
-
-    socket.on("eventChatMessage", onChatMessageEvent);
-
-    return () => {
-      socket.off("eventChatMessage", onChatMessageEvent);
-    };
   }, []);
 
   // run when password or username changes
@@ -73,6 +62,23 @@ export const PageNewChat = () => {
     setSimpleCrypto(newSimpleCrypto);
 
     setEvents(decryptEvents(newSimpleCrypto, events));
+
+    function onChatMessageEvent(event) {
+      console.log("got chat message event", {
+        event,
+        decryptEvent: decryptEvent(newSimpleCrypto, event),
+      });
+      setEvents((previous) => [
+        ...previous,
+        decryptEvent(newSimpleCrypto, event),
+      ]);
+    }
+
+    socket.on("eventChatMessage", onChatMessageEvent);
+
+    return () => {
+      socket.off("eventChatMessage", onChatMessageEvent);
+    };
   }, [password]);
 
   const onMessageSubmit = (value) => {
