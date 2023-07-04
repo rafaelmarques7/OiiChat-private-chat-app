@@ -1,8 +1,13 @@
 // FormInput.js
 import React, { useState } from "react";
 
-export const FormInput = ({ callback, placeholder = "Enter value", icon }) => {
-  const [value, setValue] = useState("");
+export const FormInput = ({
+  initialValue,
+  callback,
+  placeholder = "Enter value",
+  icon,
+}) => {
+  const [value, setValue] = useState(initialValue || "");
 
   const onChange = (event) => {
     event.preventDefault();

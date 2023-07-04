@@ -1,65 +1,112 @@
-// messagesRouter.js
-
 const express = require("express");
-const mongojs = require("mongojs");
+const { MongoClient, ObjectId } = require("mongodb");
 const router = express.Router();
 
-const db = mongojs("mongodb://localhost:27017/ChatApp", ["messages"]);
+const url = "mongodb://localhost:27017";
+const client = new MongoClient(url);
+const dbName = "ChatApp";
+
+async function insertMessage(message) {
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const result = await db.collection("messages").insertOne(message);
+    console.log("Message written to database: ", result.ops[0]);
+    return result.ops[0];
+  } catch (err) {
+    console.error("Error writing message to database", err);
+    throw err;
+  } finally {
+    await client.close();
+  }
+}
 
 // Create
-router.post("/", (req, res) => {
-  const message = req.body;
-  db.messages.insert(message, (err, doc) => {
-    if (err) return res.status(500).send(err);
-    res.json(doc);
-  });
+router.post("/", async (req, res) => {
+  try {
+    const message = req.body;
+    const result = await insertMessage(message);
+    res.json(result);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 // Read all with pagination
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  db.messages
-    .find()
-    .skip(skip)
-    .limit(limit, (err, docs) => {
-      if (err) return res.status(500).send(err);
-      res.json(docs);
-    });
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const docs = await db
+      .collection("messages")
+      .find()
+      .sort({ timestamp: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    res.json(docs.reverse());
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await client.close();
+  }
 });
 
 // Read one
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  db.messages.findOne({ _id: mongojs.ObjectId(id) }, (err, doc) => {
-    if (err) return res.status(500).send(err);
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const doc = await db.collection("messages").findOne({ _id: ObjectId(id) });
     res.json(doc);
-  });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await client.close();
+  }
 });
 
 // Update
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const id = req.params.id;
   const message = req.body;
-  db.messages.update(
-    { _id: mongojs.ObjectId(id) },
-    { $set: message },
-    (err, doc) => {
-      if (err) return res.status(500).send(err);
-      res.json(doc);
-    }
-  );
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const result = await db
+      .collection("messages")
+      .updateOne({ _id: ObjectId(id) }, { $set: message });
+    res.json(result);
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await client.close();
+  }
 });
 
 // Delete
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
-  db.messages.remove({ _id: mongojs.ObjectId(id) }, (err, doc) => {
-    if (err) return res.status(500).send(err);
-    res.json(doc);
-  });
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const result = await db
+      .collection("messages")
+      .deleteOne({ _id: ObjectId(id) });
+    res.json(result);
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await client.close();
+  }
 });
 
 module.exports = router;

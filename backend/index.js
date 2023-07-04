@@ -2,13 +2,14 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
-const mongojs = require("mongojs");
+const { MongoClient } = require("mongodb");
 const cors = require("cors");
 
 const messagesRouter = require("./messagesRouter");
-const { writeMessageToDb } = require("./lib");
 
-const db = mongojs("mongodb://localhost:27017/ChatApp", ["messages"]);
+const url = "mongodb://localhost:27017";
+const client = new MongoClient(url);
+const dbName = "ChatApp";
 
 const app = express();
 const server = http.createServer(app);
@@ -34,20 +35,20 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("eventChatMessage", (msg) => {
+  socket.on("eventChatMessage", async (msg) => {
     console.log("received eventChatMessage: ", msg);
 
     // Write the message to the database
-    db.messages.insert(msg, (err, doc) => {
-      if (err) {
-        console.error("Error writing message to database", err);
-        return;
-      }
-      console.log("Message written to database: ", doc);
-    });
+    try {
+      console.log("writing message to database");
+      await insertMessage(msg);
 
-    console.log("broadcasting eventChatMessage to everyone");
-    io.emit("eventChatMessage", msg);
+      console.log("broadcasting eventChatMessage to everyone");
+      io.emit("eventChatMessage", msg);
+    } catch (err) {
+      console.error("Error writing message to database", err);
+      return;
+    }
   });
 });
 

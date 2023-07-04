@@ -8,3 +8,13 @@ export const decryptSafe = (simpleCrypto, value) => {
     return value;
   }
 };
+
+export const decryptEvents = (simpleCrypto, events) => {
+  return events.map((event) => decryptEvent(simpleCrypto, event));
+};
+
+export const decryptEvent = (simpleCrypto, event) => ({
+  text: decryptSafe(simpleCrypto, event?.text),
+  username: event?.username,
+  timestamp: event?.timestamp,
+});

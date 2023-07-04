@@ -3,55 +3,69 @@ import { socket } from "../lib/socket";
 import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
-import { decryptSafe } from "../lib/utils";
+import { decryptEvent, decryptEvents } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
-// import userIcon from "public/img/username.svg"; // Replace with the path to your SVG file
-// import passwordIcon from "./icons/password.svg"; // Replace with the path to your SVG file
 
 export const PageNewChat = () => {
-  const [username, setUsername] = useState("John Doe");
-  const [password, setPassword] = useState("default-encryption-key");
+  const [username, setUsername] = useState(
+    localStorage.getItem("username") || ""
+  );
+  const [password, setPassword] = useState(
+    localStorage.getItem("password") || ""
+  );
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
 
+  // run once on page load
   useEffect(() => {
-    console.log("this should only run once");
+    console.log("running page load effect");
+
+    const savedUser = localStorage.getItem("username");
+    const savedPass = localStorage.getItem("password");
+    console.log("getting user preferences from local storage", {
+      savedUser,
+      savedPass,
+    });
+
+    if (savedUser) setUsername(savedUser);
+    if (savedPass) setPassword(savedPass);
 
     const fetchData = async () => {
       const response = await fetch("http://localhost:5001/messages", {
         mode: "cors",
       });
       const data = await response.json();
-      setEvents(data);
+      setEvents(decryptEvents(simpleCrypto, data));
     };
 
     fetchData();
   }, []);
 
+  // run when password or username changes
   useEffect(() => {
+    console.log("saving user preferences to local storage", {
+      username,
+      password,
+    });
+
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+  }, [username, password]);
+
+  // run when password changes
+  useEffect(() => {
+    // password has changed, so we need a new crypto client
     const newSimpleCrypto = new SimpleCrypto(password);
     setSimpleCrypto(newSimpleCrypto);
 
-    // update the events using the new encryption key
-    const decryptedEvents = events.map((event) => {
-      const newEvent = {
-        username: event.username,
-        text: decryptSafe(newSimpleCrypto, event.text),
-        timestamp: event.timestamp,
-      };
-      return newEvent;
-    });
-    setEvents(decryptedEvents);
+    setEvents(decryptEvents(newSimpleCrypto, events));
 
     function onChatMessageEvent(event) {
-      const newEvent = {
-        username: event.username,
-        text: decryptSafe(newSimpleCrypto, event.text),
-        timestamp: event.timestamp,
-      };
-
-      setEvents((previous) => [...previous, newEvent]);
+      setEvents((previous) => [
+        ...previous,
+        decryptEvent(newSimpleCrypto, event),
+      ]);
     }
 
     socket.on("eventChatMessage", onChatMessageEvent);
@@ -86,11 +100,13 @@ export const PageNewChat = () => {
       <Navigation />
 
       <FormInput
+        initialValue={username}
         icon={"./img/username.svg"}
         placeholder="Username"
         callback={(val) => setUsername(val)}
       />
       <FormInput
+        initialValue={password}
         icon={"./img/lock.svg"}
         placeholder="Password"
         callback={(val) => setPassword(val)}
