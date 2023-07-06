@@ -6,7 +6,7 @@ import SimpleCrypto from "simple-crypto-js";
 import { decryptEvent, decryptEvents } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
-import { URL_MESSAGES } from "../config";
+import { URL_MESSAGES, URL_MESSAGES_ROOM } from "../config";
 import { useParams } from "react-router-dom";
 
 export const PageChatRoom = () => {
@@ -37,15 +37,18 @@ export const PageChatRoom = () => {
     if (savedPass) setPassword(savedPass);
 
     // 2 - fetch events from server and decrypt data
-    // const fetchData = async () => {
-    //   const response = await fetch(URL_MESSAGES, {
-    //     mode: "cors",
-    //   });
-    //   const data = await response.json();
-    //   setEvents(decryptEvents(simpleCrypto, data));
-    // };
+    const fetchData = async () => {
+      const url = `${URL_MESSAGES_ROOM}/${roomId}`;
+      const response = await fetch(url, {
+        mode: "cors",
+      });
+      const data = await response.json();
+      if (data && data.length) {
+        setEvents(decryptEvents(simpleCrypto, data));
+      }
+    };
 
-    // fetchData();
+    fetchData();
   }, []);
 
   // run when password or username changes
@@ -78,7 +81,7 @@ export const PageChatRoom = () => {
       ]);
     }
 
-    socket.emit("join", roomId);
+    socket.emit("joinRoom", roomId);
 
     socket.on("eventChatMessage", onChatMessageEvent);
 

@@ -51,6 +51,31 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Read messages of a room
+router.get("/rooms/:idRoom", async (req, res) => {
+  const idRoom = req.params.idRoom;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    console.log("trying to get messages for", { idRoom });
+
+    await client.connect();
+    const db = client.db(dbName);
+    const docs = await db
+      .collection("messages")
+      .find({ idRoom: idRoom })
+      .sort({ timestamp: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    res.json(docs.reverse());
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 // Update
 router.put("/:id", async (req, res) => {
   const id = req.params.id;

@@ -1,9 +1,9 @@
 const { dbName, client } = require("./config");
 
-async function insertMessageToDb(message, room) {
+async function insertMessageToDb(message, idRoom) {
   const doc = {
     ...message,
-    room,
+    idRoom,
   };
 
   try {

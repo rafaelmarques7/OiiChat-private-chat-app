@@ -37,21 +37,21 @@ io.on("connection", (socket) => {
   });
 
   // join room
-  socket.on("join", (room) => {
-    socket.join(room);
-    console.log("user joined room: ", room);
+  socket.on("joinRoom", (idRoom) => {
+    socket.join(idRoom);
+    console.log("user joined room: ", idRoom);
   });
 
-  socket.on("eventChatMessage", async (msg, room) => {
-    console.log("received eventChatMessage: ", msg);
+  socket.on("eventChatMessage", async (msg, idRoom) => {
+    console.log("received eventChatMessage: ", msg, idRoom);
 
     // Write the message to the database
     try {
       console.log("writing message to database");
-      await insertMessageToDb(msg, room);
+      await insertMessageToDb(msg, idRoom);
 
-      console.log("broadcasting eventChatMessage to room: ", room);
-      io.to(room).emit("eventChatMessage", msg);
+      console.log("broadcasting eventChatMessage to room: ", idRoom);
+      io.to(idRoom).emit("eventChatMessage", msg);
     } catch (err) {
       console.error("Error writing message to database", err);
       return;
