@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { socket } from "../lib/socket";
 import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
@@ -8,7 +8,7 @@ import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
 import { URL_MESSAGES_ROOM } from "../config";
 import { useParams } from "react-router-dom";
-import { FormControl, FormLabel, Select, Switch } from "@chakra-ui/react";
+import { Select } from "@chakra-ui/react";
 
 export const PageChatRoom = () => {
   let { roomId } = useParams();
@@ -27,6 +27,15 @@ export const PageChatRoom = () => {
 
   const [usersInRoom, setUsersInRoom] = useState([]);
   const [usersTyping, setUsersTyping] = useState([]);
+
+  const messagesEndRef = useRef(null); // Added this line
+
+  useEffect(() => {
+    // When a message is received, scroll down to it
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [events]);
 
   // run once on page load
   useEffect(() => {
@@ -185,23 +194,8 @@ export const PageChatRoom = () => {
   };
 
   return (
-    <div>
+    <div className="chatroom-container">
       <Navigation />
-
-      <div className="form-input-container">
-        <img src={"/img/visibility.svg"} alt="" className="form-input-icon" />
-
-        <Select
-          onChange={handleUpdateVisibility}
-          value={visibility}
-          size={"md"}
-          border={"none"}
-          fontSize={14}
-        >
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-        </Select>
-      </div>
 
       <FormInput
         initialValue={roomName}
@@ -209,25 +203,45 @@ export const PageChatRoom = () => {
         callback={(val) => handleUpdateRoomName(val)}
       />
 
-      <FormInput
-        initialValue={username}
-        icon={"/img/username.svg"}
-        placeholder="Username"
-        callback={(val) => setUsername(val)}
-      />
-
-      <FormInput
-        initialValue={password}
-        icon={"/img/lock.svg"}
-        placeholder="Password"
-        callback={(val) => setPassword(val)}
-      />
-
       <div className="message-list-container">
+        <div className="form-input-container">
+          <img src={"/img/visibility.svg"} alt="" className="form-input-icon" />
+
+          <Select
+            onChange={handleUpdateVisibility}
+            value={visibility}
+            size={"md"}
+            border={"none"}
+            fontSize={14}
+          >
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </Select>
+        </div>
+
+        <FormInput
+          initialValue={username}
+          icon={"/img/username.svg"}
+          placeholder="Username"
+          callback={(val) => setUsername(val)}
+        />
+
+        <FormInput
+          initialValue={password}
+          icon={"/img/lock.svg"}
+          placeholder="Password"
+          callback={(val) => setPassword(val)}
+        />
+
         <MessageList userId={username} messages={events} />
         {usersTyping.length > 0 && (
-          <p>{usersTyping.join(", ")} is typing... </p>
+          <div className="flex-items">
+            <p style={{ fontWeight: "bold" }}>
+              {usersTyping.join(", ")} is typing...{" "}
+            </p>
+          </div>
         )}
+        <div ref={messagesEndRef} style={{ height: 0 }} />
       </div>
 
       <div className="submit-message-container">

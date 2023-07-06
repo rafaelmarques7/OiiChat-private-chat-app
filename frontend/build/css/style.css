@@ -761,5 +761,5 @@ label {
 .message-list-container {
   display: flex;
   flex-direction: column;
-  padding-bottom: 5vh;
+  /* padding-bottom: 5vh; */
 }

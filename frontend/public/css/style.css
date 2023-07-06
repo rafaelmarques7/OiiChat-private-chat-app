@@ -762,4 +762,15 @@ label {
   display: flex;
   flex-direction: column;
   padding-bottom: 5vh;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.chatroom-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  /* padding-top: 7vh; */
+  padding-bottom: 7vh;
 }
