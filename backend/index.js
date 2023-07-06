@@ -42,6 +42,18 @@ io.on("connection", (socket) => {
     console.log("user joined room: ", idRoom);
   });
 
+  socket.on("eventStartTyping", ({ idRoom, username }) => {
+    console.log("received eventStartTyping: ", { idRoom, username });
+
+    socket.to(idRoom).emit("eventStartTyping", username);
+  });
+
+  socket.on("eventStopTyping", ({ idRoom, username }) => {
+    console.log("received eventStopTyping: ", { idRoom, username });
+
+    socket.to(idRoom).emit("eventStopTyping", username);
+  });
+
   socket.on("eventChatMessage", async (msg, idRoom) => {
     console.log("received eventChatMessage: ", msg, idRoom);
 

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
 export const FormInputWithButton = ({
-  callback,
+  callbackSubmit = () => {},
+  callbackStartTyping = () => {},
+  callbackStopTyping = () => {},
   buttonLabel = "Submit",
   resetOnSubmit = false,
   placeholder = "",
@@ -10,17 +12,31 @@ export const FormInputWithButton = ({
 
   function onSubmit(event) {
     event.preventDefault();
-    callback(value);
+    callbackSubmit(value);
+    callbackStopTyping();
 
     if (resetOnSubmit) {
       setValue("");
     }
   }
+
+  function handleSetValue(newValue) {
+    if (!value) {
+      callbackStartTyping();
+    }
+
+    if (newValue === "") {
+      callbackStopTyping();
+    }
+
+    setValue(newValue);
+  }
+
   return (
     <form onSubmit={onSubmit} className="submit-message-form">
       <input
         placeholder={placeholder}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => handleSetValue(e.target.value)}
         value={value}
       />
 

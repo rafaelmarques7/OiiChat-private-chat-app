@@ -4,15 +4,14 @@
 App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfront.net/
 
 desired features:
-* ability to make rooms public or private (default to private)
-* give rooms a name (and icon?)
+
 * show users connected to a room
-* show when user is typing
 * only allow user to post message when username has been selected
 * when the messages are, display a lock icon instead of a message hash
 * add a tooltip on tap to each icon
-
-
+* ability to make rooms public or private (default to private)
+* give rooms a name (and icon?)
+* show when user is typing
 
 ### Multiple rooms
 
@@ -65,4 +64,3 @@ I think that the question to both of those answers is yes, it can, but I think i
 
 useful links:
 https://chakra-ui.com/docs/components/select
-

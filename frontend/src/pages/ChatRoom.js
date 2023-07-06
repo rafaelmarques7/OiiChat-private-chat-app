@@ -6,9 +6,8 @@ import SimpleCrypto from "simple-crypto-js";
 import { decryptEvent, decryptEvents, updateRoomInfo } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
-import { URL_MESSAGES, URL_MESSAGES_ROOM } from "../config";
+import { URL_MESSAGES_ROOM } from "../config";
 import { useParams } from "react-router-dom";
-// import { MenuRoomSettings } from "../components/room/roomSettings";
 import { FormControl, FormLabel, Select, Switch } from "@chakra-ui/react";
 
 export const PageChatRoom = () => {
@@ -25,6 +24,9 @@ export const PageChatRoom = () => {
   );
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
+
+  const [usersInRoom, setUsersInRoom] = useState([]);
+  const [usersTyping, setUsersTyping] = useState([]);
 
   // run once on page load
   useEffect(() => {
@@ -54,6 +56,24 @@ export const PageChatRoom = () => {
     };
 
     fetchData();
+
+    const onEventStartTyping = (username) => {
+      const newUsersTypings = [...usersTyping, username];
+      setUsersTyping(newUsersTypings);
+    };
+
+    const onEventStopTyping = (username) => {
+      const newUsersTypings = usersTyping.filter((u) => u !== username);
+      setUsersTyping(newUsersTypings);
+    };
+
+    socket.on("eventStartTyping", onEventStartTyping);
+    socket.on("eventStopTyping", onEventStopTyping);
+
+    return () => {
+      socket.off("eventStartTyping", onEventStartTyping);
+      socket.off("eventStopTyping", onEventStopTyping);
+    };
   }, []);
 
   // run when password or username changes
@@ -86,12 +106,26 @@ export const PageChatRoom = () => {
       ]);
     }
 
+    const onEventStartTyping = (username) => {
+      const newUsersTypings = [...usersTyping, username];
+      setUsersTyping(newUsersTypings);
+    };
+
+    const onEventStopTyping = (username) => {
+      const newUsersTypings = usersTyping.filter((u) => u !== username);
+      setUsersTyping(newUsersTypings);
+    };
+
     socket.emit("joinRoom", roomId);
 
     socket.on("eventChatMessage", onChatMessageEvent);
+    socket.on("eventStartTyping", onEventStartTyping);
+    socket.on("eventStopTyping", onEventStopTyping);
 
     return () => {
       socket.off("eventChatMessage", onChatMessageEvent);
+      socket.off("eventStartTyping", onEventStartTyping);
+      socket.off("eventStopTyping", onEventStopTyping);
     };
   }, [password]);
 
@@ -107,6 +141,19 @@ export const PageChatRoom = () => {
     console.log("onMessageSubmit: ", { value, payload, password });
 
     socket.timeout(10).emit("eventChatMessage", payload, roomId);
+  };
+
+  const onStartTyping = () => {
+    console.log("inside onStartTyping");
+    socket
+      .timeout(10)
+      .emit("eventStartTyping", { idRoom: roomId, username: username });
+  };
+
+  const onStopTyping = () => {
+    socket
+      .timeout(10)
+      .emit("eventStopTyping", { idRoom: roomId, username: username });
   };
 
   console.log("rendering chat page with events: ", {
@@ -176,15 +223,20 @@ export const PageChatRoom = () => {
         callback={(val) => setPassword(val)}
       />
 
-      {/* <MenuRoomSettings idRoom={roomId} /> */}
-
-      <MessageList userId={username} messages={events} />
+      <div className="message-list-container">
+        <MessageList userId={username} messages={events} />
+        {usersTyping.length > 0 && (
+          <p>{usersTyping.join(", ")} is typing... </p>
+        )}
+      </div>
 
       <div className="submit-message-container">
         <FormInputWithButton
-          placeholder={"Type a message..."}
-          callback={onMessageSubmit}
           resetOnSubmit={true}
+          placeholder={"Type a message..."}
+          callbackSubmit={onMessageSubmit}
+          callbackStartTyping={onStartTyping}
+          callbackStopTyping={onStopTyping}
         />
       </div>
     </div>

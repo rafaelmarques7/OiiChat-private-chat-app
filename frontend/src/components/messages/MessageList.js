@@ -2,7 +2,8 @@ import TextMessage from "./TextMessage";
 import { howLongAgo } from "./lib";
 
 export default ({ messages, userId }) => (
-  <div className="message-list-container">
+  // <div className="message-list-container">
+  <>
     {messages.map((message) => (
       <TextMessage
         key={message?._id}
@@ -12,5 +13,6 @@ export default ({ messages, userId }) => (
         direction={message?.username === userId ? "outgoing" : "incoming"}
       />
     ))}
-  </div>
+  </>
+  // </div>
 );
