@@ -1,5 +1,7 @@
 # (Private!) Chat app
 
+App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfront.net/
+
 Let's try to deploy this:
 s3 static website
 ECS container
