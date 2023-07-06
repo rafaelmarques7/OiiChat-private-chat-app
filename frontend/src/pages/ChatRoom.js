@@ -7,8 +7,11 @@ import { decryptEvent, decryptEvents } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
 import { URL_MESSAGES } from "../config";
+import { useParams } from "react-router-dom";
 
 export const PageChatRoom = () => {
+  let { roomId } = useParams();
+
   const [username, setUsername] = useState(
     localStorage.getItem("username") || ""
   );
@@ -34,15 +37,15 @@ export const PageChatRoom = () => {
     if (savedPass) setPassword(savedPass);
 
     // 2 - fetch events from server and decrypt data
-    const fetchData = async () => {
-      const response = await fetch(URL_MESSAGES, {
-        mode: "cors",
-      });
-      const data = await response.json();
-      setEvents(decryptEvents(simpleCrypto, data));
-    };
+    // const fetchData = async () => {
+    //   const response = await fetch(URL_MESSAGES, {
+    //     mode: "cors",
+    //   });
+    //   const data = await response.json();
+    //   setEvents(decryptEvents(simpleCrypto, data));
+    // };
 
-    fetchData();
+    // fetchData();
   }, []);
 
   // run when password or username changes
@@ -75,6 +78,8 @@ export const PageChatRoom = () => {
       ]);
     }
 
+    socket.emit("join", roomId);
+
     socket.on("eventChatMessage", onChatMessageEvent);
 
     return () => {
@@ -93,7 +98,7 @@ export const PageChatRoom = () => {
 
     console.log("onMessageSubmit: ", { value, payload, password });
 
-    socket.timeout(10).emit("eventChatMessage", payload);
+    socket.timeout(10).emit("eventChatMessage", payload, roomId);
   };
 
   console.log("rendering chat page with events: ", {

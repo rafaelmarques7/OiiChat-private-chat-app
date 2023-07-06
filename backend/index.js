@@ -36,16 +36,22 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("eventChatMessage", async (msg) => {
+  // join room
+  socket.on("join", (room) => {
+    socket.join(room);
+    console.log("user joined room: ", room);
+  });
+
+  socket.on("eventChatMessage", async (msg, room) => {
     console.log("received eventChatMessage: ", msg);
 
     // Write the message to the database
     try {
       console.log("writing message to database");
-      await insertMessageToDb(msg);
+      await insertMessageToDb(msg, room);
 
-      console.log("broadcasting eventChatMessage to everyone");
-      io.emit("eventChatMessage", msg);
+      console.log("broadcasting eventChatMessage to room: ", room);
+      io.to(room).emit("eventChatMessage", msg);
     } catch (err) {
       console.error("Error writing message to database", err);
       return;
