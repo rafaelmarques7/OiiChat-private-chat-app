@@ -1,12 +1,15 @@
 const express = require("express");
 const { ObjectId } = require("mongodb");
-const { insertMessageToDb } = require("./lib");
 const { client, dbName } = require("./config");
 const router = express.Router();
 
 // Create
 router.post("/create-room", async (req, res) => {
+  const _id = new ObjectId();
   const newRoom = {
+    _id,
+    roomName: `Room ${_id}`,
+    private: "private",
     timestamp: Date.now(),
   };
 
@@ -20,6 +23,38 @@ router.post("/create-room", async (req, res) => {
     res.json({
       _id: result.insertedId,
     });
+  } catch (err) {
+    console.error("Error creating room", err);
+    res.status(500).send(err);
+  }
+});
+
+// Use this endpoint to update Room settings
+router.put("/:idRoom", async (req, res) => {
+  try {
+    const idRoom = req.params.idRoom;
+    const { roomName, visibility } = req.body;
+
+    console.log("trying to update room info", { idRoom, roomName, visibility });
+
+    const db = client.db(dbName);
+    const doc = await db
+      .collection("rooms")
+      .findOne({ _id: new ObjectId(idRoom) });
+
+    const docNewRoom = {
+      ...doc,
+      roomName: roomName ? roomName : doc?.roomName,
+      visibility: visibility ? visibility : doc?.visibility,
+    };
+
+    const result = await db
+      .collection("rooms")
+      .updateOne({ _id: new ObjectId(idRoom) }, { $set: docNewRoom });
+
+    console.log("Room successfully updated: ", result);
+
+    res.json(docNewRoom);
   } catch (err) {
     console.error("Error creating room", err);
     res.status(500).send(err);
@@ -53,14 +88,16 @@ router.get("/:id", async (req, res) => {
   const id = req.params.id;
 
   try {
+    console.log("trying to get room info", { id });
     await client.connect();
     const db = client.db(dbName);
-    const doc = await db.collection("rooms").findOne({ _id: ObjectId(id) });
+    const doc = await db.collection("rooms").findOne({ _id: new ObjectId(id) });
     res.json(doc);
   } catch (err) {
     res.status(500).send(err);
   }
 });
+
 // Delete
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;

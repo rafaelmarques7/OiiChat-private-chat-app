@@ -3,14 +3,19 @@ import { socket } from "../lib/socket";
 import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
-import { decryptEvent, decryptEvents } from "../lib/utils";
+import { decryptEvent, decryptEvents, updateRoomInfo } from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
 import { URL_MESSAGES, URL_MESSAGES_ROOM } from "../config";
 import { useParams } from "react-router-dom";
+// import { MenuRoomSettings } from "../components/room/roomSettings";
+import { FormControl, FormLabel, Select, Switch } from "@chakra-ui/react";
 
 export const PageChatRoom = () => {
   let { roomId } = useParams();
+
+  const [roomName, setRoomName] = useState(`Room ${roomId}`);
+  const [visibility, setVisibility] = useState("private");
 
   const [username, setUsername] = useState(
     localStorage.getItem("username") || ""
@@ -110,9 +115,52 @@ export const PageChatRoom = () => {
     events,
   });
 
+  const handleUpdateRoomName = async (val) => {
+    console.log("update room name, ", val);
+    setRoomName(val);
+
+    const res = await updateRoomInfo(roomId, { roomName: val });
+    if (!res) {
+      // @todo: handle error
+      console.log("error updating room info");
+    }
+  };
+
+  const handleUpdateVisibility = async (val) => {
+    console.log("update visibility, ", val.target.value);
+    setVisibility(val.target.value);
+
+    const res = await updateRoomInfo(roomId, { visibility: val.target.value });
+    if (!res) {
+      // @todo: handle error
+      console.log("error updating room info");
+    }
+  };
+
   return (
     <div>
       <Navigation />
+
+      <div className="form-input-container">
+        <img src={"/img/visibility.svg"} alt="" className="form-input-icon" />
+
+        <Select
+          onChange={handleUpdateVisibility}
+          value={visibility}
+          size={"lg"}
+          border={"none"}
+          fontSize={14}
+        >
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </Select>
+      </div>
+
+      <FormInput
+        initialValue={roomName}
+        icon={"/img/group.svg"}
+        callback={(val) => handleUpdateRoomName(val)}
+      />
 
       <FormInput
         initialValue={username}
@@ -120,12 +168,15 @@ export const PageChatRoom = () => {
         placeholder="Username"
         callback={(val) => setUsername(val)}
       />
+
       <FormInput
         initialValue={password}
         icon={"/img/lock.svg"}
         placeholder="Password"
         callback={(val) => setPassword(val)}
       />
+
+      {/* <MenuRoomSettings idRoom={roomId} /> */}
 
       <MessageList userId={username} messages={events} />
 
