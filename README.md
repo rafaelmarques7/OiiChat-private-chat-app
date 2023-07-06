@@ -2,6 +2,21 @@
 
 App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfront.net/
 
+### Multiple rooms
+
+We want to support multiple rooms, so that each user can create their own private chat room.
+
+How would this look like on the frontend (describe user journeys)?
+What is required to support this on the backend (be)?
+
+Frontend:
+* user clicks on a button to "create new chat room"
+  * (be) this should trigger a call to the backend to create a new room, which should respond with a `idRoom`
+  * (fe) this `idRoom` is used in to create a new frontend URL for the new room
+* user is taken to a new web page
+* user can now interact with the chatroom and invite friends (share via link), configure the username password, and send messages
+
+
 Let's try to deploy this:
 s3 static website
 ECS container

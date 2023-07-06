@@ -1,4 +1,5 @@
 import ParticlesBg from "particles-bg";
+import { ButtonNewChat } from "./ButtonNewChat";
 
 export const Header = (props) => {
   return (
@@ -17,12 +18,13 @@ export const Header = (props) => {
                   <span></span>
                 </h1>
                 <p>{props.data ? props.data.paragraph : "Loading"}</p>
-                <a
+                <ButtonNewChat />
+                {/* <a
                   href="/new-chat"
                   className="btn btn-custom btn-lg page-scroll"
                 >
                   Start chatting!
-                </a>{" "}
+                </a>{" "} */}
               </div>
             </div>
           </div>

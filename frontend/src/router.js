@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { PageNotFound } from "./pages/NotFound";
 import { PageHome } from "./pages/Home";
 import { PageNewChat } from "./pages/NewChat";
+import { PageChatRoom } from "./pages/ChatRoom";
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +12,10 @@ export const router = createBrowserRouter([
   {
     path: "/new-chat",
     element: <PageNewChat />,
+  },
+  {
+    path: "/rooms/:roomId",
+    element: <PageChatRoom />,
   },
   {
     path: "*",

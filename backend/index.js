@@ -6,14 +6,16 @@ const { MongoClient } = require("mongodb");
 const cors = require("cors");
 
 const messagesRouter = require("./messagesRouter");
+const roomsRouter = require("./roomsRouter");
+
 const { insertMessageToDb } = require("./lib");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://dq5rcunnxjcst.cloudfront.net",
-    // || "http://localhost:3000",
+    origin: "http://localhost:3000",
+    // "http://dq5rcunnxjcst.cloudfront.net",
   },
 });
 
@@ -25,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/messages", messagesRouter);
+app.use("/rooms", roomsRouter);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
