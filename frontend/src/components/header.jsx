@@ -19,12 +19,6 @@ export const Header = (props) => {
                 </h1>
                 <p>{props.data ? props.data.paragraph : "Loading"}</p>
                 <ButtonNewChat />
-                {/* <a
-                  href="/new-chat"
-                  className="btn btn-custom btn-lg page-scroll"
-                >
-                  Start chatting!
-                </a>{" "} */}
               </div>
             </div>
           </div>

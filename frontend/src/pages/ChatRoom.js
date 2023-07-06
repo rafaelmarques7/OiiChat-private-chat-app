@@ -108,13 +108,13 @@ export const PageChatRoom = () => {
 
       <FormInput
         initialValue={username}
-        icon={"./img/username.svg"}
+        icon={"/img/username.svg"}
         placeholder="Username"
         callback={(val) => setUsername(val)}
       />
       <FormInput
         initialValue={password}
-        icon={"./img/lock.svg"}
+        icon={"/img/lock.svg"}
         placeholder="Password"
         callback={(val) => setPassword(val)}
       />
