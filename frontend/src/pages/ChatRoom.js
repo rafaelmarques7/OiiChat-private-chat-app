@@ -30,7 +30,7 @@ export const PageChatRoom = () => {
 
   // run once on page load
   useEffect(() => {
-    console.log("running page load effect");
+    console.log("running page load effect.");
 
     // 1 - get username and password from local storage
     const savedUser = localStorage.getItem("username");
