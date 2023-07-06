@@ -2,10 +2,11 @@ const cdk = require("aws-cdk-lib");
 const iam = cdk.aws_iam;
 const ec2 = cdk.aws_ec2;
 const ecs = cdk.aws_ecs;
+const logs = cdk.aws_logs;
 const ecs_patterns = cdk.aws_ecs_patterns;
 const ecr_assets = cdk.aws_ecr_assets;
 
-class MyEcsAppStack extends cdk.Stack {
+class ChatAppCdkStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
@@ -40,11 +41,14 @@ class MyEcsAppStack extends cdk.Stack {
           taskImageOptions: {
             image: ecs.ContainerImage.fromRegistry(dockerImageAsset.imageUri),
             containerPort: 5001,
-            executionRole: iam.Role.fromRoleArn(
-              this,
-              "ExecutionRole",
-              "arn:aws:iam::381336380362:role/MyEcsAppStack-FargateServiceTaskDefExecutionRole91-1N1BUYEMM2YYQ"
-            ),
+            logDriver: new ecs.AwsLogDriver({
+              streamPrefix: "MyApp",
+              logGroup: new logs.LogGroup(this, "LogGroup", {
+                logGroupName: "/ecs/MyApp",
+                retention: logs.RetentionDays.ONE_WEEK,
+                removalPolicy: cdk.RemovalPolicy.DESTROY,
+              }),
+            }),
           },
           memoryLimitMiB: 512, // Default is 512
           publicLoadBalancer: true, // Default is false
@@ -54,7 +58,12 @@ class MyEcsAppStack extends cdk.Stack {
     fargateService.taskDefinition.executionRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["ecr:GetAuthorizationToken"],
+        actions: [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+        ],
         resources: ["*"],
       })
     );
@@ -66,4 +75,4 @@ class MyEcsAppStack extends cdk.Stack {
   }
 }
 
-module.exports = { MyEcsAppStack };
+module.exports = { ChatAppCdkStack };

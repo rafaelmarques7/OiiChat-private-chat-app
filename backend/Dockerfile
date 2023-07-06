@@ -1,7 +1,7 @@
 # Dockerfile
 
 # Node.js version
-FROM node:18
+FROM --platform=linux/amd64 node:18
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies in the local node_modules folder
-RUN npm install
+RUN npm install --only=production
 
 # Bundle app source
 COPY . .
@@ -20,4 +20,5 @@ COPY . .
 EXPOSE 5001
 
 # Define the command to run your app using CMD which defines your runtime
-CMD [ "npm", "run", "dev" ]
+# CMD [ "npm", "run", "dev" ]
+CMD [ "node", "index.js" ]
