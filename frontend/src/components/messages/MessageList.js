@@ -2,7 +2,6 @@ import TextMessage from "./TextMessage";
 import { howLongAgo } from "./lib";
 
 export default ({ messages, userId }) => (
-  // <div className="message-list-container">
   <>
     {messages.map((message) => (
       <TextMessage
@@ -14,5 +13,4 @@ export default ({ messages, userId }) => (
       />
     ))}
   </>
-  // </div>
 );

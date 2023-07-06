@@ -194,7 +194,7 @@ export const PageChatRoom = () => {
         <Select
           onChange={handleUpdateVisibility}
           value={visibility}
-          size={"lg"}
+          size={"md"}
           border={"none"}
           fontSize={14}
         >
