@@ -1,7 +1,7 @@
 const express = require("express");
 const { ObjectId } = require("mongodb");
-const { insertMessageToDb } = require("./lib");
-const { client, dbName } = require("./config");
+const { insertMessageToDb } = require("../utils/lib");
+const { client, dbName } = require("../config");
 const router = express.Router();
 
 // Create

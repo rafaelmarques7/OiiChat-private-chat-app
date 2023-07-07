@@ -8,7 +8,7 @@ const cors = require("cors");
 const messagesRouter = require("./messagesRouter");
 const roomsRouter = require("./roomsRouter");
 
-const { insertMessageToDb } = require("./lib");
+const { insertMessageToDb } = require("./utils/lib");
 
 const app = express();
 const server = http.createServer(app);

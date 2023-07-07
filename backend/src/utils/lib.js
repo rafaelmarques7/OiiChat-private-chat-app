@@ -1,4 +1,4 @@
-const { dbName, client } = require("./config");
+const { dbName, client } = require("../config");
 
 async function insertMessageToDb(message, idRoom) {
   const doc = {
