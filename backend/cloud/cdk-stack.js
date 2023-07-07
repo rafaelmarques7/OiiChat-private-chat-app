@@ -68,6 +68,20 @@ class ChatAppCdkStack extends cdk.Stack {
       })
     );
 
+    // Access the ECS service associated with the ApplicationLoadBalancedFargateService
+    const ecsService = fargateService.service;
+
+    // Configure health checks for the ECS service
+    ecsService.taskDefinition.defaultContainer?.addHealthCheck({
+      command: [
+        "CMD-SHELL",
+        "curl -f http://localhost:5001/messages || exit 1",
+      ],
+      interval: cdk.Duration.seconds(30),
+      timeout: cdk.Duration.seconds(5),
+      retries: 3,
+    });
+
     // Output the DNS where you can access your service
     new cdk.CfnOutput(this, "LoadBalancerDNS", {
       value: fargateService.loadBalancer.loadBalancerDnsName,
