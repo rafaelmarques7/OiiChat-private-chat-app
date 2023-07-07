@@ -1,5 +1,5 @@
 {
-  "app": "node bin/mycdk.js",
+  "app": "node cloud/mycdk.js",
   "watch": {
     "include": [
       "**"

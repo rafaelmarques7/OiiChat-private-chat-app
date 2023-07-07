@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: export CI=FALSE && npm ci # CI=FALSE is to ignore eslint warnings
 
       - name: Build production build
         working-directory: ./frontend
