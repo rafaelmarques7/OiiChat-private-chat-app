@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # Chnage to the backend directory
-cd backend
+cd ../backend
 
 cdk deploy --require-approval never

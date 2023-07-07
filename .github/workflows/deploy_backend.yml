@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Backend
 
 on:
   push:
@@ -36,6 +36,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 18
+
+      - name: Install AWS CDK
+        run: sudo npm install -g aws-cdk
 
       - name: Install dependencies
         working-directory: ./backend
