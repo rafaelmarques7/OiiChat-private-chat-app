@@ -40,7 +40,7 @@ jobs:
         run: npm ci
 
       - name: Build production build
-        run: export CI=FALSE && ls -lha && npm run build
+        run: export CI=FALSE && ls -lha && ls -lha ./src/pages &&  npm run build
 
       - name: Deploy to S3 bucket
         run: |
