@@ -17,9 +17,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: "Deploy frontend"
-    defaults:
-      run:
-        working-directory: ./frontend
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
@@ -31,24 +28,22 @@ jobs:
           role-session-name: GitHub_to_AWS_frontend_deployment
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Install aws cli
+        run: sudo apt-get -q install -y awscli
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 18
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm ci
 
       - name: Build production build
+        working-directory: ./frontend
         run: npm run build
 
       - name: Deploy to S3 bucket
-        run: |
-          S3_BUCKET_NAME="my-private-chat-app"
-          LOCAL_FOLDER_PATH="build"
-
-          # Install AWS CLI
-          sudo apt-get -q install -y awscli
-
-          # Deploy to S3 bucket
-          aws s3 sync "$LOCAL_FOLDER_PATH" "s3://$S3_BUCKET_NAME"
+        working-directory: ./cicd
+        run: bash deploy_frontend.sh
