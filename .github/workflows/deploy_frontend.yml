@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "frontend/**"
+      - ".github/workflows/deploy_frontend.yml"
 
 env:
   AWS_REGION : "eu-west-1"
