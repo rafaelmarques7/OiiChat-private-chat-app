@@ -16,4 +16,10 @@ To run locally:
 * configure env variables 
 * run `npm run dev`
 
+## Running in production
 
+For production, we have:
+* cdk to build and manage cloud infrastructure
+* ECS Fargate running containers
+* MongoDb cloud atlas
+   
