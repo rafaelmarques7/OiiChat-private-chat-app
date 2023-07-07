@@ -40,7 +40,7 @@ jobs:
         run: npm ci
 
       - name: Build production build
-        run: export CI=FALSE && ls -lha && ls -lha ./src/pages &&  npm run build
+        run: npm run build
 
       - name: Deploy to S3 bucket
         run: |
@@ -48,7 +48,7 @@ jobs:
           LOCAL_FOLDER_PATH="build"
 
           # Install AWS CLI
-          apt-get -q install -y awscli
+          sudo apt-get -q install -y awscli
 
           # Deploy to S3 bucket
           aws s3 sync "$LOCAL_FOLDER_PATH" "s3://$S3_BUCKET_NAME"
