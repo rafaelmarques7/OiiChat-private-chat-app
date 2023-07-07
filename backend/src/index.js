@@ -1,13 +1,14 @@
+// Configure env variables
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const cors = require("cors");
-
-const messagesRouter = require("./messagesRouter");
-const roomsRouter = require("./roomsRouter");
-
+const messagesRouter = require("./router/messagesRouter");
+const roomsRouter = require("./router/roomsRouter");
 const { insertMessageToDb } = require("./utils/lib");
 
 const app = express();

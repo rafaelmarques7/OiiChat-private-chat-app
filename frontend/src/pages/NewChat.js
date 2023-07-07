@@ -35,6 +35,7 @@ export const PageNewChat = () => {
 
     // 2 - fetch events from server and decrypt data
     const fetchData = async () => {
+      console.log("making get request", URL_MESSAGES);
       const response = await fetch(URL_MESSAGES, {
         mode: "cors",
       });

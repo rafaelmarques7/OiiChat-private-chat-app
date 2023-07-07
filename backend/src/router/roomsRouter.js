@@ -1,6 +1,6 @@
 const express = require("express");
 const { ObjectId } = require("mongodb");
-const { client, dbName } = require("./config");
+const { client, dbName } = require("../config");
 const router = express.Router();
 
 // Create

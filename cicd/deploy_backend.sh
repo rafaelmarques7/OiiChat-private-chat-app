@@ -3,4 +3,4 @@
 # Chnage to the backend directory
 cd backend
 
-cdk deploy
+cdk deploy --require-approval never

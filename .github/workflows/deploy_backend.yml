@@ -1,0 +1,45 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION : "eu-west-1"
+
+# required for AWS
+permissions:
+      id-token: write   
+      contents: read    
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: "Deploy backend"
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume:  arn:aws:iam::381336380362:role/github-actions-chat-app-role
+          role-session-name: GitHub_to_AWS_frontend_deployment
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Install aws cli
+        run: sudo apt-get -q install -y awscli
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Deploy CDK Stack
+        working-directory: ./cicd
+        run: bash deploy_backend.sh
