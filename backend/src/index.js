@@ -23,7 +23,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.send("Hello World!");
 });
 
 app.use("/messages", messagesRouter);
