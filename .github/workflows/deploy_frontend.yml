@@ -49,7 +49,12 @@ jobs:
 
       - name: Build production build
         working-directory: ./frontend
-        run: echo $REACT_APP_URL_BACKEND && CI=false npm run build  # CI=FALSE is to ignore eslint warnings
+        run: |
+          # create env file so that create-react-app picks up on it
+          echo "REACT_APP_URL_BACKEND=$REACT_APP_URL_BACKEND" > .env
+
+          # CI=FALSE is to ignore eslint warnings
+          CI=false npm run build 
         env:
           REACT_APP_URL_BACKEND: ${{ secrets.REACT_APP_URL_BACKEND }}
 
