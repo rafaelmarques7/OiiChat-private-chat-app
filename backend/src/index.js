@@ -10,12 +10,13 @@ const cors = require("cors");
 const messagesRouter = require("./router/messagesRouter");
 const roomsRouter = require("./router/roomsRouter");
 const { insertMessageToDb } = require("./utils/lib");
+const { URL_FRONTEND } = require("./config");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.URL_FRONTEND,
+    origin: URL_FRONTEND,
   },
 });
 

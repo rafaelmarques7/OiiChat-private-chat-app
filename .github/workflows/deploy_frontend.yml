@@ -50,16 +50,8 @@ jobs:
       - name: Build production build
         working-directory: ./frontend
         run: |
-          # create env file so that create-react-app picks up on it
-          echo "creating .env file"
-          echo "REACT_APP_URL_BACKEND=$REACT_APP_URL_BACKEND" > .env
-          ls -lha
-          cat .env
-
           # CI=FALSE is to ignore eslint warnings
           CI=false npm run build 
-        env:
-          REACT_APP_URL_BACKEND: ${{ secrets.REACT_APP_URL_BACKEND }}
 
       - name: Deploy to S3 bucket
         working-directory: ./cicd

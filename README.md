@@ -67,3 +67,7 @@ I think that the question to both of those answers is yes, it can, but I think i
 
 useful links:
 https://chakra-ui.com/docs/components/select
+
+## CICD
+
+I setup the CICD using github actions, but I can not get the `.env` files to work correctly during the build steps.
