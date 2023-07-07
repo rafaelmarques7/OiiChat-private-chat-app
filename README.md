@@ -5,6 +5,8 @@ App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfr
 
 desired features:
 
+* when a new room is created and there are no messages, display "messages will appear here"
+
 * better styling for "type message" CTA
 * show users connected to a room
 * only allow user to post message when username has been selected

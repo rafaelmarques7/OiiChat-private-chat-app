@@ -48,3 +48,6 @@ jobs:
       - name: Deploy CDK Stack
         working-directory: ./cicd
         run: bash deploy_backend.sh
+        env:
+          URL_DATABASE: ${{ secrets.URL_DATABASE }}
+          URL_FRONTEND: ${{ secrets.URL_FRONTEND }}
