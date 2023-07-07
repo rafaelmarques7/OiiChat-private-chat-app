@@ -50,6 +50,8 @@ jobs:
       - name: Build production build
         working-directory: ./frontend
         run: CI=false npm run build  # CI=FALSE is to ignore eslint warnings
+        env:
+          REACT_APP_URL_BACKEND: ${{ secrets.REACT_APP_URL_BACKEND }}
 
       - name: Deploy to S3 bucket
         working-directory: ./cicd
