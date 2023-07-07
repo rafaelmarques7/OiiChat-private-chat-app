@@ -27,10 +27,14 @@ jobs:
           role-to-assume:  arn:aws:iam::381336380362:role/github-actions-chat-app-role
           role-session-name: GitHub_to_AWS_frontend_deployment
           aws-region: ${{ env.AWS_REGION }}
+      
 
       - name: Install aws cli
         run: sudo apt-get -q install -y awscli
 
+      - name: check s3 
+        run: aws s3 ls
+        
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
