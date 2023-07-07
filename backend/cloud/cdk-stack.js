@@ -49,6 +49,10 @@ class ChatAppCdkStack extends cdk.Stack {
                 removalPolicy: cdk.RemovalPolicy.DESTROY,
               }),
             }),
+            environment: {
+              URL_DATABASE: process.env.URL_DATABASE,
+              URL_FRONTEND: process.env.URL_FRONTEND,
+            },
           },
           memoryLimitMiB: 512, // Default is 512
           publicLoadBalancer: true, // Default is false
