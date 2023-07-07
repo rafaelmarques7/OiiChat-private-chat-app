@@ -707,7 +707,9 @@ label {
   width: 100%;
   display: flex;
   justify-content: center;
+  /* background-color: rgba(217, 217, 227, 0.97); */
   background-color: white;
+  padding: 1rem;
 }
 
 .avatar {
@@ -773,4 +775,18 @@ label {
   height: 100vh;
   /* padding-top: 7vh; */
   padding-bottom: 7vh;
+}
+
+.submit-message-form {
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  width: 100%;
+  max-width: 700px; /* Limit the width on large screens */
+  margin: 0 auto; /* Center the form */
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 7px;
+  font-weight: bold;
+  font-size: large;
 }

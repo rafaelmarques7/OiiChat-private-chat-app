@@ -41,7 +41,7 @@ export const FormInputWithButton = ({
       />
 
       <button type="submit" disabled={!value}>
-        {buttonLabel}
+        <img src={"/img/send.svg"} alt="" className="form-input-icon" />
       </button>
     </form>
   );

@@ -234,6 +234,7 @@ export const PageChatRoom = () => {
         />
 
         <MessageList userId={username} messages={events} />
+
         {usersTyping.length > 0 && (
           <div className="flex-items">
             <p style={{ fontWeight: "bold" }}>
