@@ -16,12 +16,13 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    name: "Deploy frontend"
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
-
-      - name: Change directory to frontend
-        run: cd frontend
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
