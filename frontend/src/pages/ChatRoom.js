@@ -245,15 +245,12 @@ export const PageChatRoom = () => {
         <div ref={messagesEndRef} style={{ height: 0 }} />
       </div>
 
-      <div className="submit-message-container">
-        <FormInputWithButton
-          resetOnSubmit={true}
-          placeholder={"Type a message..."}
-          callbackSubmit={onMessageSubmit}
-          callbackStartTyping={onStartTyping}
-          callbackStopTyping={onStopTyping}
-        />
-      </div>
+      <FormInputWithButton
+        resetOnSubmit={true}
+        callbackSubmit={onMessageSubmit}
+        callbackStartTyping={onStartTyping}
+        callbackStopTyping={onStopTyping}
+      />
     </div>
   );
 };

@@ -701,17 +701,6 @@ label {
   max-width: 80%;
 }
 
-.submit-message-container {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  /* background-color: rgba(217, 217, 227, 0.97); */
-  background-color: white;
-  padding: 1rem;
-}
-
 .avatar {
   border-radius: 50%;
   border: 2px solid white;
@@ -777,6 +766,16 @@ label {
   padding-bottom: 7vh;
 }
 
+.submit-message-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  padding: 1rem;
+}
+
 .submit-message-form {
   display: flex;
   justify-content: space-between;
@@ -789,4 +788,13 @@ label {
   border-radius: 7px;
   font-weight: bold;
   font-size: large;
+}
+
+.submit-message-button-container {
+  display: flex;
+  align-items: flex-end;
+}
+.submit-message-button {
+  align-self: flex-end;
+  /* flex-grow: 1; */
 }
