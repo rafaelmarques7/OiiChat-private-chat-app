@@ -73,3 +73,10 @@ export const sha256Hash = async (input) => {
     .join("");
   return hashedString;
 };
+
+export const loadUserDetails = () => {
+  const userDataStr = localStorage.getItem("ChatAppUserData") || "{}";
+  const userData = JSON.parse(userDataStr);
+  const isLoggedIn = userData && userData.username;
+  return { isLoggedIn, userData };
+};

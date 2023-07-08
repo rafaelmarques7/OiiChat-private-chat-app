@@ -3,7 +3,12 @@ import { socket } from "../lib/socket";
 import { FormInput } from "../components/FormInput";
 import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
-import { decryptEvent, decryptEvents, updateRoomInfo } from "../lib/utils";
+import {
+  decryptEvent,
+  decryptEvents,
+  loadUserDetails,
+  updateRoomInfo,
+} from "../lib/utils";
 import MessageList from "../components/messages/MessageList";
 import { Navigation } from "../components/navigation";
 import { URL_MESSAGES_ROOM } from "../config";
@@ -12,13 +17,12 @@ import { Select } from "@chakra-ui/react";
 
 export const PageChatRoom = () => {
   let { roomId } = useParams();
+  const { isLoggedIn, userData } = loadUserDetails();
 
   const [roomName, setRoomName] = useState(`Room ${roomId}`);
   const [visibility, setVisibility] = useState("private");
 
-  const [username, setUsername] = useState(
-    localStorage.getItem("username") || ""
-  );
+  const [username, setUsername] = useState(userData?.username || "");
   const [password, setPassword] = useState(
     localStorage.getItem("password") || ""
   );
@@ -42,7 +46,9 @@ export const PageChatRoom = () => {
     console.log("running page load effect.");
 
     // 1 - get username and password from local storage
-    const savedUser = localStorage.getItem("username");
+    const { isLoggedIn, userData } = loadUserDetails();
+    const savedUser = userData?.username;
+    // const savedUser = localStorage.getItem("username");
     const savedPass = localStorage.getItem("password");
     console.log("getting user preferences from local storage", {
       savedUser,

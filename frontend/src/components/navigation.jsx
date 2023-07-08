@@ -1,7 +1,7 @@
+import { loadUserDetails } from "../lib/utils";
+
 export const Navigation = (props) => {
-  const userDataStr = localStorage.getItem("ChatAppUserData") || "{}";
-  const userData = JSON.parse(userDataStr);
-  const isLoggedIn = userData && userData.username;
+  const { isLoggedIn, userData } = loadUserDetails();
 
   return (
     <nav
@@ -36,7 +36,7 @@ export const Navigation = (props) => {
           <ul className="nav navbar-nav navbar-right">
             {isLoggedIn ? (
               <li>
-                <a>{userData.username}</a>
+                <a>{userData?.username}</a>
               </li>
             ) : (
               <li>
