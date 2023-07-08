@@ -762,7 +762,6 @@ label {
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
-  /* padding-top: 7vh; */
   padding-bottom: 7vh;
 }
 
@@ -779,10 +778,9 @@ label {
 .submit-message-form {
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
   width: 100%;
-  max-width: 700px; /* Limit the width on large screens */
-  margin: 0 auto; /* Center the form */
+  max-width: 700px;
+  margin: 0 auto;
   padding: 10px;
   border: 2px solid #ccc;
   border-radius: 7px;
@@ -794,7 +792,7 @@ label {
   display: flex;
   align-items: flex-end;
 }
+
 .submit-message-button {
   align-self: flex-end;
-  /* flex-grow: 1; */
 }

@@ -5,9 +5,7 @@ App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfr
 
 desired features:
 
-* when a new room is created and there are no messages, display "messages will appear here"
 
-* better styling for "type message" CTA
 * show users connected to a room
 * only allow user to post message when username has been selected
 * when the messages are, display a lock icon instead of a message hash
@@ -71,3 +69,9 @@ https://chakra-ui.com/docs/components/select
 ## CICD
 
 I setup the CICD using github actions, but I can not get the `.env` files to work correctly during the build steps.
+
+## Bugs
+
+* In mobile, page is slightly too large (on the phone)
+* mobile, anacvar is sllightly cut off
+* typing password scrolls down

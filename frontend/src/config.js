@@ -1,4 +1,5 @@
-const USE_CONFIG = "prod"; // "dev";
+const USE_CONFIG = process.env.REACT_APP_USE_CONFIG || "prod";
+console.log("frontend using config: ", USE_CONFIG);
 
 export const URL_BACKEND =
   USE_CONFIG === "dev"
