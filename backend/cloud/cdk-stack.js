@@ -46,12 +46,23 @@ class ChatAppCdkStack extends cdk.Stack {
 
     const listener = alb.addListener("Listener", {
       port: 443,
-      sslCertificateArns: [
-        "arn:aws:acm:us-east-1:381336380362:certificate/62722852-ef6b-4ed2-93ed-bf4a1296393f",
-      ],
       protocol: elbv2.ApplicationProtocol.HTTPS,
       defaultTargetGroups: [targetGroup],
     });
+
+    const listenerCertificate = elbv2.ListenerCertificate.fromArn(
+      "arn:aws:acm:us-east-1:381336380362:certificate/62722852-ef6b-4ed2-93ed-bf4a1296393f"
+    );
+
+    const applicationListenerCertificate =
+      new elbv2.ApplicationListenerCertificate(
+        this,
+        "MyApplicationListenerCertificate",
+        {
+          listener: listener,
+          certificates: [listenerCertificate],
+        }
+      );
 
     // Create Fargate Service with a load balancer
     const fargateService =
