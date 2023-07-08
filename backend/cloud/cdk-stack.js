@@ -5,6 +5,8 @@ const ecs = cdk.aws_ecs;
 const logs = cdk.aws_logs;
 const ecs_patterns = cdk.aws_ecs_patterns;
 const ecr_assets = cdk.aws_ecr_assets;
+const elb = cdk.aws_elasticloadbalancing;
+const elbv2 = require("aws-cdk-lib/aws-elasticloadbalancingv2");
 
 class ChatAppCdkStack extends cdk.Stack {
   constructor(scope, id, props) {
@@ -29,6 +31,28 @@ class ChatAppCdkStack extends cdk.Stack {
       vpc: vpc,
     });
 
+    // Create an ALB
+    const alb = new elbv2.ApplicationLoadBalancer(this, "ALB", {
+      vpc,
+      internetFacing: true,
+    });
+
+    const targetGroup = new elbv2.ApplicationTargetGroup(this, "TargetGroup", {
+      vpc,
+      targetType: elbv2.TargetType.IP,
+      port: 80, // Adjust the port as needed
+      protocol: elbv2.ApplicationProtocol.HTTP,
+    });
+
+    const listener = alb.addListener("Listener", {
+      port: 443,
+      sslCertificateArns: [
+        "arn:aws:acm:us-east-1:381336380362:certificate/62722852-ef6b-4ed2-93ed-bf4a1296393f",
+      ],
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      defaultTargetGroups: [targetGroup],
+    });
+
     // Create Fargate Service with a load balancer
     const fargateService =
       new ecs_patterns.ApplicationLoadBalancedFargateService(
@@ -36,6 +60,7 @@ class ChatAppCdkStack extends cdk.Stack {
         "FargateService",
         {
           cluster: cluster, // Required
+          targetGroup: targetGroup,
           cpu: 256, // Default is 256
           desiredCount: 1, // Default is 1
           taskImageOptions: {
