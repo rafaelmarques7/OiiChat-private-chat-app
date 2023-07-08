@@ -18,6 +18,7 @@ import { Select } from "@chakra-ui/react";
 export const PageChatRoom = () => {
   let { roomId } = useParams();
   const { isLoggedIn, userData } = loadUserDetails();
+  console.log("user detials, ", userData);
 
   const [roomName, setRoomName] = useState(`Room ${roomId}`);
   const [visibility, setVisibility] = useState("private");
@@ -74,6 +75,12 @@ export const PageChatRoom = () => {
 
     fetchData();
 
+    const handleBeforeUnload = () => {
+      socket.emit("eventRoomLeave", roomId, userData);
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     const onEventStartTyping = (username) => {
       const newUsersTypings = [...usersTyping, username];
       setUsersTyping(newUsersTypings);
@@ -90,6 +97,7 @@ export const PageChatRoom = () => {
     return () => {
       socket.off("eventStartTyping", onEventStartTyping);
       socket.off("eventStopTyping", onEventStopTyping);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
@@ -133,7 +141,7 @@ export const PageChatRoom = () => {
       setUsersTyping(newUsersTypings);
     };
 
-    socket.emit("joinRoom", roomId);
+    socket.emit("joinRoom", roomId, userData);
 
     socket.on("eventChatMessage", onChatMessageEvent);
     socket.on("eventStartTyping", onEventStartTyping);

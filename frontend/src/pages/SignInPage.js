@@ -46,7 +46,8 @@ export const SignInPage = () => {
       })
       .then((data) => {
         // Save metadata for the rest of the app to use
-        localStorage.setItem("ChatAppUserData", JSON.stringify({ username }));
+        console.log("adding userdata to local storage", data);
+        localStorage.setItem("ChatAppUserData", JSON.stringify(data));
 
         // this will trigger a redirect after 2 seconds
         setSuccess(true);

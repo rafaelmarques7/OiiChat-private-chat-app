@@ -14,6 +14,7 @@ export const PagePrivateRooms = () => {
         const url = `${URL_GET_PRIVATE_ROOMS}/${userData?._id}`;
         const response = await fetch(url, { mode: "cors" });
         const data = await response.json();
+        console.log("response: ", data);
         setRooms(data);
       } catch (error) {
         console.error("Error fetching public rooms:", error);

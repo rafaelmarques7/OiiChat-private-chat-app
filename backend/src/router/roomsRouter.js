@@ -20,7 +20,7 @@ router.post("/create-room", async (req, res) => {
     const db = client.db(dbName);
 
     const result = await db.collection("rooms").insertOne(newRoom);
-    console.log("New room successfully created: ", result);
+    console.log("New room successfully created: ", result?.insertedId);
 
     res.json({
       _id: result.insertedId,
@@ -31,7 +31,7 @@ router.post("/create-room", async (req, res) => {
   }
 });
 
-// Use this endpoint to update Room settings
+// Use this endpoint to update Room
 router.put("/:idRoom", async (req, res) => {
   try {
     const idRoom = req.params.idRoom;
@@ -115,11 +115,10 @@ router.get("/private-rooms/:idUser", async (req, res) => {
     const db = client.db(dbName);
     const docs = await db
       .collection("rooms")
-      .find({}) // TODO: add filter by user
+      .find({ participantIds: { $in: [idUser] } })
       .sort({ timestamp: 1 })
-      .skip(skip)
-      .limit(limit)
       .toArray();
+    console.log("found rooms", docs);
     res.json(docs.reverse());
   } catch (err) {
     res.status(500).send(err);

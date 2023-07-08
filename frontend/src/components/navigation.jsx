@@ -35,9 +35,14 @@ export const Navigation = (props) => {
         >
           <ul className="nav navbar-nav navbar-right">
             {isLoggedIn ? (
-              <li>
-                <a>{userData?.username}</a>
-              </li>
+              <>
+                <li>
+                  <a>{userData?.username}</a>
+                </li>
+                <li>
+                  <a href="/rooms/my-rooms">See my conversations</a>
+                </li>
+              </>
             ) : (
               <li>
                 <a href="/sign-in" className="page-scroll">
@@ -45,20 +50,11 @@ export const Navigation = (props) => {
                 </a>
               </li>
             )}
-            {isLoggedIn ? (
-              <li>
-                <a href="/sign-out" className="page-scroll">
-                  Sign out
-                </a>
-              </li>
-            ) : (
-              <li>
-                <a href="/sign-up" className="page-scroll">
-                  Sign up
-                </a>
-              </li>
-            )}
-
+            <li>
+              <a href="/rooms/public-rooms" className="page-scroll">
+                See public rooms
+              </a>
+            </li>
             <li>
               <a href="/#features" className="page-scroll">
                 Features
@@ -74,11 +70,19 @@ export const Navigation = (props) => {
                 Contact
               </a>
             </li>
-            <li>
-              <a href="/rooms/public-rooms" className="page-scroll">
-                See public rooms
-              </a>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <a href="/sign-out" className="page-scroll">
+                  Sign out
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a href="/sign-up" className="page-scroll">
+                  Sign up
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

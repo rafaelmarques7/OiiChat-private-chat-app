@@ -24,15 +24,12 @@ router.post("/sign-up", async (req, res) => {
 
 router.post("/sign-in", async (req, res) => {
   try {
-    console.log("trying to get user", { params: req.body });
+    console.log("trying to get user");
     await client.connect();
     const db = client.db(dbName);
-    const doc = await db
-      .collection("users")
-      .find({ ...req.body })
-      .toArray();
-    console.log("doc", doc);
-    if (!doc.length) {
+    const doc = await db.collection("users").findOne({ ...req.body });
+    console.log("user found", doc._id);
+    if (!doc) {
       res.status(404).send("User not found");
     } else {
       res.json(doc);

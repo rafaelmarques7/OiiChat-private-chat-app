@@ -8,7 +8,11 @@ const bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const cors = require("cors");
 
-const { insertMessageToDb } = require("./utils/lib");
+const {
+  insertMessageToDb,
+  updateRoomParticipants,
+  updateRoomAfterUserDisconnect,
+} = require("./utils/lib");
 const { URL_FRONTEND } = require("./config");
 
 const messagesRouter = require("./router/messagesRouter");
@@ -42,9 +46,22 @@ io.on("connection", (socket) => {
   });
 
   // join room
-  socket.on("joinRoom", (idRoom) => {
+  socket.on("joinRoom", (idRoom, userData) => {
     socket.join(idRoom);
-    console.log("user joined room: ", idRoom);
+    console.log("user joined room: ", { idRoom, userData });
+
+    if (userData && userData.username) {
+      updateRoomParticipants(idRoom, userData);
+    }
+  });
+
+  socket.on("eventRoomLeave", (idRoom, userData) => {
+    socket.join(idRoom);
+    console.log("user left room: ", { idRoom, userData });
+
+    if (userData && userData.username) {
+      updateRoomAfterUserDisconnect(idRoom, userData);
+    }
   });
 
   socket.on("eventStartTyping", ({ idRoom, username }) => {
