@@ -2,6 +2,8 @@ import ParticlesBg from "particles-bg";
 import { ButtonNewChat } from "./ButtonNewChat";
 
 export const Header = (props) => {
+  console.log("inside home, REACT_APP_FOO=", process.env.REACT_APP_FOO);
+
   return (
     <header id="header">
       <div className="intro">
