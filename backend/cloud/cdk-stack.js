@@ -72,6 +72,12 @@ class ChatAppCdkStack extends cdk.Stack {
       })
     );
 
+    // Allow traffic from the ALB security group to the ECS service
+    fargateService.service.connections.allowFrom(
+      fargateService.loadBalancer.connections,
+      ec2.Port.allTcp()
+    );
+
     // Output the DNS where you can access your service
     new cdk.CfnOutput(this, "LoadBalancerDNS", {
       value: fargateService.loadBalancer.loadBalancerDnsName,
