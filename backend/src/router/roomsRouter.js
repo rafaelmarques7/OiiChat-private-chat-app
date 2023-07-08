@@ -9,7 +9,7 @@ router.post("/create-room", async (req, res) => {
   const newRoom = {
     _id,
     roomName: `Room ${_id}`,
-    private: "private",
+    visibility: "private",
     timestamp: Date.now(),
   };
 
@@ -73,6 +73,27 @@ router.get("/", async (req, res) => {
     const docs = await db
       .collection("rooms")
       .find()
+      .sort({ timestamp: 1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    res.json(docs.reverse());
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.get("/public-rooms", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const docs = await db
+      .collection("rooms")
+      .find({ visibility: "public" })
       .sort({ timestamp: 1 })
       .skip(skip)
       .limit(limit)

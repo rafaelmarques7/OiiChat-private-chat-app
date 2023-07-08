@@ -28,7 +28,7 @@ export const PageChatRoom = () => {
   const [usersInRoom, setUsersInRoom] = useState([]);
   const [usersTyping, setUsersTyping] = useState([]);
 
-  const messagesEndRef = useRef(null); // Added this line
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     // When a message is received, scroll down to it
