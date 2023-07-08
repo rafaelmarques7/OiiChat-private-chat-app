@@ -1,5 +1,6 @@
 import ParticlesBg from "particles-bg";
 import { ButtonNewChat } from "./ButtonNewChat";
+import { ButtonPublicRooms } from "./ButtonPublicRooms";
 
 export const Header = (props) => {
   console.log("inside home, REACT_APP_FOO=", process.env.REACT_APP_FOO);
@@ -21,6 +22,8 @@ export const Header = (props) => {
                 </h1>
                 <p>{props.data ? props.data.paragraph : "Loading"}</p>
                 <ButtonNewChat />
+                <div style={{ padding: "0.5em" }}></div>
+                <ButtonPublicRooms />
               </div>
             </div>
           </div>
