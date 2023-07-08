@@ -771,12 +771,41 @@ label {
   padding: 0 10 10 10;
   padding-bottom: 5vh;
 }
+
 .chatroom-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
   padding-bottom: 7vh;
+}
+
+.public-rooms-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+}
+
+.public-rooms-title {
+  width: 90%;
+  border-bottom: 1px solid black;
+  padding-top: 1rem;
+  border-radius: 0.1em;
+  font-size: x-large;
+  text-align: center;
+}
+
+.public-rooms-list {
+  padding-top: 1rem;
+}
+
+.public-rooms-item {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.4em;
+  background-color: lavender;
 }
 
 .submit-message-container {
