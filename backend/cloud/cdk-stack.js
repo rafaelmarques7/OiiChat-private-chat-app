@@ -6,6 +6,7 @@ const logs = cdk.aws_logs;
 const ecs_patterns = cdk.aws_ecs_patterns;
 const ecr_assets = cdk.aws_ecr_assets;
 const elbv2 = require("aws-cdk-lib/aws-elasticloadbalancingv2");
+const acm = require("aws-cdk-lib/aws-certificatemanager");
 
 class ChatAppCdkStack extends cdk.Stack {
   constructor(scope, id, props) {
@@ -43,12 +44,16 @@ class ChatAppCdkStack extends cdk.Stack {
       protocol: elbv2.ApplicationProtocol.HTTP,
     });
 
+    const cert = acm.Certificate.fromCertificateArn(
+      this,
+      "Certificate",
+      "arn:aws:acm:eu-west-1:381336380362:certificate/6f944b07-a30e-439c-8da2-54890a644ec4"
+    );
+
     const listener = alb.addListener("Listener", {
       port: 443,
       protocol: elbv2.ApplicationProtocol.HTTPS,
-      certificates: [
-        "arn:aws:acm:us-east-1:381336380362:certificate/62722852-ef6b-4ed2-93ed-bf4a1296393f",
-      ],
+      certificates: [cert],
       defaultTargetGroups: [targetGroup],
     });
 
