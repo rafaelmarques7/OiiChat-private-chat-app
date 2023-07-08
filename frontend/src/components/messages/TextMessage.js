@@ -13,6 +13,7 @@ export default ({ direction, text, author, timestamp }) => (
         </div>
         <div className="author-text">
           <div
+            style={{ whiteSpace: "pre-line" }} // Render newline characters as line breaks
             className={
               direction === "incoming"
                 ? "message-incoming message-container"
