@@ -685,7 +685,7 @@ label {
 .message-incoming {
   padding: 0.5rem 1rem;
   line-height: 1.5;
-  font-size: 2.5rem;
+  font-size: 2rem;
   background-color: #f8f9fa;
   border-radius: 10px;
   max-width: 100%;
@@ -694,7 +694,7 @@ label {
 .message-outgoing {
   padding: 0.5rem 2.5rem 0.5rem 1rem;
   line-height: 1.5;
-  font-size: 2.5rem;
+  font-size: 2rem;
   background-color: #007bff;
   color: white;
   border-radius: 10px;
@@ -769,6 +769,7 @@ label {
   overflow-y: auto;
   /* this has to match the chatroom-room-settings-container*/
   padding: 0 10 10 10;
+  padding-bottom: 5vh;
 }
 .chatroom-container {
   display: flex;

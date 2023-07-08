@@ -204,12 +204,14 @@ export const PageChatRoom = () => {
           initialValue={roomName}
           icon={"/img/group.svg"}
           callback={(val) => handleUpdateRoomName(val)}
+          tooltipText="Change room name"
         />
         <FormInput
           initialValue={password}
           icon={"/img/lock.svg"}
           placeholder="Password"
           callback={(val) => setPassword(val)}
+          tooltipText="Password used to encrypt messages"
         />
       </div>
 
@@ -234,6 +236,7 @@ export const PageChatRoom = () => {
           icon={"/img/username.svg"}
           placeholder="Username"
           callback={(val) => setUsername(val)}
+          tooltipText="Change username"
         />
 
         <MessageList userId={username} messages={events} />

@@ -6,19 +6,22 @@ export const FormInputWithButton = ({
   callbackSubmit = () => {},
   callbackStartTyping = () => {},
   callbackStopTyping = () => {},
-  buttonLabel = "Submit",
   resetOnSubmit = false,
   placeholder = "\nType a message ...",
 }) => {
+  const [value, setValue] = useState("");
+  const [shouldResize, setShouldResize] = useState(false);
+
   const ref = useRef();
+
   useEffect(() => {
     autosize(ref.current);
+    setShouldResize(false);
+
     return () => {
       autosize.destroy(ref.current);
     };
-  }, []);
-
-  const [value, setValue] = useState("");
+  }, [shouldResize]);
 
   function onSubmit(event) {
     event.preventDefault();
@@ -27,6 +30,7 @@ export const FormInputWithButton = ({
 
     if (resetOnSubmit) {
       setValue("");
+      setShouldResize(true);
     }
   }
 
@@ -43,12 +47,11 @@ export const FormInputWithButton = ({
   }
 
   function handleKeyDown(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
-      setValue((prevValue) => prevValue + "\n");
+      onSubmit(event);
     }
   }
-
   return (
     <Flex className="submit-message-container">
       <form onSubmit={onSubmit} className="submit-message-form">

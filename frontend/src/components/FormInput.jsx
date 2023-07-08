@@ -1,11 +1,12 @@
-// FormInput.js
 import React, { useState } from "react";
+import { Tooltip } from "react-tooltip";
 
 export const FormInput = ({
   initialValue,
   callback,
-  placeholder = "Enter value",
   icon,
+  placeholder = "Enter value",
+  tooltipText = "tooltip",
 }) => {
   const [value, setValue] = useState(initialValue || "");
 
@@ -15,9 +16,20 @@ export const FormInput = ({
     callback(event.target.value);
   };
 
+  const tooltipId = `tooltip-${initialValue}`;
+
   return (
     <div className="form-input-container">
-      <img src={icon} alt="" className="form-input-icon" />
+      <img
+        src={icon}
+        alt=""
+        className="form-input-icon"
+        data-tooltip-id={tooltipId}
+        data-tooltip-content={tooltipText}
+        data-tooltip-place="top"
+      />
+      <Tooltip id={tooltipId} />
+
       <input
         className="form-input-field"
         onChange={onChange}
