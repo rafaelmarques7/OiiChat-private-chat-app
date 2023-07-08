@@ -50,8 +50,8 @@ jobs:
       - name: Build production build
         working-directory: ./frontend
         env:
-          REACT_APP_URL_BACKEND=${{ secrets.REACT_APP_URL_BACKEND }}
-          REACT_APP_FOO=bar_cicd
+          REACT_APP_URL_BACKEND: ${{ secrets.REACT_APP_URL_BACKEND }}
+          REACT_APP_FOO: bar_cicd
         run: |
           echo "creating .env file"
           echo "$(printenv)" > .env
