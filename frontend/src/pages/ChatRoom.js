@@ -199,17 +199,19 @@ export const PageChatRoom = () => {
     <div className="chatroom-container">
       <Navigation />
 
-      <FormInput
-        initialValue={roomName}
-        icon={"/img/group.svg"}
-        callback={(val) => handleUpdateRoomName(val)}
-      />
-      <FormInput
-        initialValue={password}
-        icon={"/img/lock.svg"}
-        placeholder="Password"
-        callback={(val) => setPassword(val)}
-      />
+      <div className="chatroom-room-settings-container">
+        <FormInput
+          initialValue={roomName}
+          icon={"/img/group.svg"}
+          callback={(val) => handleUpdateRoomName(val)}
+        />
+        <FormInput
+          initialValue={password}
+          icon={"/img/lock.svg"}
+          placeholder="Password"
+          callback={(val) => setPassword(val)}
+        />
+      </div>
 
       <div className="message-list-container">
         <div className="form-input-container">

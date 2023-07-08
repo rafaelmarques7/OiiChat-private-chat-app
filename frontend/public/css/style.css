@@ -755,8 +755,9 @@ label {
   padding-bottom: 5vh;
   flex-grow: 1;
   overflow-y: auto;
+  /* this has to match the chatroom-room-settings-container*/
+  padding: 0 10 10 10;
 }
-
 .chatroom-container {
   display: flex;
   flex-direction: column;
@@ -795,4 +796,8 @@ label {
 
 .submit-message-button {
   align-self: flex-end;
+}
+
+.chatroom-room-settings-container {
+  padding: 10 10 0 10;
 }
