@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-export const ButtonPublicRooms = ({ label = "See public rooms" }) => {
+export const ButtonLink = ({ label, targetUrl }) => {
   const navigate = useNavigate();
 
   return (
     <>
       <button
-        onClick={() => navigate("/rooms/public-rooms")}
+        onClick={() => navigate(targetUrl)}
         className="btn btn-custom btn-lg page-scroll"
       >
         {label}

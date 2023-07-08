@@ -1,9 +1,11 @@
 import ParticlesBg from "particles-bg";
 import { ButtonNewChat } from "./ButtonNewChat";
-import { ButtonPublicRooms } from "./ButtonPublicRooms";
+import { ButtonLink } from "./ButtonLink";
+import { loadUserDetails } from "../lib/utils";
 
 export const Header = (props) => {
   console.log("inside home, REACT_APP_FOO=", process.env.REACT_APP_FOO);
+  const { isLoggedIn } = loadUserDetails();
 
   return (
     <header id="header">
@@ -23,7 +25,19 @@ export const Header = (props) => {
                 <p>{props.data ? props.data.paragraph : "Loading"}</p>
                 <ButtonNewChat />
                 <div style={{ padding: "0.5em" }}></div>
-                <ButtonPublicRooms />
+                <ButtonLink
+                  label="See public rooms"
+                  targetUrl={"/rooms/public-rooms"}
+                />
+                {isLoggedIn && (
+                  <>
+                    <div style={{ padding: "0.5em" }}></div>
+                    <ButtonLink
+                      label="See my conversations"
+                      targetUrl={"/rooms/my-rooms"}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { URL_GET_PUBLIC_ROOMS } from "../config";
+import { URL_GET_PRIVATE_ROOMS, URL_GET_PUBLIC_ROOMS } from "../config";
 import { Navigation } from "../components/navigation";
 import { RoomsList } from "../components/rooms/RoomList";
 
-export const PagePublicRooms = () => {
+import { loadUserDetails } from "../lib/utils";
+export const PagePrivateRooms = () => {
   const [rooms, setRooms] = useState([]);
+  const { isLoggedIn, userData } = loadUserDetails();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(URL_GET_PUBLIC_ROOMS, { mode: "cors" });
+        const url = `${URL_GET_PRIVATE_ROOMS}/${userData?._id}`;
+        const response = await fetch(url, { mode: "cors" });
         const data = await response.json();
         setRooms(data);
       } catch (error) {
@@ -23,7 +26,7 @@ export const PagePublicRooms = () => {
   return (
     <>
       <Navigation />
-      <RoomsList rooms={rooms} label="Public Rooms" />
+      <RoomsList rooms={rooms} label="My conversations" />
     </>
   );
 };

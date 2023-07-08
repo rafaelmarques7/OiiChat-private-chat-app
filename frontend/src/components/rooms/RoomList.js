@@ -21,10 +21,10 @@ const RoomInfo = ({ room }) => {
   );
 };
 
-export const RoomsList = ({ rooms }) => {
+export const RoomsList = ({ rooms, label = "Title" }) => {
   return (
     <div className="public-rooms-container">
-      <div className="public-rooms-title">Public Rooms</div>
+      <div className="public-rooms-title">{label}</div>
 
       <div className="public-rooms-list">
         {rooms.map((room) => (

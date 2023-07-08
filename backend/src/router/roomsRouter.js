@@ -11,6 +11,8 @@ router.post("/create-room", async (req, res) => {
     roomName: `Room ${_id}`,
     visibility: "private",
     timestamp: Date.now(),
+    participantIds: [],
+    onlineParticipantIds: [],
   };
 
   try {
@@ -94,6 +96,26 @@ router.get("/public-rooms", async (req, res) => {
     const docs = await db
       .collection("rooms")
       .find({ visibility: "public" })
+      .sort({ timestamp: 1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    res.json(docs.reverse());
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.get("/private-rooms/:idUser", async (req, res) => {
+  const idUser = req.params.idUser;
+
+  try {
+    console.log("trying to match rooms with user", { idUser });
+    await client.connect();
+    const db = client.db(dbName);
+    const docs = await db
+      .collection("rooms")
+      .find({}) // TODO: add filter by user
       .sort({ timestamp: 1 })
       .skip(skip)
       .limit(limit)

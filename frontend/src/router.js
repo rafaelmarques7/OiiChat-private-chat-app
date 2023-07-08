@@ -6,6 +6,7 @@ import { PagePublicRooms } from "./pages/PublicRooms";
 import { SignUpPage } from "./pages/SignUpPage";
 import { SignOutPage } from "./pages/SignOutPage";
 import { SignInPage } from "./pages/SignInPage";
+import { PagePrivateRooms } from "./pages/PrivateRooms";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
   {
     path: "/rooms/public-rooms",
     element: <PagePublicRooms />,
+  },
+  {
+    path: "/rooms/my-rooms",
+    element: <PagePrivateRooms />,
   },
 
   {
