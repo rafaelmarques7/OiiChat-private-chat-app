@@ -10,7 +10,7 @@ const cors = require("cors");
 const messagesRouter = require("./router/messagesRouter");
 const roomsRouter = require("./router/roomsRouter");
 const { insertMessageToDb } = require("./utils/lib");
-const { URL_FRONTEND, URL_DB } = require("./config");
+const { URL_FRONTEND } = require("./config");
 
 const app = express();
 const server = http.createServer(app);
@@ -74,9 +74,4 @@ io.on("connection", (socket) => {
 
 server.listen(5001, () => {
   console.log("listening on http://localhost:5001");
-
-  console.log("app is using env: ", {
-    URL_FRONTEND: URL_FRONTEND,
-    URL_DB: URL_DB,
-  });
 });
