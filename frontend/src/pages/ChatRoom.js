@@ -55,6 +55,8 @@ export const PageChatRoom = () => {
     // 2 - fetch events from server and decrypt data
     const fetchData = async () => {
       const url = `${URL_MESSAGES_ROOM}/${roomId}`;
+
+      console.log("making GET request: ", url);
       const response = await fetch(url, {
         mode: "cors",
       });

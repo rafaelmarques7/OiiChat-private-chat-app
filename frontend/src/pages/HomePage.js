@@ -19,6 +19,11 @@ export const PageHome = () => {
     setLandingPageData(JsonData);
   }, []);
 
+  console.log(
+    "using REACT_APP_URL_BACKEND: ",
+    process.env.REACT_APP_URL_BACKEND
+  );
+
   return (
     <div>
       <Navigation fixed={true} />
