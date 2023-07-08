@@ -5,7 +5,6 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
-const { MongoClient } = require("mongodb");
 const cors = require("cors");
 
 const {
@@ -13,7 +12,7 @@ const {
   updateRoomParticipants,
   updateRoomAfterUserDisconnect,
 } = require("./utils/lib");
-const { URL_FRONTEND } = require("./config");
+const { ALLOWED_ORIGINS } = require("./config");
 
 const messagesRouter = require("./router/messagesRouter");
 const roomsRouter = require("./router/roomsRouter");
@@ -23,7 +22,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: URL_FRONTEND,
+    origin: ALLOWED_ORIGINS,
   },
 });
 
