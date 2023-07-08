@@ -54,7 +54,7 @@ jobs:
           REACT_APP_FOO=bar_cicd
         run: |
           echo "creating .env file"
-          echo $(printenv) > .env
+          echo "$(printenv)" > .env
           echo "removing .env.local"
           rm .env.local
 
