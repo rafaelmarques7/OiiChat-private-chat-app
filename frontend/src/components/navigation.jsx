@@ -1,4 +1,8 @@
 export const Navigation = (props) => {
+  const userDataStr = localStorage.getItem("ChatAppUserData") || "{}";
+  const userData = JSON.parse(userDataStr);
+  const isLoggedIn = userData && userData.username;
+
   return (
     <nav
       id="menu"
@@ -30,6 +34,31 @@ export const Navigation = (props) => {
           id="bs-example-navbar-collapse-1"
         >
           <ul className="nav navbar-nav navbar-right">
+            {isLoggedIn ? (
+              <li>
+                <a>{userData.username}</a>
+              </li>
+            ) : (
+              <li>
+                <a href="/sign-in" className="page-scroll">
+                  Sign in
+                </a>
+              </li>
+            )}
+            {isLoggedIn ? (
+              <li>
+                <a href="/sign-out" className="page-scroll">
+                  Sign out
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a href="/sign-up" className="page-scroll">
+                  Sign up
+                </a>
+              </li>
+            )}
+
             <li>
               <a href="/#features" className="page-scroll">
                 Features
@@ -47,7 +76,7 @@ export const Navigation = (props) => {
             </li>
             <li>
               <a href="/rooms/public-rooms" className="page-scroll">
-                See all public rooms
+                See public rooms
               </a>
             </li>
           </ul>

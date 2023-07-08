@@ -97,6 +97,7 @@ hr {
   border-radius: 0;
   margin: 9px 20px 0 20px;
 }
+
 #menu.navbar-default .navbar-nav > li > a:after {
   display: block;
   position: absolute;
@@ -855,4 +856,48 @@ label {
 
 .chatroom-room-settings-container {
   padding: 10 10 0 10;
+}
+
+/* SignUpPage.css */
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  height: 100vh;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.signup-form label {
+  font-weight: bold;
+}
+
+.signup-form input {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.signup-form button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.signup-form button:hover {
+  background-color: #0056b3;
+}
+
+.signup-form p {
+  margin-top: 10px;
 }

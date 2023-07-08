@@ -19,6 +19,21 @@ today, we'll:
    1. exactly the same as `my-rooms` feature, but for public rooms only
 
 
+We need to create sign up feature and user accounts.
+This is the only way to manage private user rooms.
+
+The user journey is as follows:
+* the user clicks on signup, which takes him to a new page
+* user must enter
+  * username and password
+  * before being sent to the backend, password should be salted and hashed
+* this will create basic user information in the database {idUser, username, timestamp, password, vault}
+* upon navigating to a page, the username will automatically be filled
+* each user has a vault, where the passwords for each room are stored
+  * each item in the vault is encrypted, and the user password is used as the encryption key
+  * {vault: [{idRoom, encryptedKey}]}
+
+
 desired features:
 
 
