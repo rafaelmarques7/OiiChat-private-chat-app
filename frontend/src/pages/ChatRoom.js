@@ -204,6 +204,12 @@ export const PageChatRoom = () => {
         icon={"/img/group.svg"}
         callback={(val) => handleUpdateRoomName(val)}
       />
+      <FormInput
+        initialValue={password}
+        icon={"/img/lock.svg"}
+        placeholder="Password"
+        callback={(val) => setPassword(val)}
+      />
 
       <div className="message-list-container">
         <div className="form-input-container">
@@ -226,13 +232,6 @@ export const PageChatRoom = () => {
           icon={"/img/username.svg"}
           placeholder="Username"
           callback={(val) => setUsername(val)}
-        />
-
-        <FormInput
-          initialValue={password}
-          icon={"/img/lock.svg"}
-          placeholder="Password"
-          callback={(val) => setPassword(val)}
         />
 
         <MessageList userId={username} messages={events} />

@@ -72,7 +72,7 @@ hr {
 }
 /* Navigation */
 #menu {
-  padding: 15px;
+  padding: 1rem;
   transition: all 0.8s;
 }
 #menu.navbar-default {
@@ -209,7 +209,7 @@ a:focus,
 }
 /* Header Section */
 .intro {
-  display: table;
+  /* display: table; */
   position: relative;
   width: 100%;
   padding: 0;
@@ -225,7 +225,7 @@ a:focus,
 .intro h1 {
   font-family: "Raleway", sans-serif;
   color: #fff;
-  font-size: 82px;
+  font-size: 70px;
   font-weight: 700;
   text-transform: uppercase;
   margin-top: 0;
