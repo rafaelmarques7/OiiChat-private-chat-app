@@ -51,11 +51,13 @@ jobs:
         working-directory: ./frontend
         env:
           REACT_APP_URL_BACKEND=${{ secrets.REACT_APP_URL_BACKEND }}
-          REACT_APP_FOO="bar_cicd"
+          REACT_APP_FOO=bar_cicd
         run: |
+          echo "creating .env file"
           echo $(printenv) > .env
+          echo "removing .env.local"
           rm .env.local
-          
+
           # CI=FALSE is to ignore eslint warnings
           CI=false npm run build 
 
