@@ -612,7 +612,7 @@ label {
   border-bottom: 2px solid #608dfd;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1300px) {
   #about img {
     margin: 50px 0;
   }

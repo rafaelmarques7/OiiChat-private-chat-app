@@ -17,9 +17,9 @@ today, we'll:
    3. on desktop, it should be displayed on the left side
 3. create a `public-rooms` feature
    1. exactly the same as `my-rooms` feature, but for public rooms only
+4. Remove encryption from public rooms
+  
 
-
-We need to create sign up feature and user accounts.
 This is the only way to manage private user rooms.
 
 The user journey is as follows:
