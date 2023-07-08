@@ -22,14 +22,12 @@ export default ({ direction, text, author, timestamp }) => (
           >
             {text}
           </div>
-          <div className="avatar">
-            <Avatar
-              initials={String(author).toUpperCase()}
-              style={{
-                transform: direction === "incoming" && "scaleX(-1)",
-              }}
-            />
-          </div>
+          <Avatar
+            initials={String(author).toUpperCase()}
+            style={{
+              transform: direction === "incoming" && "scaleX(-1)",
+            }}
+          />
         </div>
       </div>
     </div>

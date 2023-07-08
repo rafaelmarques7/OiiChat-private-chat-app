@@ -1,26 +1,21 @@
-export default ({ src, initials, size, className, ...rest }) => {
-  const sizeClass = "avatar-large";
+import { Tooltip } from "react-tooltip";
 
-  if (src) {
-    return (
-      <img
-        className={`avatar ${sizeClass} ${className}`}
-        src={src}
-        alt="..."
-        title={initials}
-        {...rest}
-      />
-    );
-  }
+export default ({ initials, size, className, badgeNumber, ...rest }) => {
+  const sizeClass = "avatar-large";
 
   if (initials) {
     return (
       <span
         className={`avatar avatar-initials ${sizeClass} ${className}`}
         title={initials}
+        data-tooltip-id="my-tooltip"
+        data-tooltip-content={initials}
+        data-tooltip-place="top"
         {...rest}
       >
-        {initials.charAt(0)}
+        {initials.substring(0, 3)}
+        {badgeNumber && <span className="badge-number">{badgeNumber}</span>}
+        <Tooltip id="my-tooltip" />
       </span>
     );
   }

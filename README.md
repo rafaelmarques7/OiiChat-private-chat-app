@@ -3,6 +3,22 @@
 
 App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfront.net/
 
+today, we'll:
+1. create an `active-users` feature
+   1. this will display a horizontal bar with icons with the initial of every user (similar to messages)
+   2. on tapping the icon, it should display the full username
+   3. users with no username should be "anonymous"
+   4. if there are more than one anonymous users connected, they should be grouped (the icon should contain a superset indicating the number of anonymous users connected)
+2. create a `my-rooms` feature
+   1. this should display a list of all the rooms a user is part of
+      1. clicking on the link/room should take the user to that room
+      2. it should also contain metadata about the room, like privacy of room, date of creation, last message, number of users, etc.
+   2. on mobile, it should be its own page
+   3. on desktop, it should be displayed on the left side
+3. create a `public-rooms` feature
+   1. exactly the same as `my-rooms` feature, but for public rooms only
+
+
 desired features:
 
 
