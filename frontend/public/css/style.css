@@ -836,13 +836,15 @@ label {
 }
 
 .submit-message-container {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
-  justify-content: center;
   background-color: white;
   padding: 1rem;
+  text-align: center;
 }
 
 .submit-message-form {

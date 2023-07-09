@@ -53,7 +53,8 @@ export const FormInputWithButton = ({
     }
   }
   return (
-    <Flex className="submit-message-container">
+    // <Flex className="submit-message-container">
+    <>
       <form onSubmit={onSubmit} className="submit-message-form">
         <Textarea
           ref={ref}
@@ -81,6 +82,7 @@ export const FormInputWithButton = ({
           </Button>
         </div>
       </form>
-    </Flex>
+      {/* </Flex> */}
+    </>
   );
 };

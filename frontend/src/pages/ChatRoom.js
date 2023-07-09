@@ -14,6 +14,7 @@ import { Navigation } from "../components/navigation";
 import { URL_MESSAGES_ROOM } from "../config";
 import { useParams } from "react-router-dom";
 import { Select } from "@chakra-ui/react";
+import { ContainerMessages } from "../components/messages/ContainerMessages";
 
 export const PageChatRoom = () => {
   let { roomId } = useParams();
@@ -229,7 +230,12 @@ export const PageChatRoom = () => {
         />
       </div>
 
-      <div className="message-list-container">
+      <ContainerMessages
+        password={password}
+        username={username}
+        visibility={visibility}
+      />
+      {/* <div className="message-list-container">
         <div className="form-input-container">
           <img src={"/img/visibility.svg"} alt="" className="form-input-icon" />
 
@@ -270,7 +276,7 @@ export const PageChatRoom = () => {
         callbackSubmit={onMessageSubmit}
         callbackStartTyping={onStartTyping}
         callbackStopTyping={onStopTyping}
-      />
+      /> */}
     </div>
   );
 };
