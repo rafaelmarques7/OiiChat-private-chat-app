@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { socket } from "../lib/socket";
-import { FormInput } from "../components/FormInput";
-import SimpleCrypto from "simple-crypto-js";
 import { loadUserDetails, updateRoomInfo } from "../lib/utils";
 import { Navigation } from "../components/navigation";
 import { useParams } from "react-router-dom";
 import { ContainerMessages } from "../components/messages/ContainerMessages";
+import { URL_BACKEND } from "../config";
+import { RoomInfo } from "../components/rooms/RoomInfo";
 
 export const PageChatRoom = () => {
-  let { roomId } = useParams();
-  const { isLoggedIn, userData } = loadUserDetails();
+  const { roomId } = useParams();
+  const { userData } = loadUserDetails();
 
   const [roomName, setRoomName] = useState("");
   const [visibility, setVisibility] = useState("");
+  const [ownerId, setOwnerId] = useState("");
 
   const [username, setUsername] = useState(userData?.username || "");
   const [password, setPassword] = useState(
     localStorage.getItem("password") || ""
   );
-  const [events, setEvents] = useState([]);
-  const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
 
   const [usersInRoom, setUsersInRoom] = useState([]);
 
@@ -39,6 +38,34 @@ export const PageChatRoom = () => {
 
     if (savedUser) setUsername(savedUser);
     if (savedPass) setPassword(savedPass);
+
+    // 2 - get room info from server
+    const getRoomInfo = async () => {
+      try {
+        const url = `${URL_BACKEND}/rooms/${roomId}`;
+        console.log("fetching room info from url: ", url);
+
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log("result: ", res.status, res);
+        if (res.status === 200) {
+          const { roomName, visibility, ownerId } = await res.json();
+
+          console.log("setting rooms: ", { roomName, visibility, ownerId });
+          setRoomName(roomName);
+          setVisibility(visibility);
+          setOwnerId(ownerId);
+        }
+      } catch (e) {
+        console.log("error fetching room info: ", e);
+      }
+    };
+    getRoomInfo();
 
     const handleBeforeUnload = () => {
       socket.emit("eventRoomLeave", roomId, userData);
@@ -61,10 +88,13 @@ export const PageChatRoom = () => {
     localStorage.setItem("password", password);
   }, [username, password]);
 
-  console.log("rendering chat page with events: ", {
+  console.log("rendering chat page: ", {
     username,
-    password,
-    events,
+    roomName,
+    visibility,
+    ownerId,
+    userData,
+    isOwner: String(ownerId) === String(userData?._id),
   });
 
   const handleUpdateRoomName = async (val) => {
@@ -82,21 +112,14 @@ export const PageChatRoom = () => {
     <div className="chatroom-container">
       <Navigation />
 
-      <div className="chatroom-room-settings-container">
-        <FormInput
-          initialValue={roomName}
-          icon={"/img/group.svg"}
-          callback={(val) => handleUpdateRoomName(val)}
-          tooltipText="Change room name"
-        />
-        <FormInput
-          initialValue={password}
-          icon={"/img/lock.svg"}
-          placeholder="Password"
-          callback={(val) => setPassword(val)}
-          tooltipText="Password used to encrypt messages"
-        />
-      </div>
+      <RoomInfo
+        isOwner={ownerId === userData?._id}
+        visibility={visibility}
+        roomName={roomName}
+        handleUpdateRoomName={handleUpdateRoomName}
+        password={password}
+        handleUpdatePassword={setPassword}
+      />
 
       <ContainerMessages password={password} username={username} />
     </div>

@@ -41,35 +41,3 @@ export const FormInput = ({
     </div>
   );
 };
-
-export const ReadOnlyInput = ({
-  value,
-  callback,
-  icon,
-  placeholder = "Enter value",
-  tooltipText = "tooltip",
-  disabled = false,
-}) => {
-  const tooltipId = `tooltip-${value}`;
-
-  return (
-    <div className="form-input-container">
-      <img
-        src={icon}
-        alt=""
-        className="form-input-icon"
-        data-tooltip-id={tooltipId}
-        data-tooltip-content={tooltipText}
-        data-tooltip-place="top"
-      />
-      <Tooltip id={tooltipId} />
-
-      <input
-        className="form-input-field"
-        value={value}
-        placeholder={placeholder}
-        disabled={true}
-      />
-    </div>
-  );
-};
