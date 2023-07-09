@@ -3,6 +3,65 @@
 
 App is live and running as expected, no major bugs: http://dq5rcunnxjcst.cloudfront.net/
 
+Tomorrow we're gonna create the following functionality:
+* ability to generate a QR code to:
+  * invite someone to private conversation (and set password automatically and save to vault)
+  * share profile and add as friend (?)
+  
+
+We need a vault.
+A vault is going to contain all the password used for the different conversations that a user is part of.
+Note that these passwords will be stored encrypted in our database. We do not store the original passwords.
+
+The user journeys looks as follows:
+* when the user signs up, they will select a encryption password that is used to encode their vault
+  * this password should be different from the users account password
+* upon login, the user has to enter their encryption password to access their (previous) private conversations
+* when the users joins a room and enters a password to
+  * the client app makes a POST request to update the vault
+  * the request contains the encrypted password
+
+* to summarize, the server stores the following client details:
+  * salted and hashed user password
+    * when the user logs in, we salt and hash the typed password and compare it to the salted and hashed password in the servers database 
+  * salted and hashed user encryption key
+    * when the user enters their vault encryption key, we salt and hash the typed password and compare it to the salted and hashed password in the servers database 
+  * encrypted password rooms
+    * using the users encryption key
+
+Having written the above, I now see that having 1. password and 2. encryption key is too much. No users wants that.
+So, we'll just have 1 password (stored salted and hashed), and we use that to encrypt the user vault 
+
+We also have to change one thing:
+* only the owner of the room can set the rooms password (and also the name of the room)
+  * for now, we'll also make it so that rooms password can not be changed (this is because changing the password would change the encryption which would also make the previous messages unreadable)
+
+User journey for creating rooms is as follows:
+* a user clicks on a button to create a new room
+* the user is redirected to a new page
+* the user is asked to
+  * select a name for the room
+  * select visibility: public or private
+    * (if private), select a password for the room
+    * (if public), no password is asked for, and the messages will not be encrypted
+
+User journey for joining a room:
+  *  if rooms password exists in user vault 
+     * password is automatically filled
+     * user can immediately send messages
+  *  if room password is Not available in the vault
+     * user is asked to enter password for the room
+     * password is encrypted and saved to the users vault
+
+ToDo:
+* create a new tag in github
+* nice extras:
+  * favicon
+  * app title
+* Share with friends has the wrong text
+
+
+
 today, we'll:
 1. create an `active-users` feature
    1. this will display a horizontal bar with icons with the initial of every user (similar to messages)

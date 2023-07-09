@@ -5,11 +5,15 @@ const router = express.Router();
 
 // Create
 router.post("/create-room", async (req, res) => {
-  const _id = new ObjectId();
+  if (!req.body.roomName || !req.body.visibility) {
+    res.status(400).send("Missing parameters roomName or visibility");
+    return;
+  }
+
   const newRoom = {
-    _id,
-    roomName: `Room ${_id}`,
-    visibility: "private",
+    roomName: req.body.roomName,
+    visibility: req.body.visibility,
+    ownerId: req.body.ownerId || null,
     timestamp: Date.now(),
     participantIds: [],
     onlineParticipantIds: [],
@@ -24,6 +28,7 @@ router.post("/create-room", async (req, res) => {
 
     res.json({
       _id: result.insertedId,
+      ...newRoom,
     });
   } catch (err) {
     console.error("Error creating room", err);

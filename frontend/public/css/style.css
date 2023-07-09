@@ -781,6 +781,19 @@ label {
   padding-bottom: 7vh;
 }
 
+.new-room-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: 7vh;
+}
+
+.new-room-action-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
 .public-rooms-container {
   height: 100vh;
   display: flex;

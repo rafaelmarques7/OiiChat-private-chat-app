@@ -18,7 +18,7 @@ import { Select } from "@chakra-ui/react";
 export const PageChatRoom = () => {
   let { roomId } = useParams();
   const { isLoggedIn, userData } = loadUserDetails();
-  console.log("user detials, ", userData);
+  console.log("user details, ", userData);
 
   const [roomName, setRoomName] = useState(`Room ${roomId}`);
   const [visibility, setVisibility] = useState("private");

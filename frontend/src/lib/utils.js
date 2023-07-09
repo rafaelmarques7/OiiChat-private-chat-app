@@ -20,18 +20,22 @@ export const decryptEvent = (simpleCrypto, event) => ({
   text: decryptSafe(simpleCrypto, event?.text),
 });
 
-export const createNewRoom = async () => {
+export const createNewRoom = async (payload) => {
   try {
+    console.log("trying to create a new room: ", URL_NEW_ROOM, payload);
     const res = await fetch(URL_NEW_ROOM, {
       method: "POST",
       mode: "cors",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const data = await res.json();
-    const roomId = data._id;
-    return roomId;
+    return { data, err: null };
   } catch (e) {
     console.error(e);
-    return;
+    return { data: null, err: e };
   }
 };
 

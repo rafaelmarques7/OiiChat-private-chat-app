@@ -7,6 +7,7 @@ import { SignUpPage } from "./pages/SignUpPage";
 import { SignOutPage } from "./pages/SignOutPage";
 import { SignInPage } from "./pages/SignInPage";
 import { PagePrivateRooms } from "./pages/PrivateRooms";
+import { NewRoom } from "./pages/NewRoom";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
   {
     path: "/rooms/my-rooms",
     element: <PagePrivateRooms />,
+  },
+  {
+    path: "/rooms/new-room",
+    element: <NewRoom />,
   },
 
   {

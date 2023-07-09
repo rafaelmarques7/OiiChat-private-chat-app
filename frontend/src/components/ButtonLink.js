@@ -14,3 +14,16 @@ export const ButtonLink = ({ label, targetUrl }) => {
     </>
   );
 };
+
+export const ButtonAction = ({ label, callback }) => {
+  return (
+    <>
+      <button
+        onClick={() => callback()}
+        className="btn btn-custom btn-lg page-scroll"
+      >
+        {label}
+      </button>
+    </>
+  );
+};
