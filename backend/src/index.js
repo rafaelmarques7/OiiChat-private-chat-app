@@ -44,22 +44,29 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  // join room
-  socket.on("joinRoom", (idRoom, userData) => {
+  socket.on("joinRoom", async (idRoom, userData) => {
     socket.join(idRoom);
     console.log("user joined room: ", { idRoom, userData });
 
-    if (userData && userData.username) {
-      updateRoomParticipants(idRoom, userData);
+    if (userData && userData._id) {
+      const { res } = await updateRoomParticipants(idRoom, userData);
+      if (res) {
+        console.log("emitting eventNewRoomInfo");
+        socket.to(idRoom).emit("eventNewRoomInfo", res);
+      }
     }
   });
 
-  socket.on("eventRoomLeave", (idRoom, userData) => {
+  socket.on("eventRoomLeave", async (idRoom, userData) => {
     socket.join(idRoom);
     console.log("user left room: ", { idRoom, userData });
 
-    if (userData && userData.username) {
-      updateRoomAfterUserDisconnect(idRoom, userData);
+    if (userData && userData._id) {
+      const { res } = await updateRoomAfterUserDisconnect(idRoom, userData);
+      if (res) {
+        console.log("emitting eventNewRoomInfo");
+        socket.to(idRoom).emit("eventNewRoomInfo", res);
+      }
     }
   });
 

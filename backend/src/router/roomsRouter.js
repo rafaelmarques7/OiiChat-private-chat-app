@@ -59,7 +59,7 @@ router.put("/:idRoom", async (req, res) => {
       .collection("rooms")
       .updateOne({ _id: new ObjectId(idRoom) }, { $set: docNewRoom });
 
-    console.log("Room successfully updated: ", result);
+    console.log("Room successfully updated");
 
     res.json(docNewRoom);
   } catch (err) {

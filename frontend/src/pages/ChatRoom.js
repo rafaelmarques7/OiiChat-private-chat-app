@@ -14,6 +14,8 @@ export const PageChatRoom = () => {
   const [roomName, setRoomName] = useState("");
   const [visibility, setVisibility] = useState("");
   const [ownerId, setOwnerId] = useState("");
+  const [participantIds, setParticipantIds] = useState([]);
+  const [onlineParticipantIds, setOnlineParticipantIds] = useState([]);
 
   const [username, setUsername] = useState(userData?.username || "");
   const [password, setPassword] = useState(
@@ -26,10 +28,10 @@ export const PageChatRoom = () => {
   useEffect(() => {
     console.log("running page load effect.");
 
-    // 1 - get username and password from local storage
-    const { isLoggedIn, userData } = loadUserDetails();
+    const { userData } = loadUserDetails();
+    socket.emit("joinRoom", roomId, userData);
+
     const savedUser = userData?.username;
-    // const savedUser = localStorage.getItem("username");
     const savedPass = localStorage.getItem("password");
     console.log("getting user preferences from local storage", {
       savedUser,
@@ -72,8 +74,20 @@ export const PageChatRoom = () => {
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
 
+    const onEventNewRoomInfo = (data) => {
+      console.log("received eventNewRoomInfo: ", data);
+      const { participantIds, onlineParticipantIds } = data;
+
+      if (participantIds && onlineParticipantIds) {
+        setParticipantIds(participantIds);
+        setOnlineParticipantIds(onlineParticipantIds);
+      }
+    };
+    socket.on("eventNewRoomInfo", onEventNewRoomInfo);
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
+      socket.off("eventNewRoomInfo", onEventNewRoomInfo);
     };
   }, []);
 
@@ -95,6 +109,8 @@ export const PageChatRoom = () => {
     ownerId,
     userData,
     isOwner: String(ownerId) === String(userData?._id),
+    participantIds,
+    onlineParticipantIds,
   });
 
   const handleUpdateRoomName = async (val) => {
