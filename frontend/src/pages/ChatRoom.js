@@ -1,28 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { socket } from "../lib/socket";
 import { FormInput } from "../components/FormInput";
-import { FormInputWithButton } from "../components/FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
-import {
-  decryptEvent,
-  decryptEvents,
-  loadUserDetails,
-  updateRoomInfo,
-} from "../lib/utils";
-import MessageList from "../components/messages/MessageList";
+import { loadUserDetails, updateRoomInfo } from "../lib/utils";
 import { Navigation } from "../components/navigation";
-import { URL_MESSAGES_ROOM } from "../config";
 import { useParams } from "react-router-dom";
-import { Select } from "@chakra-ui/react";
 import { ContainerMessages } from "../components/messages/ContainerMessages";
 
 export const PageChatRoom = () => {
   let { roomId } = useParams();
   const { isLoggedIn, userData } = loadUserDetails();
-  console.log("user details, ", userData);
 
-  const [roomName, setRoomName] = useState(`Room ${roomId}`);
-  const [visibility, setVisibility] = useState("private");
+  const [roomName, setRoomName] = useState("");
+  const [visibility, setVisibility] = useState("");
 
   const [username, setUsername] = useState(userData?.username || "");
   const [password, setPassword] = useState(
@@ -32,16 +22,6 @@ export const PageChatRoom = () => {
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
 
   const [usersInRoom, setUsersInRoom] = useState([]);
-  const [usersTyping, setUsersTyping] = useState([]);
-
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    // When a message is received, scroll down to it
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [events]);
 
   // run once on page load
   useEffect(() => {
@@ -60,44 +40,12 @@ export const PageChatRoom = () => {
     if (savedUser) setUsername(savedUser);
     if (savedPass) setPassword(savedPass);
 
-    // 2 - fetch events from server and decrypt data
-    const fetchData = async () => {
-      const url = `${URL_MESSAGES_ROOM}/${roomId}`;
-
-      console.log("making GET request: ", url);
-      const response = await fetch(url, {
-        mode: "cors",
-      });
-      const data = await response.json();
-      if (data && data.length) {
-        setEvents(decryptEvents(simpleCrypto, data));
-      }
-    };
-
-    fetchData();
-
     const handleBeforeUnload = () => {
       socket.emit("eventRoomLeave", roomId, userData);
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    const onEventStartTyping = (username) => {
-      const newUsersTypings = [...usersTyping, username];
-      setUsersTyping(newUsersTypings);
-    };
-
-    const onEventStopTyping = (username) => {
-      const newUsersTypings = usersTyping.filter((u) => u !== username);
-      setUsersTyping(newUsersTypings);
-    };
-
-    socket.on("eventStartTyping", onEventStartTyping);
-    socket.on("eventStopTyping", onEventStopTyping);
-
     return () => {
-      socket.off("eventStartTyping", onEventStartTyping);
-      socket.off("eventStopTyping", onEventStopTyping);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
@@ -113,75 +61,6 @@ export const PageChatRoom = () => {
     localStorage.setItem("password", password);
   }, [username, password]);
 
-  // run when password changes
-  useEffect(() => {
-    // password has changed, so we need a new crypto client
-    const newSimpleCrypto = new SimpleCrypto(password);
-    setSimpleCrypto(newSimpleCrypto);
-
-    setEvents(decryptEvents(newSimpleCrypto, events));
-
-    function onChatMessageEvent(event) {
-      console.log("got chat message event", {
-        event,
-        decryptEvent: decryptEvent(newSimpleCrypto, event),
-      });
-      setEvents((previous) => [
-        ...previous,
-        decryptEvent(newSimpleCrypto, event),
-      ]);
-    }
-
-    const onEventStartTyping = (username) => {
-      const newUsersTypings = [...usersTyping, username];
-      setUsersTyping(newUsersTypings);
-    };
-
-    const onEventStopTyping = (username) => {
-      const newUsersTypings = usersTyping.filter((u) => u !== username);
-      setUsersTyping(newUsersTypings);
-    };
-
-    socket.emit("joinRoom", roomId, userData);
-
-    socket.on("eventChatMessage", onChatMessageEvent);
-    socket.on("eventStartTyping", onEventStartTyping);
-    socket.on("eventStopTyping", onEventStopTyping);
-
-    return () => {
-      socket.off("eventChatMessage", onChatMessageEvent);
-      socket.off("eventStartTyping", onEventStartTyping);
-      socket.off("eventStopTyping", onEventStopTyping);
-    };
-  }, [password]);
-
-  const onMessageSubmit = (value) => {
-    const encryptedValue = simpleCrypto.encrypt(value);
-
-    const payload = {
-      username,
-      text: encryptedValue,
-      timestamp: Date.now(),
-    };
-
-    console.log("onMessageSubmit: ", { value, payload, password });
-
-    socket.timeout(10).emit("eventChatMessage", payload, roomId);
-  };
-
-  const onStartTyping = () => {
-    console.log("inside onStartTyping");
-    socket
-      .timeout(10)
-      .emit("eventStartTyping", { idRoom: roomId, username: username });
-  };
-
-  const onStopTyping = () => {
-    socket
-      .timeout(10)
-      .emit("eventStopTyping", { idRoom: roomId, username: username });
-  };
-
   console.log("rendering chat page with events: ", {
     username,
     password,
@@ -193,17 +72,6 @@ export const PageChatRoom = () => {
     setRoomName(val);
 
     const res = await updateRoomInfo(roomId, { roomName: val });
-    if (!res) {
-      // @todo: handle error
-      console.log("error updating room info");
-    }
-  };
-
-  const handleUpdateVisibility = async (val) => {
-    console.log("update visibility, ", val.target.value);
-    setVisibility(val.target.value);
-
-    const res = await updateRoomInfo(roomId, { visibility: val.target.value });
     if (!res) {
       // @todo: handle error
       console.log("error updating room info");
@@ -230,53 +98,7 @@ export const PageChatRoom = () => {
         />
       </div>
 
-      <ContainerMessages
-        password={password}
-        username={username}
-        visibility={visibility}
-      />
-      {/* <div className="message-list-container">
-        <div className="form-input-container">
-          <img src={"/img/visibility.svg"} alt="" className="form-input-icon" />
-
-          <Select
-            onChange={handleUpdateVisibility}
-            value={visibility}
-            size={"md"}
-            border={"none"}
-            fontSize={14}
-          >
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-          </Select>
-        </div>
-
-        <FormInput
-          initialValue={username}
-          icon={"/img/username.svg"}
-          placeholder="Username"
-          callback={(val) => setUsername(val)}
-          tooltipText="Change username"
-        />
-
-        <MessageList userId={username} messages={events} />
-
-        {usersTyping.length > 0 && (
-          <div className="flex-items">
-            <p style={{ fontWeight: "bold" }}>
-              {usersTyping.join(", ")} is typing...{" "}
-            </p>
-          </div>
-        )}
-        <div ref={messagesEndRef} style={{ height: 0 }} />
-      </div>
-
-      <FormInputWithButton
-        resetOnSubmit={true}
-        callbackSubmit={onMessageSubmit}
-        callbackStartTyping={onStartTyping}
-        callbackStopTyping={onStopTyping}
-      /> */}
+      <ContainerMessages password={password} username={username} />
     </div>
   );
 };

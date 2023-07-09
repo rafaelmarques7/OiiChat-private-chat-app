@@ -1,31 +1,19 @@
 import { socket } from "../../lib/socket";
 import React, { useState, useEffect, useRef } from "react";
-import { FormInput } from "../FormInput";
 import { FormInputWithButton } from "../FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
-import {
-  decryptEvent,
-  decryptEvents,
-  loadUserDetails,
-  updateRoomInfo,
-} from "../../lib/utils";
+import { decryptEvent, decryptEvents, loadUserDetails } from "../../lib/utils";
 import MessageList from "..//messages/MessageList";
-import { Navigation } from "../navigation";
 import { URL_MESSAGES_ROOM } from "../../config";
 import { useParams } from "react-router-dom";
-import { Select } from "@chakra-ui/react";
 import { IsTyping } from "./IsTyping";
 
-export const ContainerMessages = ({ password, username, visibility }) => {
-  let { roomId } = useParams();
-  const { isLoggedIn, userData } = loadUserDetails();
-  console.log("user details, ", userData);
-
+export const ContainerMessages = ({ password, username }) => {
+  const { roomId } = useParams();
+  const { userData } = loadUserDetails();
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
-
   const [usersTyping, setUsersTyping] = useState([]);
-
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
