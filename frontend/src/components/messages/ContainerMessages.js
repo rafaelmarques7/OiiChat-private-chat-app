@@ -27,8 +27,6 @@ export const ContainerMessages = ({ password, username }) => {
   useEffect(() => {
     console.log("running page load effect.");
 
-    socket.emit("joinRoom", roomId, userData);
-
     // fetch events from server and decrypt data
     const fetchData = async () => {
       const url = `${URL_MESSAGES_ROOM}/${roomId}`;

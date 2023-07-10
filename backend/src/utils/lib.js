@@ -22,74 +22,122 @@ async function insertMessageToDb(message, idRoom) {
   }
 }
 
-async function updateRoomParticipants(idRoom, userData) {
+async function updateParticipantsColl(collName, idRoom, userData) {
   try {
-    console.log("trying to add participant to room: ", {
+    const idUser = userData._id;
+    console.log("trying to update coll: ", {
+      collName,
       idRoom,
-      idUser: userData?._id,
+      idUser,
     });
 
+    // check if a doc already exists, and if so do nothing
     const db = client.db(dbName);
-    const doc = await db
-      .collection("rooms")
-      .findOne({ _id: new ObjectId(idRoom) });
+    const doc = await db.collection(collName).findOne({
+      $and: [{ idRoom: idRoom }, { idUser: new ObjectId(idUser) }],
+    });
 
-    const idUser = userData._id;
+    if (doc) {
+      console.log("user already exists in participants collection");
+      return { res: doc };
+    } else {
+      console.log("did not find user", doc);
+    }
 
-    const updatedParticipantIds = doc.participantIds.includes(idUser)
-      ? doc.participantIds
-      : [...doc.participantIds, idUser];
+    // get user details
+    const userDoc = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(idUser) });
 
-    const updatedOnlineIds = doc.onlineParticipantIds.includes(idUser)
-      ? doc.onlineParticipantIds
-      : [...doc.onlineParticipantIds, idUser];
-
-    const docNewRoom = {
-      ...doc,
-      participantIds: updatedParticipantIds,
-      onlineParticipantIds: updatedOnlineIds,
+    // create new doc in roomParticipants collection
+    const newDoc = {
+      idRoom,
+      timestamp: Date.now(),
+      idUser: userDoc._id,
+      username: userDoc.username,
     };
 
-    await db
-      .collection("rooms")
-      .updateOne({ _id: new ObjectId(idRoom) }, { $set: docNewRoom });
+    const res = await db.collection(collName).insertOne(newDoc);
 
-    console.log("Room successfully updated");
-    return { res: docNewRoom };
+    console.log(`User added to ${collName} collection`);
+    return { res };
   } catch (err) {
-    console.log("error adding user to room: ", err);
+    console.log(`error adding user to ${collName} collection: ${err}`);
     return { err: err };
   }
 }
 
-async function updateRoomAfterUserDisconnect(idRoom, userData) {
+async function updateRoomOnlineUsers(idRoom, userData) {
+  const { res, err } = await updateParticipantsColl(
+    "roomOnlineUsers",
+    idRoom,
+    userData
+  );
+
+  return { res, err };
+}
+
+async function updateRoomParticipants(idRoom, userData) {
+  const { res, err } = await updateParticipantsColl(
+    "roomParticipants",
+    idRoom,
+    userData
+  );
+
+  return { res, err };
+}
+
+async function removeRoomOnlineUsers(idRoom, userData) {
   try {
     console.log("marking user as offline", idRoom, userData?._id);
 
+    const dbPayload = { idRoom: idRoom, idUser: userData._id };
+
     const db = client.db(dbName);
-    const doc = await db
-      .collection("rooms")
-      .findOne({ _id: new ObjectId(idRoom) });
+    const doc = await db.collection("roomOnlineUsers").findOne(dbPayload);
 
-    const idUser = userData._id;
+    if (!doc) {
+      console.log("user not found in roomOnlineUsers collection");
+    }
 
-    const updatedOnlineIds = doc.onlineParticipantIds.filter(
-      (id) => id !== idUser
-    );
+    await db.collection("roomOnlineUsers").deleteOne(dbPayload);
 
-    const docNewRoom = {
-      ...doc,
-      onlineParticipantIds: updatedOnlineIds,
-    };
-
-    const result = await db
-      .collection("rooms")
-      .updateOne({ _id: new ObjectId(idRoom) }, { $set: docNewRoom });
-
-    console.log("success marking user as offline");
-    return { res: docNewRoom };
+    console.log("user removed from roomOnlineUsers collection");
+    return { res: true };
   } catch (err) {
     console.log("error removing online user from room: ", err);
+    return { err };
+  }
+}
+
+async function getRoomInfo(idRoom) {
+  try {
+    console.log("trying to get room info", { idRoom });
+    await client.connect();
+    const db = client.db(dbName);
+
+    const roomCollection = db.collection("rooms");
+    const participantCollection = db.collection("roomParticipants");
+    const onlineUsersCollection = db.collection("roomOnlineUsers");
+
+    const roomQuery = roomCollection.findOne({ _id: new ObjectId(idRoom) });
+    const participantsQuery = participantCollection.find({ idRoom }).toArray();
+    const onlineUsersQuery = onlineUsersCollection.find({ idRoom }).toArray();
+
+    const [roomDoc, participantsDocs, onlineUsersDocs] = await Promise.all([
+      roomQuery,
+      participantsQuery,
+      onlineUsersQuery,
+    ]);
+
+    return {
+      res: {
+        ...roomDoc,
+        participants: participantsDocs,
+        onlineUsers: onlineUsersDocs,
+      },
+    };
+  } catch (err) {
     return { err };
   }
 }
@@ -97,5 +145,7 @@ async function updateRoomAfterUserDisconnect(idRoom, userData) {
 module.exports = {
   insertMessageToDb,
   updateRoomParticipants,
-  updateRoomAfterUserDisconnect,
+  removeRoomOnlineUsers,
+  updateRoomOnlineUsers,
+  getRoomInfo,
 };

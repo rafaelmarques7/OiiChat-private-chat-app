@@ -11,6 +11,9 @@ const {
   insertMessageToDb,
   updateRoomParticipants,
   updateRoomAfterUserDisconnect,
+  updateRoomOnlineUsers,
+  getRoomInfo,
+  removeRoomOnlineUsers,
 } = require("./utils/lib");
 const { ALLOWED_ORIGINS } = require("./config");
 
@@ -49,7 +52,13 @@ io.on("connection", (socket) => {
     console.log("user joined room: ", { idRoom, userData });
 
     if (userData && userData._id) {
-      const { res } = await updateRoomParticipants(idRoom, userData);
+      // update room participants
+      const promiseOne = updateRoomParticipants(idRoom, userData);
+      const promiseTwo = updateRoomOnlineUsers(idRoom, userData);
+      await Promise.all([promiseOne, promiseTwo]);
+
+      // return latest room document
+      const { res } = await getRoomInfo(idRoom);
       if (res) {
         console.log("emitting eventNewRoomInfo");
         socket.to(idRoom).emit("eventNewRoomInfo", res);
@@ -62,7 +71,10 @@ io.on("connection", (socket) => {
     console.log("user left room: ", { idRoom, userData });
 
     if (userData && userData._id) {
-      const { res } = await updateRoomAfterUserDisconnect(idRoom, userData);
+      await removeRoomOnlineUsers(idRoom, userData);
+
+      // return latest room document
+      const { res } = await getRoomInfo(idRoom);
       if (res) {
         console.log("emitting eventNewRoomInfo");
         socket.to(idRoom).emit("eventNewRoomInfo", res);

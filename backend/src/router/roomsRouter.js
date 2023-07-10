@@ -1,6 +1,7 @@
 const express = require("express");
 const { ObjectId } = require("mongodb");
 const { client, dbName } = require("../config");
+const { getRoomInfo } = require("../utils/lib");
 const router = express.Router();
 
 // Create
@@ -15,8 +16,6 @@ router.post("/create-room", async (req, res) => {
     visibility: req.body.visibility,
     ownerId: req.body.ownerId || null,
     timestamp: Date.now(),
-    participantIds: [],
-    onlineParticipantIds: [],
   };
 
   try {
@@ -132,16 +131,14 @@ router.get("/private-rooms/:idUser", async (req, res) => {
 
 // Read one
 router.get("/:id", async (req, res) => {
-  const id = req.params.id;
+  const opRes = await getRoomInfo(req.params.id);
 
-  try {
-    console.log("trying to get room info", { id });
-    await client.connect();
-    const db = client.db(dbName);
-    const doc = await db.collection("rooms").findOne({ _id: new ObjectId(id) });
-    res.json(doc);
-  } catch (err) {
-    res.status(500).send(err);
+  if (opRes.res) {
+    console.log("in success", opRes.res);
+    res.status(200).send(opRes.res);
+  } else {
+    console.log("in error", opRes.err);
+    res.status(500).send(opRes.err);
   }
 });
 
