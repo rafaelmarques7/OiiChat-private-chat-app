@@ -128,16 +128,18 @@ export const PageChatRoom = () => {
     <div className="chatroom-container">
       <Navigation />
 
-      <RoomInfo
-        isOwner={ownerId === userData?._id}
-        visibility={visibility}
-        roomName={roomName}
-        handleUpdateRoomName={handleUpdateRoomName}
-        password={password}
-        handleUpdatePassword={setPassword}
-      />
+      <div className="chatroom-contents-container">
+        <RoomInfo
+          isOwner={ownerId === userData?._id}
+          visibility={visibility}
+          roomName={roomName}
+          handleUpdateRoomName={handleUpdateRoomName}
+          password={password}
+          handleUpdatePassword={setPassword}
+        />
 
-      <ContainerMessages password={password} username={username} />
+        <ContainerMessages password={password} username={username} />
+      </div>
     </div>
   );
 };

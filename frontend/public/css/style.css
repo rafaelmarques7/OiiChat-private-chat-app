@@ -75,6 +75,18 @@ hr {
   padding: 1rem;
   transition: all 0.8s;
 }
+
+.chatroom-contents-container {
+  height: 100vh;
+  padding-top: 6vh;
+}
+
+@media (max-width: 700px) {
+  .chatroom-contents-container {
+    padding-top: 8vh;
+  }
+}
+
 #menu.navbar-default {
   background-color: #fff;
   border-color: rgba(231, 231, 231, 0);
@@ -85,7 +97,7 @@ hr {
   font-size: 24px;
   font-weight: 700;
   color: #333;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 #menu.navbar-default .navbar-nav > li > a {
   font-family: "Lato", sans-serif;

@@ -20,7 +20,7 @@ export const Navigation = () => {
             <span className="icon-bar"></span>{" "}
           </button>
           <a className="navbar-brand page-scroll" href="#page-top">
-            Private chat app
+            Oii Chat
           </a>{" "}
         </div>
 
