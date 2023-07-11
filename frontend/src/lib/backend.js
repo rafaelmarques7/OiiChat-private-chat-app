@@ -1,35 +1,16 @@
-import { URL_BACKEND, URL_MESSAGES_ROOM } from "../config";
+import {
+  URL_BACKEND,
+  URL_GET_PRIVATE_ROOMS,
+  URL_GET_PUBLIC_ROOMS,
+  URL_MESSAGES_ROOM,
+} from "../config";
 
-export const getRoom = async (roomId) => {
+export const getReqSafe = async (url) => {
   try {
-    const url = `${URL_BACKEND}/rooms/${roomId}`;
-    console.log("GET room info from url: ", url);
+    console.log("GET: ", url);
 
     const res = await fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (res.status === 200) {
-      const data = await res.json();
-
-      console.log("success, roomInfo:", data);
-      return { res: data };
-    }
-  } catch (e) {
-    console.error("error fetching room info: ", e);
-    return { err: e };
-  }
-};
-
-export const getMessagesByRoom = async (roomId) => {
-  try {
-    const url = `${URL_MESSAGES_ROOM}/${roomId}`;
-    console.log("GET messages for room from url: ", url);
-
-    const res = await fetch(url, {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
@@ -39,11 +20,31 @@ export const getMessagesByRoom = async (roomId) => {
     if (res.status === 200) {
       const data = await res.json();
 
-      console.log("success, messages:", data);
+      console.log("success,", { url, data });
       return { res: data };
     }
   } catch (e) {
-    console.error("error fetching room info: ", e);
+    console.error("error: ", { url, e });
     return { err: e };
   }
+};
+
+export const getRoom = async (roomId) => {
+  const url = `${URL_BACKEND}/rooms/${roomId}`;
+  return await getReqSafe(url);
+};
+
+export const getMessagesByRoom = async (roomId) => {
+  const url = `${URL_MESSAGES_ROOM}/${roomId}`;
+  return await getReqSafe(url);
+};
+
+export const getPublicRooms = async (roomId) => {
+  const url = URL_GET_PUBLIC_ROOMS;
+  return await getReqSafe(url);
+};
+
+export const getPrivateRooms = async (idUser) => {
+  const url = `${URL_GET_PRIVATE_ROOMS}/${idUser}`;
+  return await getReqSafe(url);
 };
