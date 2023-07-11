@@ -26,7 +26,7 @@ export const PageHome = () => {
 
   return (
     <div>
-      <Navigation fixed={true} />
+      <Navigation />
       <Header data={landingPageData.Header} />
       <Features data={landingPageData.Features} />
       <About data={landingPageData.About} />

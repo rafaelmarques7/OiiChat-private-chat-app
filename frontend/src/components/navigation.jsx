@@ -1,15 +1,10 @@
 import { loadUserDetails } from "../lib/utils";
 
-export const Navigation = (props) => {
+export const Navigation = () => {
   const { isLoggedIn, userData } = loadUserDetails();
 
   return (
-    <nav
-      id="menu"
-      className={`navbar navbar-default ${
-        props.fixed ? "navbar-fixed-top" : ""
-      }`}
-    >
+    <nav id="menu" className={`navbar navbar-default navbar-fixed-top`}>
       <div className="container">
         <div className="navbar-header">
           <button
