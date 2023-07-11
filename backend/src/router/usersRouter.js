@@ -13,12 +13,11 @@ router.post("/sign-up", async (req, res) => {
       vault: [],
     };
 
-    const result = await db.collection("users").insertOne(req.body);
-    console.log("New user successfully created: ", result);
+    const op = await db.collection("users").insertOne(payload);
+    const doc = await db.collection("users").findOne({ _id: op.insertedId });
 
-    res.json({
-      _id: result.insertedId,
-    });
+    console.log("New user successfully created: ", doc);
+    res.json(doc);
   } catch (err) {
     console.error("Error creating user", err);
     res.status(500).send(err);
@@ -49,7 +48,31 @@ router.get("/:id", async (req, res) => {
     console.log("trying to get user", { id });
     await client.connect();
     const db = client.db(dbName);
+
+    // Find user
     const doc = await db.collection("users").findOne({ _id: new ObjectId(id) });
+    if (!doc) {
+      return res.status(404).send("User not found");
+    }
+
+    // Fetch room information for each idRoom in the vault
+    const updatedVault = await Promise.all(
+      doc.vault.map(async (vaultItem) => {
+        const room = await db
+          .collection("rooms")
+          .findOne({ _id: new ObjectId(vaultItem.idRoom) });
+        if (room) {
+          return {
+            ...vaultItem,
+            roomName: room.roomName,
+          };
+        }
+        return vaultItem;
+      })
+    );
+
+    doc.vault = updatedVault;
+
     res.json(doc);
   } catch (err) {
     res.status(500).send(err);

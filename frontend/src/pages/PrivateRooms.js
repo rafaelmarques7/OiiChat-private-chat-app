@@ -6,7 +6,7 @@ import { getPrivateRooms } from "../lib/backend";
 
 export const PagePrivateRooms = () => {
   const [rooms, setRooms] = useState([]);
-  const { isLoggedIn, userData } = loadUserDetails();
+  const { userData } = loadUserDetails();
 
   useEffect(() => {
     const fetchData = async () => {

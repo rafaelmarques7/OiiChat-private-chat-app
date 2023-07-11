@@ -43,7 +43,7 @@ export const SignUpPage = () => {
         return response.json();
       })
       .then((data) => {
-        // Save metadata for the rest of the app to use
+        console.log("sign up successful. adding metadata to local storage");
         localStorage.setItem("ChatAppUserData", JSON.stringify(data));
 
         // this will trigger a redirect after 2 seconds
@@ -80,7 +80,9 @@ export const SignUpPage = () => {
               onChange={handlePasswordChange}
             />
           </div>
-          <button type="submit">Sign Up</button>
+          <button disabled={!username || !password} type="submit">
+            Sign Up
+          </button>
         </form>
         {error && <p>{error}</p>}
         {success && <p>Sign up successful! You will now be redirected ...</p>}

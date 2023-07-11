@@ -1,0 +1,26 @@
+.profile-vault-title {
+  text-align: center;
+  font-size: 2rem;
+  padding-top: 1rem;
+}
+
+.profile-vault-item {
+  display: flex;
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+.profile-vault-header {
+  font-weight: bold;
+  margin-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.profile-room-name {
+  width: 50%;
+  text-align: center;
+  border-right: 1px solid #ccc;
+}
+.profile-room-password {
+  text-align: center;
+  width: 50%;
+}

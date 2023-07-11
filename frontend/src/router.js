@@ -8,6 +8,7 @@ import { SignOutPage } from "./pages/SignOutPage";
 import { SignInPage } from "./pages/SignInPage";
 import { PagePrivateRooms } from "./pages/PrivateRooms";
 import { NewRoom } from "./pages/NewRoom";
+import { ProfilePage } from "./pages/ProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -42,7 +43,10 @@ export const router = createBrowserRouter([
     path: "/rooms/new-room",
     element: <NewRoom />,
   },
-
+  {
+    path: "/profile/:idUser",
+    element: <ProfilePage />,
+  },
   {
     path: "*",
     element: <PageNotFound />,

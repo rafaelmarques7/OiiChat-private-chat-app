@@ -6,8 +6,6 @@ import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
 import { addPasswordToVault, createNewRoom } from "../lib/backend";
-import { InputToggle } from "../components/InputToggle";
-import { FormAddToVault } from "../components/forms/FormAddToVault";
 import { AddToVault } from "../components/vault/addToVault";
 
 export const NewRoom = () => {

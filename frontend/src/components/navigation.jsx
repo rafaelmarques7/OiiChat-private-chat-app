@@ -32,7 +32,7 @@ export const Navigation = () => {
             {isLoggedIn ? (
               <>
                 <li>
-                  <a>{userData?.username}</a>
+                  <a href={`/profile/${userData?._id}`}>{userData?.username}</a>
                 </li>
                 <li>
                   <a href="/rooms/my-rooms">See my conversations</a>
