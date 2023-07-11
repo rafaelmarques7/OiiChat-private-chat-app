@@ -8,6 +8,11 @@ router.post("/sign-up", async (req, res) => {
     console.log("trying to create a new user");
     const db = client.db(dbName);
 
+    const payload = {
+      ...req.body,
+      vault: [],
+    };
+
     const result = await db.collection("users").insertOne(req.body);
     console.log("New user successfully created: ", result);
 
@@ -46,6 +51,33 @@ router.get("/:id", async (req, res) => {
     const db = client.db(dbName);
     const doc = await db.collection("users").findOne({ _id: new ObjectId(id) });
     res.json(doc);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.post("/:id/add-to-vault", async (req, res) => {
+  const id = req.params.id;
+  const { idRoom, passwordRoom } = req.body;
+
+  try {
+    console.log("trying to add to user vault", { id });
+    await client.connect();
+    const db = client.db(dbName);
+
+    await db
+      .collection("users")
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $push: { vault: { idRoom, passwordRoom } } }
+      );
+
+    // Retrieve updated document
+    const updatedDoc = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(id) });
+
+    res.json(updatedDoc);
   } catch (err) {
     res.status(500).send(err);
   }

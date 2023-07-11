@@ -1,0 +1,8 @@
+.form-add-to-vault {
+  justify-content: space-between;
+  /* background-color: red; */
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  align-content: center;
+}

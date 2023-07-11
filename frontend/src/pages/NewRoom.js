@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
-import { createNewRoom, loadUserDetails } from "../lib/utils";
+import { loadUserDetails } from "../lib/utils";
 import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
+import { addPasswordToVault, createNewRoom } from "../lib/backend";
+import { InputToggle } from "../components/InputToggle";
+import { FormAddToVault } from "../components/forms/FormAddToVault";
+import { AddToVault } from "../components/vault/addToVault";
 
 export const NewRoom = () => {
   const navigate = useNavigate();
 
   const { userData } = loadUserDetails();
-  console.log("user details, ", userData);
 
   const [roomName, setRoomName] = useState(null);
   const [visibility, setVisibility] = useState("private");
   const [password, setPassword] = useState("");
+  const [addToVault, setAddToVault] = useState(true);
   const [error, setError] = useState(null);
 
   const onSubmit = async () => {
@@ -23,6 +27,8 @@ export const NewRoom = () => {
       visibility,
       ownerId: userData?._id,
     });
+
+    await addPasswordToVault(data._id, password);
 
     if (err) {
       setError(err);
@@ -33,6 +39,8 @@ export const NewRoom = () => {
       navigate(`/rooms/${data._id}`);
     }
   };
+
+  console.log("new room, ", { userData, roomName, visibility, addToVault });
 
   return (
     <Layout>
@@ -69,11 +77,19 @@ export const NewRoom = () => {
           <FormInput
             initialValue={password}
             icon={"/img/lock.svg"}
-            placeholder="Password"
+            placeholder="Room password"
             callback={(val) => setPassword(val)}
             tooltipText="Password used to encrypt messages"
           />
         )}
+
+        <AddToVault
+          shouldRender={
+            userData?._id && roomName && visibility === "private" && password
+          }
+          addToVault={addToVault}
+          setAddToVault={setAddToVault}
+        />
 
         {roomName && (visibility === "public" || password) && (
           <div className="new-room-action-container">

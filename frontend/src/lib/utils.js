@@ -1,4 +1,4 @@
-import { URL_BACKEND, URL_NEW_ROOM } from "../config";
+import { URL_BACKEND } from "../config";
 
 /**
  * Method that returns the decrypted value, or the encrypted value if the decryption fails.
@@ -19,25 +19,6 @@ export const decryptEvent = (simpleCrypto, event) => ({
   ...event,
   text: decryptSafe(simpleCrypto, event?.text),
 });
-
-export const createNewRoom = async (payload) => {
-  try {
-    console.log("trying to create a new room: ", URL_NEW_ROOM, payload);
-    const res = await fetch(URL_NEW_ROOM, {
-      method: "POST",
-      mode: "cors",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    return { data, err: null };
-  } catch (e) {
-    console.error(e);
-    return { data: null, err: e };
-  }
-};
 
 export const updateRoomInfo = async (roomId, { roomName, visibility }) => {
   try {
@@ -80,7 +61,12 @@ export const sha256Hash = async (input) => {
 
 export const loadUserDetails = () => {
   const userDataStr = localStorage.getItem("ChatAppUserData") || "{}";
-  const userData = JSON.parse(userDataStr);
+  let userData;
+  try {
+    userData = JSON.parse(userDataStr);
+  } catch (e) {
+    userData = {};
+  }
   const isLoggedIn = userData && userData.username;
   return { isLoggedIn, userData };
 };
