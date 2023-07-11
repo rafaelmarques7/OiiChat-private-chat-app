@@ -2,15 +2,14 @@ import { socket } from "../../lib/socket";
 import React, { useState, useEffect, useRef } from "react";
 import { FormInputWithButton } from "../FormInputWithButton";
 import SimpleCrypto from "simple-crypto-js";
-import { decryptEvent, decryptEvents, loadUserDetails } from "../../lib/utils";
+import { decryptEvent, decryptEvents } from "../../lib/utils";
 import MessageList from "..//messages/MessageList";
-import { URL_MESSAGES_ROOM } from "../../config";
 import { useParams } from "react-router-dom";
 import { IsTyping } from "./IsTyping";
+import { getMessagesByRoom } from "../../lib/backend";
 
 export const ContainerMessages = ({ password, username }) => {
   const { roomId } = useParams();
-  const { userData } = loadUserDetails();
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
   const [usersTyping, setUsersTyping] = useState([]);
@@ -29,15 +28,9 @@ export const ContainerMessages = ({ password, username }) => {
 
     // fetch events from server and decrypt data
     const fetchData = async () => {
-      const url = `${URL_MESSAGES_ROOM}/${roomId}`;
-
-      console.log("making GET request: ", url);
-      const response = await fetch(url, {
-        mode: "cors",
-      });
-      const data = await response.json();
-      if (data && data.length) {
-        setEvents(decryptEvents(simpleCrypto, data));
+      const { res } = await getMessagesByRoom(roomId);
+      if (res) {
+        setEvents(decryptEvents(simpleCrypto, res));
       }
     };
     fetchData();

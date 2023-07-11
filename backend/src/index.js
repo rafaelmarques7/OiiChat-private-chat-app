@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
       // return latest room document
       const { res } = await getRoomInfo(idRoom);
       if (res) {
-        console.log("emitting eventNewRoomInfo");
+        console.log("emitting eventNewRoomInfo", res);
         socket.to(idRoom).emit("eventNewRoomInfo", res);
       }
     }
