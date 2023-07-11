@@ -44,7 +44,7 @@ export const updateRoomInfo = async (roomId, { roomName, visibility }) => {
     const url = `${URL_BACKEND}/rooms/${roomId}`;
     const payload = { roomName, visibility };
 
-    console.log("making PUT request: ", { url, payload });
+    console.log("making PUT request to update room info: ", { url, payload });
 
     const res = await fetch(url, {
       method: "PUT",

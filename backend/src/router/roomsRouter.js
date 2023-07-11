@@ -54,13 +54,14 @@ router.put("/:idRoom", async (req, res) => {
       visibility: visibility ? visibility : doc?.visibility,
     };
 
-    const result = await db
+    await db
       .collection("rooms")
       .updateOne({ _id: new ObjectId(idRoom) }, { $set: docNewRoom });
 
-    console.log("Room successfully updated");
+    const resGet = await getRoomInfo(idRoom);
+    console.log("Room successfully updated", resGet.res);
 
-    res.json(docNewRoom);
+    res.json(resGet.res);
   } catch (err) {
     console.error("Error creating room", err);
     res.status(500).send(err);

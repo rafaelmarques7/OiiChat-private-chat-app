@@ -8,15 +8,6 @@ export const RoomInfo = ({
   password,
   handleUpdatePassword,
 }) => {
-  console.log("roomInfo component", {
-    isOwner,
-    visibility,
-    roomName,
-    handleUpdateRoomName,
-    password,
-    handleUpdatePassword,
-  });
-
   const itemRoomName = isOwner ? (
     <FormInput
       initialValue={roomName}

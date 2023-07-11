@@ -1,29 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
 import { loadUserDetails, updateRoomInfo } from "../lib/utils";
 import { useParams } from "react-router-dom";
 import { ContainerMessages } from "../components/messages/ContainerMessages";
-import { URL_BACKEND } from "../config";
 import { RoomInfo } from "../components/rooms/RoomInfo";
 import { RoomParticipants } from "../components/rooms/RoomParticipants";
+import { getRoom } from "../lib/backend";
 import Layout from "../components/Layout";
 
 export const PageChatRoom = () => {
   const { roomId } = useParams();
   const { userData } = loadUserDetails();
 
-  const [roomName, setRoomName] = useState("");
-  const [visibility, setVisibility] = useState("");
-  const [ownerId, setOwnerId] = useState("");
-  const [participants, setParticipants] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [roomInfo, setRoomInfo] = useState({});
 
   const [username, setUsername] = useState(userData?.username || "");
   const [password, setPassword] = useState(
     localStorage.getItem("password") || ""
   );
-
-  const [usersInRoom, setUsersInRoom] = useState([]);
 
   // run once on page load
   useEffect(() => {
@@ -44,28 +38,9 @@ export const PageChatRoom = () => {
 
     // 2 - get room info from server
     const getRoomInfo = async () => {
-      try {
-        const url = `${URL_BACKEND}/rooms/${roomId}`;
-        console.log("fetching room info from url: ", url);
-
-        const res = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        console.log("result: ", res.status, res);
-        if (res.status === 200) {
-          const { roomName, visibility, ownerId } = await res.json();
-
-          console.log("setting rooms: ", { roomName, visibility, ownerId });
-          setRoomName(roomName);
-          setVisibility(visibility);
-          setOwnerId(ownerId);
-        }
-      } catch (e) {
-        console.log("error fetching room info: ", e);
+      const { res } = await getRoom(roomId);
+      if (res) {
+        setRoomInfo(res);
       }
     };
     getRoomInfo();
@@ -77,12 +52,7 @@ export const PageChatRoom = () => {
 
     const onEventNewRoomInfo = (data) => {
       console.log("received eventNewRoomInfo: ", data);
-      const { participants, onlineUsers } = data;
-
-      if (participants && onlineUsers) {
-        setParticipants(participants);
-        setOnlineUsers(onlineUsers);
-      }
+      setRoomInfo(data);
     };
     socket.on("eventNewRoomInfo", onEventNewRoomInfo);
 
@@ -104,22 +74,16 @@ export const PageChatRoom = () => {
   }, [username, password]);
 
   console.log("rendering chat page: ", {
-    username,
-    roomName,
-    visibility,
-    ownerId,
+    roomInfo,
     userData,
-    isOwner: String(ownerId) === String(userData?._id),
-    participants,
-    onlineUsers,
   });
 
   const handleUpdateRoomName = async (val) => {
-    console.log("update room name, ", val);
-    setRoomName(val);
-
     const res = await updateRoomInfo(roomId, { roomName: val });
-    if (!res) {
+    console.log("handleUpdateRoomName res: ", res);
+    if (res) {
+      setRoomInfo(res);
+    } else {
       // @todo: handle error
       console.log("error updating room info");
     }
@@ -128,15 +92,18 @@ export const PageChatRoom = () => {
   return (
     <Layout>
       <RoomInfo
-        isOwner={ownerId === userData?._id}
-        visibility={visibility}
-        roomName={roomName}
+        isOwner={roomInfo.ownerId === userData?._id}
+        visibility={roomInfo.visibility || ""}
+        roomName={roomInfo.roomName || ""}
+        password={password | ""}
         handleUpdateRoomName={handleUpdateRoomName}
-        password={password}
         handleUpdatePassword={setPassword}
       />
 
-      <RoomParticipants participants={participants} onlineUsers={onlineUsers} />
+      <RoomParticipants
+        participants={roomInfo.participants}
+        onlineUsers={roomInfo.onlineUsers}
+      />
 
       <ContainerMessages password={password} username={username} />
     </Layout>
