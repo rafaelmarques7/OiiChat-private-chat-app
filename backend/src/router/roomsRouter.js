@@ -118,13 +118,30 @@ router.get("/private-rooms/:idUser", async (req, res) => {
     console.log("trying to match rooms with user", { idUser });
     await client.connect();
     const db = client.db(dbName);
-    const docs = await db
+
+    // Get rooms participant matches from the roomParticipants collection
+    const roomParticipantDocs = await db
+      .collection("roomParticipants")
+      .find({ idUser: idUser })
+      .toArray();
+
+    console.log("found participant rooms", roomParticipantDocs);
+
+    // Map roomParticipantDocs to an array of idRoom for the next step
+    const roomIdArray = roomParticipantDocs.map(
+      (doc) => new ObjectId(doc.idRoom)
+    );
+
+    // Get the room info for each match
+    const roomDocs = await db
       .collection("rooms")
-      .find({ participantIds: { $in: [idUser] } }) // @TODO: this needs to be updated
+      .find({ _id: { $in: roomIdArray } })
       .sort({ timestamp: 1 })
       .toArray();
-    console.log("found rooms", docs);
-    res.json(docs.reverse());
+
+    console.log("found rooms", roomDocs);
+
+    res.json(roomDocs.reverse());
   } catch (err) {
     res.status(500).send(err);
   }
