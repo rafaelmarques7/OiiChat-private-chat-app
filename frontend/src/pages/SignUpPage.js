@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Navigation } from "../components/navigation";
 import { sha256Hash } from "../lib/utils";
 import { URL_USER_SIGN_UP } from "../config";
+import Layout from "../components/Layout";
 
 export const SignUpPage = () => {
   const navigate = useNavigate();
@@ -58,8 +58,7 @@ export const SignUpPage = () => {
   };
 
   return (
-    <>
-      <Navigation />
+    <Layout>
       <div className="signup-container">
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit} className="signup-form">
@@ -86,6 +85,6 @@ export const SignUpPage = () => {
         {error && <p>{error}</p>}
         {success && <p>Sign up successful! You will now be redirected ...</p>}
       </div>
-    </>
+    </Layout>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { URL_GET_PUBLIC_ROOMS } from "../config";
-import { Navigation } from "../components/navigation";
 import { RoomsList } from "../components/rooms/RoomList";
+import Layout from "../components/Layout";
 
 export const PagePublicRooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -21,9 +21,8 @@ export const PagePublicRooms = () => {
   }, []);
 
   return (
-    <>
-      <Navigation />
+    <Layout>
       <RoomsList rooms={rooms} />
-    </>
+    </Layout>
   );
 };

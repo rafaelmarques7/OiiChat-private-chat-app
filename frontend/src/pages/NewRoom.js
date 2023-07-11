@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
 import { createNewRoom, loadUserDetails } from "../lib/utils";
-import { Navigation } from "../components/navigation";
 import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
+import Layout from "../components/Layout";
 
 export const NewRoom = () => {
   const navigate = useNavigate();
@@ -35,9 +35,7 @@ export const NewRoom = () => {
   };
 
   return (
-    <div className="new-room-container">
-      <Navigation />
-
+    <Layout>
       <div className="chatroom-room-settings-container">
         <FormInput
           placeholder="Enter room name"
@@ -89,6 +87,6 @@ export const NewRoom = () => {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };

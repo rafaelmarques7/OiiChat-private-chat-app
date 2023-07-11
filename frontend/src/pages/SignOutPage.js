@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Navigation } from "../components/navigation";
+import Layout from "../components/Layout";
 
 export const SignOutPage = () => {
   const navigate = useNavigate();
@@ -13,9 +13,8 @@ export const SignOutPage = () => {
   }, []);
 
   return (
-    <>
-      <Navigation />
+    <Layout>
       <div>Sign out successful. You will now be redirected.</div>
-    </>
+    </Layout>
   );
 };

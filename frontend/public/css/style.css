@@ -782,22 +782,13 @@ label {
   overflow-y: auto;
   /* this has to match the chatroom-room-settings-container*/
   padding: 0 10 10 10;
-  padding-bottom: 5vh;
-}
-
-.chatroom-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
   padding-bottom: 7vh;
 }
 
-.new-room-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding-bottom: 7vh;
+@media (max-width: 700px) {
+  .message-list-container {
+    padding-bottom: 10vh;
+  }
 }
 
 .new-room-action-container {
@@ -883,6 +874,10 @@ label {
 
 .chatroom-room-settings-container {
   padding: 10 10 0 10;
+}
+
+.room-participants-container {
+  text-align: center;
 }
 
 /* SignUpPage.css */

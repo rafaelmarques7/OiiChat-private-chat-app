@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { URL_GET_PRIVATE_ROOMS, URL_GET_PUBLIC_ROOMS } from "../config";
-import { Navigation } from "../components/navigation";
+import { URL_GET_PRIVATE_ROOMS } from "../config";
 import { RoomsList } from "../components/rooms/RoomList";
 
 import { loadUserDetails } from "../lib/utils";
+import Layout from "../components/Layout";
 export const PagePrivateRooms = () => {
   const [rooms, setRooms] = useState([]);
   const { isLoggedIn, userData } = loadUserDetails();
@@ -25,9 +25,8 @@ export const PagePrivateRooms = () => {
   }, []);
 
   return (
-    <>
-      <Navigation />
+    <Layout>
       <RoomsList rooms={rooms} label="My conversations" />
-    </>
+    </Layout>
   );
 };

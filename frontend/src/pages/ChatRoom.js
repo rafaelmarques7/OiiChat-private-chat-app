@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { socket } from "../lib/socket";
 import { loadUserDetails, updateRoomInfo } from "../lib/utils";
-import { Navigation } from "../components/navigation";
 import { useParams } from "react-router-dom";
 import { ContainerMessages } from "../components/messages/ContainerMessages";
 import { URL_BACKEND } from "../config";
 import { RoomInfo } from "../components/rooms/RoomInfo";
+import { RoomParticipants } from "../components/rooms/RoomParticipants";
+import Layout from "../components/Layout";
 
 export const PageChatRoom = () => {
   const { roomId } = useParams();
@@ -14,8 +15,8 @@ export const PageChatRoom = () => {
   const [roomName, setRoomName] = useState("");
   const [visibility, setVisibility] = useState("");
   const [ownerId, setOwnerId] = useState("");
-  const [participantIds, setParticipantIds] = useState([]);
-  const [onlineParticipantIds, setOnlineParticipantIds] = useState([]);
+  const [participants, setParticipants] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   const [username, setUsername] = useState(userData?.username || "");
   const [password, setPassword] = useState(
@@ -76,11 +77,11 @@ export const PageChatRoom = () => {
 
     const onEventNewRoomInfo = (data) => {
       console.log("received eventNewRoomInfo: ", data);
-      const { participantIds, onlineParticipantIds } = data;
+      const { participants, onlineUsers } = data;
 
-      if (participantIds && onlineParticipantIds) {
-        setParticipantIds(participantIds);
-        setOnlineParticipantIds(onlineParticipantIds);
+      if (participants && onlineUsers) {
+        setParticipants(participants);
+        setOnlineUsers(onlineUsers);
       }
     };
     socket.on("eventNewRoomInfo", onEventNewRoomInfo);
@@ -109,8 +110,8 @@ export const PageChatRoom = () => {
     ownerId,
     userData,
     isOwner: String(ownerId) === String(userData?._id),
-    participantIds,
-    onlineParticipantIds,
+    participants,
+    onlineUsers,
   });
 
   const handleUpdateRoomName = async (val) => {
@@ -125,21 +126,19 @@ export const PageChatRoom = () => {
   };
 
   return (
-    <div className="chatroom-container">
-      <Navigation />
+    <Layout>
+      <RoomInfo
+        isOwner={ownerId === userData?._id}
+        visibility={visibility}
+        roomName={roomName}
+        handleUpdateRoomName={handleUpdateRoomName}
+        password={password}
+        handleUpdatePassword={setPassword}
+      />
 
-      <div className="chatroom-contents-container">
-        <RoomInfo
-          isOwner={ownerId === userData?._id}
-          visibility={visibility}
-          roomName={roomName}
-          handleUpdateRoomName={handleUpdateRoomName}
-          password={password}
-          handleUpdatePassword={setPassword}
-        />
+      <RoomParticipants participants={participants} onlineUsers={onlineUsers} />
 
-        <ContainerMessages password={password} username={username} />
-      </div>
-    </div>
+      <ContainerMessages password={password} username={username} />
+    </Layout>
   );
 };
