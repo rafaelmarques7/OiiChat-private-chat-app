@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import "./Vault.css";
+import { useState } from "react";
 
-export const VaultItem = ({ item, index, navigate }) => (
+export const VaultItem = ({ item, navigate }) => (
   <div className="profile-vault-item">
     <div className="profile-room-name">
       <a href={navigate && item ? `/rooms/${item.idRoom}` : ""}>
@@ -9,12 +10,12 @@ export const VaultItem = ({ item, index, navigate }) => (
       </a>
     </div>
     <div className="profile-room-password">
-      <p>{"pass" || item?.passwordRoom}</p>
+      <p>{item?.passwordRoom}</p>
     </div>
   </div>
 );
 
-export const Vault = ({ userInfo }) => {
+export const Vault = ({ vault }) => {
   const navigate = useNavigate();
 
   return (
@@ -27,14 +28,15 @@ export const Vault = ({ userInfo }) => {
         />
       </div>
       <div className="profile-vault-items">
-        {userInfo?.vault?.map((item, index) => (
-          <VaultItem
-            item={item}
-            index={index + 1}
-            navigate={navigate}
-            key={`vault-item-${index}`}
-          />
-        ))}
+        {vault &&
+          vault.map((item, index) => (
+            <VaultItem
+              item={item}
+              index={index + 1}
+              navigate={navigate}
+              key={`vault-item-${index}`}
+            />
+          ))}
       </div>
     </div>
   );

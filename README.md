@@ -9,6 +9,10 @@ Tomorrow we're gonna create the following functionality:
   * share profile and add as friend (?)
   
 
+checkpoint - the "vault" functionality is working, but missing some features
+- when user joins room, we need to add the functionality to save password to vault
+- DRY after
+
 there's a small bug with the onlineParticipants, but i'm not gonna concern too much about this (its only on page load, and only influences +1 user, so it's not a priority) 
 
 We need a vault.

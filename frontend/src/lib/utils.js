@@ -70,3 +70,16 @@ export const loadUserDetails = () => {
   const isLoggedIn = userData && userData.username;
   return { isLoggedIn, userData };
 };
+
+export const isCorrectPassword = async (userData, password) => {
+  const encryptedPassword = await sha256Hash(password);
+  const isCorrect = userData.password === encryptedPassword;
+
+  console.log("isCorrectPassword", {
+    userData,
+    password,
+    encryptedPassword,
+    isCorrect,
+  });
+  return isCorrect;
+};

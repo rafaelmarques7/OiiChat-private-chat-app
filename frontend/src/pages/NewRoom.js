@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
-import { loadUserDetails, sha256Hash } from "../lib/utils";
+import { isCorrectPassword, loadUserDetails, sha256Hash } from "../lib/utils";
 import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
 import { addPasswordToVault, createNewRoom } from "../lib/backend";
 import { AddToVault } from "../components/vault/addToVault";
-
-const isCorrectPassword = async (userData, password) => {
-  const encryptedPassword = await sha256Hash(password);
-
-  return userData.password === encryptedPassword;
-};
 
 export const NewRoom = () => {
   const navigate = useNavigate();
@@ -50,7 +44,7 @@ export const NewRoom = () => {
     }
 
     if (shouldAddToVault && isCorrect) {
-      const op = await addPasswordToVault(data._id, password);
+      const op = await addPasswordToVault(data._id, password, roomPassword);
       if (op.err) {
         setError("Error adding to vault");
         setTimeout(() => setError(null, 5000));

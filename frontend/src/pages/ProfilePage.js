@@ -6,7 +6,6 @@ import { Profile } from "../components/profile/Profile";
 
 export const ProfilePage = () => {
   const { idUser } = useParams();
-
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
