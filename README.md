@@ -9,6 +9,8 @@ Tomorrow we're gonna create the following functionality:
   * share profile and add as friend (?)
   
 
+there's a small bug with the onlineParticipants, but i'm not gonna concern too much about this (its only on page load, and only influences +1 user, so it's not a priority) 
+
 We need a vault.
 A vault is going to contain all the password used for the different conversations that a user is part of.
 Note that these passwords will be stored encrypted in our database. We do not store the original passwords.

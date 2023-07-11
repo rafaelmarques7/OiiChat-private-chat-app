@@ -3,7 +3,7 @@ import { URL_BACKEND, URL_MESSAGES_ROOM } from "../config";
 export const getRoom = async (roomId) => {
   try {
     const url = `${URL_BACKEND}/rooms/${roomId}`;
-    console.log("fetching room info from url: ", url);
+    console.log("GET room info from url: ", url);
 
     const res = await fetch(url, {
       method: "GET",
@@ -15,7 +15,7 @@ export const getRoom = async (roomId) => {
     if (res.status === 200) {
       const data = await res.json();
 
-      console.log("success", data);
+      console.log("success, roomInfo:", data);
       return { res: data };
     }
   } catch (e) {
@@ -39,7 +39,7 @@ export const getMessagesByRoom = async (roomId) => {
     if (res.status === 200) {
       const data = await res.json();
 
-      console.log("success", data);
+      console.log("success, messages:", data);
       return { res: data };
     }
   } catch (e) {

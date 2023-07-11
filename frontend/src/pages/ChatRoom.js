@@ -79,13 +79,9 @@ export const PageChatRoom = () => {
   });
 
   const handleUpdateRoomName = async (val) => {
-    const res = await updateRoomInfo(roomId, { roomName: val });
-    console.log("handleUpdateRoomName res: ", res);
+    const { res } = await updateRoomInfo(roomId, { roomName: val });
     if (res) {
       setRoomInfo(res);
-    } else {
-      // @todo: handle error
-      console.log("error updating room info");
     }
   };
 

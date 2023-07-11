@@ -60,10 +60,10 @@ export const updateRoomInfo = async (roomId, { roomName, visibility }) => {
     }
 
     const data = await res.json();
-    return data;
+    return { res: data };
   } catch (e) {
     console.error(e);
-    return;
+    return { err: e };
   }
 };
 
