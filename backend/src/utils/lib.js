@@ -24,7 +24,7 @@ async function insertMessageToDb(message, idRoom) {
 
 async function updateParticipantsColl(collName, idRoom, userData) {
   try {
-    const idUser = userData._id;
+    const idUser = String(userData._id);
     console.log("trying to update coll: ", {
       collName,
       idRoom,
@@ -34,7 +34,7 @@ async function updateParticipantsColl(collName, idRoom, userData) {
     // check if a doc already exists, and if so do nothing
     const db = client.db(dbName);
     const doc = await db.collection(collName).findOne({
-      $and: [{ idRoom: idRoom }, { idUser: new ObjectId(idUser) }],
+      $and: [{ idRoom: idRoom }, { idUser: idUser }],
     });
 
     if (doc) {
@@ -53,7 +53,7 @@ async function updateParticipantsColl(collName, idRoom, userData) {
     const newDoc = {
       idRoom,
       timestamp: Date.now(),
-      idUser: userDoc._id,
+      idUser: idUser,
       username: userDoc.username,
     };
 

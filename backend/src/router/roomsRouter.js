@@ -119,7 +119,7 @@ router.get("/private-rooms/:idUser", async (req, res) => {
     const db = client.db(dbName);
     const docs = await db
       .collection("rooms")
-      .find({ participantIds: { $in: [idUser] } })
+      .find({ participantIds: { $in: [idUser] } }) // @TODO: this needs to be updated
       .sort({ timestamp: 1 })
       .toArray();
     console.log("found rooms", docs);
@@ -151,7 +151,7 @@ router.delete("/:id", async (req, res) => {
     const db = client.db(dbName);
     const result = await db
       .collection("rooms")
-      .deleteOne({ _id: ObjectId(id) });
+      .deleteOne({ _id: new ObjectId(id) });
     res.json(result);
   } catch (err) {
     res.status(500).send(err);

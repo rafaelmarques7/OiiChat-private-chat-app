@@ -4,8 +4,6 @@ const { client, dbName } = require("../config");
 const router = express.Router();
 
 router.post("/sign-up", async (req, res) => {
-  const _id = new ObjectId();
-
   try {
     console.log("trying to create a new user");
     const db = client.db(dbName);
@@ -61,7 +59,7 @@ router.delete("/:id", async (req, res) => {
     const db = client.db(dbName);
     const result = await db
       .collection("users")
-      .deleteOne({ _id: ObjectId(id) });
+      .deleteOne({ _id: new ObjectId(id) });
     res.json(result);
   } catch (err) {
     res.status(500).send(err);

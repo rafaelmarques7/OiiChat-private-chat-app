@@ -44,7 +44,9 @@ router.get("/:id", async (req, res) => {
   try {
     await client.connect();
     const db = client.db(dbName);
-    const doc = await db.collection("messages").findOne({ _id: ObjectId(id) });
+    const doc = await db
+      .collection("messages")
+      .findOne({ _id: new ObjectId(id) });
     res.json(doc);
   } catch (err) {
     res.status(500).send(err);
@@ -86,7 +88,7 @@ router.put("/:id", async (req, res) => {
     const db = client.db(dbName);
     const result = await db
       .collection("messages")
-      .updateOne({ _id: ObjectId(id) }, { $set: message });
+      .updateOne({ _id: new ObjectId(id) }, { $set: message });
     res.json(result);
   } catch (err) {
     res.status(500).send(err);
@@ -102,7 +104,7 @@ router.delete("/:id", async (req, res) => {
     const db = client.db(dbName);
     const result = await db
       .collection("messages")
-      .deleteOne({ _id: ObjectId(id) });
+      .deleteOne({ _id: new ObjectId(id) });
     res.json(result);
   } catch (err) {
     res.status(500).send(err);
