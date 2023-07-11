@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
-import { loadUserDetails } from "../lib/utils";
+import { loadUserDetails, sha256Hash } from "../lib/utils";
 import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
 import { addPasswordToVault, createNewRoom } from "../lib/backend";
 import { AddToVault } from "../components/vault/addToVault";
+
+const isCorrectPassword = async (userData, password) => {
+  const encryptedPassword = await sha256Hash(password);
+
+  return userData.password === encryptedPassword;
+};
 
 export const NewRoom = () => {
   const navigate = useNavigate();
@@ -15,22 +21,41 @@ export const NewRoom = () => {
 
   const [roomName, setRoomName] = useState(null);
   const [visibility, setVisibility] = useState("private");
+  const [roomPassword, setRoomPassword] = useState("");
+  const [shouldAddToVault, setAddToVault] = useState(true);
   const [password, setPassword] = useState("");
-  const [addToVault, setAddToVault] = useState(true);
+
   const [error, setError] = useState(null);
 
   const onSubmit = async () => {
+    const isCorrect = await isCorrectPassword(userData, password);
+    if (shouldAddToVault) {
+      if (!isCorrect) {
+        setError("Incorrect user password");
+        setTimeout(() => setError(null), 5000);
+        return;
+      }
+    }
+
     const { data, err } = await createNewRoom({
       roomName,
       visibility,
       ownerId: userData?._id,
     });
 
-    await addPasswordToVault(data._id, password);
-
     if (err) {
       setError(err);
-      setTimeout(() => setError(null), 5000);
+      setTimeout(() => setError(null, 5000));
+      return;
+    }
+
+    if (shouldAddToVault && isCorrect) {
+      const op = await addPasswordToVault(data._id, password);
+      if (op.err) {
+        setError("Error adding to vault");
+        setTimeout(() => setError(null, 5000));
+        return;
+      }
     }
 
     if (data) {
@@ -38,7 +63,14 @@ export const NewRoom = () => {
     }
   };
 
-  console.log("new room, ", { userData, roomName, visibility, addToVault });
+  console.log("new room, ", {
+    userData,
+    roomName,
+    visibility,
+    shouldAddToVault,
+    password,
+    roomPassword,
+  });
 
   return (
     <Layout>
@@ -73,33 +105,33 @@ export const NewRoom = () => {
 
         {roomName && visibility === "private" && (
           <FormInput
-            initialValue={password}
+            initialValue={roomPassword}
             icon={"/img/lock.svg"}
-            placeholder="Room password"
-            callback={(val) => setPassword(val)}
+            placeholder="Room roomPassword"
+            callback={(val) => setRoomPassword(val)}
             tooltipText="Password used to encrypt messages"
           />
         )}
 
         <AddToVault
           shouldRender={
-            userData?._id && roomName && visibility === "private" && password
+            userData?._id &&
+            roomName &&
+            visibility === "private" &&
+            roomPassword
           }
-          addToVault={addToVault}
+          addToVault={shouldAddToVault}
           setAddToVault={setAddToVault}
+          password={password}
+          setPassword={setPassword}
         />
 
-        {roomName && (visibility === "public" || password) && (
+        {roomName && (visibility === "public" || roomPassword) && (
           <div className="new-room-action-container">
             <ButtonAction label="Create Room!" callback={() => onSubmit()} />
           </div>
         )}
-
-        {error && (
-          <div className="error-message">
-            There was an error creating the room: {error}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
       </div>
     </Layout>
   );

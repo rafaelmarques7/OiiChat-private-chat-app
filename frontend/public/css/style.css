@@ -781,7 +781,6 @@ label {
   padding-bottom: 5vh;
   flex-grow: 1;
   overflow-y: auto;
-  /* this has to match the chatroom-room-settings-container*/
   padding: 0 10 10 10;
   padding-bottom: 7vh;
 }
@@ -795,7 +794,7 @@ label {
 .new-room-action-container {
   display: flex;
   justify-content: center;
-  padding-top: 1rem;
+  padding: 1rem;
 }
 
 .public-rooms-container {
@@ -923,4 +922,8 @@ label {
 
 .signup-form p {
   margin-top: 10px;
+}
+
+.error-message {
+  text-align: center;
 }
