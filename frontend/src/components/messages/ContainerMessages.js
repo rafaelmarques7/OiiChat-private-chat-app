@@ -91,7 +91,12 @@ export const ContainerMessages = ({ password, username }) => {
       timestamp: Date.now(),
     };
 
-    console.log("sending message: ", { payload, roomId });
+    console.log("sending message: ", {
+      payload,
+      roomId,
+      password,
+      simpleCrypto,
+    });
     socket.emit("eventChatMessage", payload, roomId);
   };
 
@@ -106,7 +111,12 @@ export const ContainerMessages = ({ password, username }) => {
     socket.emit("eventStopTyping", { idRoom: roomId, username: username });
   };
 
-  console.log("rendering chat: ", { events, usersTyping });
+  console.log("rendering chat: ", {
+    events,
+    usersTyping,
+    password,
+    simpleCrypto,
+  });
 
   return (
     <>

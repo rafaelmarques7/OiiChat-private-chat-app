@@ -1,4 +1,14 @@
 import { URL_BACKEND } from "../config";
+import { getUserInfoFromBe } from "./backend";
+import { getRoomPasswordFromLS, getUserFromLS } from "./localstorage";
+
+export const jsonParseSafe = (str) => {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    return {};
+  }
+};
 
 /**
  * Method that returns the decrypted value, or the encrypted value if the decryption fails.
@@ -59,6 +69,7 @@ export const sha256Hash = async (input) => {
   return hashedString;
 };
 
+// @todo: deprecate this function
 export const loadUserDetails = () => {
   const userDataStr = localStorage.getItem("ChatAppUserData") || "{}";
   let userData;
@@ -69,6 +80,45 @@ export const loadUserDetails = () => {
   }
   const isLoggedIn = userData && userData.username;
   return { isLoggedIn, userData };
+};
+
+/**
+ * This function gets the user data from the backend.
+ * It checks the local storage first, to get the user ID,
+ * and then uses that to make a get request to the backend.
+ */
+export const loadUserData = async () => {
+  const dataLs = getUserFromLS();
+
+  const idUser = dataLs?._id;
+  if (!idUser) {
+    return { res: null, err: "no user id in local storage" };
+  }
+
+  const { res, err } = await getUserInfoFromBe(idUser);
+  return { res, err };
+};
+/**
+ * This function:
+ * - checks if the password exists in local storage
+ *   - if it does, it returns it
+ * - if it doesn't, it gets it from the vault
+ * - if it doesn't exist in the vault, it returns null
+ */
+export const loadRoomPassword = (idRoom, userData) => {
+  const passwordLs = getRoomPasswordFromLS(idRoom);
+  if (passwordLs) {
+    return { password: passwordLs, isEncrypted: false };
+  }
+
+  // get from vault
+  const matches = userData?.vault.filter((item) => item?.idRoom === idRoom);
+  const vaultItem = matches?.[0];
+  if (vaultItem) {
+    return { password: vaultItem?.passwordRoom, isEncrypted: true };
+  }
+
+  return { password: null, isEncrypted: false };
 };
 
 export const isCorrectPassword = async (userData, password) => {

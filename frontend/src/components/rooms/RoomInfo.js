@@ -8,6 +8,7 @@ export const RoomInfo = ({
   password,
   handleUpdatePassword,
 }) => {
+  console.log("rendering room info: ", { roomName, visibility, password });
   const itemRoomName = isOwner ? (
     <FormInput
       initialValue={roomName}
@@ -27,7 +28,7 @@ export const RoomInfo = ({
   const itemVisibility = (
     <ReadOnlyInput
       value={visibility}
-      icon={"/img/lock.svg"}
+      icon={"/img/visibility.svg"}
       tooltipText={`This rooms is ${visibility}`}
     />
   );
@@ -35,6 +36,7 @@ export const RoomInfo = ({
   const itemPassword = (
     <FormInput
       initialValue={password}
+      value={password}
       icon={"/img/lock.svg"}
       placeholder="Password"
       callback={(val) => handleUpdatePassword(val)}

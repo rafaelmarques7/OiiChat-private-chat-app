@@ -10,6 +10,7 @@ export const FormInput = ({
   disabled = false,
 }) => {
   const [value, setValue] = useState(initialValue || "");
+  console.log("form input", { initialValue, value });
 
   const onChange = (event) => {
     event.preventDefault();
@@ -34,7 +35,7 @@ export const FormInput = ({
       <input
         className="form-input-field"
         onChange={onChange}
-        value={value}
+        value={value || initialValue}
         placeholder={placeholder}
         disabled={disabled}
       />

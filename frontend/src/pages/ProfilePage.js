@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { getUserInfo } from "../lib/backend";
+import { getUserInfoFromBe } from "../lib/backend";
 import { useParams } from "react-router-dom";
 import { Profile } from "../components/profile/Profile";
 
@@ -10,7 +10,7 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { res } = await getUserInfo(idUser);
+      const { res } = await getUserInfoFromBe(idUser);
       if (res) {
         setUserInfo(res);
       }

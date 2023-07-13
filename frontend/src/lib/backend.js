@@ -68,7 +68,7 @@ export const getPublicRooms = async (roomId) => {
   return await safeGetReq(url);
 };
 
-export const getUserInfo = async (idUser) => {
+export const getUserInfoFromBe = async (idUser) => {
   const url = `${URL_BACKEND}/users/${idUser}`;
   return await safeGetReq(url);
 };
