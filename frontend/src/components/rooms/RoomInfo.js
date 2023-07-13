@@ -6,6 +6,7 @@ export const RoomInfo = ({
   roomName,
   handleUpdateRoomName,
   password,
+  isCorrectPassword,
   handleUpdatePassword,
 }) => {
   console.log("rendering room info: ", { roomName, visibility, password });
@@ -37,6 +38,7 @@ export const RoomInfo = ({
     <FormInput
       initialValue={password}
       value={password}
+      disabled={isCorrectPassword}
       icon={"/img/lock.svg"}
       placeholder="Password"
       callback={(val) => handleUpdatePassword(val)}

@@ -98,20 +98,8 @@ export const createNewRoom = async (payload) => {
 };
 
 export const addPasswordToVault = async (idRoom, userPass, roomPass) => {
+  console.log("adding to vault using: ", { idRoom, userPass, roomPass });
   const { userData } = loadUserDetails();
-
-  // before sending the password, make sure to encrypt it
-  // @TODO: this could be an exploit by a malicious provider,
-  // so this has to be explained in the documentation
-
-  // @TODO: this needs to be updated
-  // we can not use the users encrypted password
-  // otherwise, we would be in control of the encryption key
-  // and we would be able to decrypt the rooms password
-  // to avoid this, we need to ask the user to type their password again
-  // so that we can use that to encrypt the room passwords before adding it the vault
-  // note: this needs to happen on create room, and also on joining a private room and setting the password correctly
-  // note: we should obviously verify that the users password is correct before allowing to proceed
   const cc = new SimpleCrypto(userPass);
   const encryptedPassword = cc.encrypt(roomPass);
 

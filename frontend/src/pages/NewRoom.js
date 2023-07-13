@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
-import { isCorrectPassword, loadUserDetails, sha256Hash } from "../lib/utils";
+import {
+  encrypt,
+  isCorrectPassword,
+  loadUserDetails,
+  sha256Hash,
+} from "../lib/utils";
 import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
 import { addPasswordToVault, createNewRoom } from "../lib/backend";
 import { AddToVault } from "../components/vault/addToVault";
 import { saveRoomPasswordToLS } from "../lib/localstorage";
+import { v4 as uuidv4 } from "uuid";
 
 export const NewRoom = () => {
   const navigate = useNavigate();
@@ -18,12 +24,11 @@ export const NewRoom = () => {
   const [visibility, setVisibility] = useState("private");
   const [roomPassword, setRoomPassword] = useState("");
   const [shouldAddToVault, setAddToVault] = useState(true);
-  const [password, setPassword] = useState("");
-
+  const [userPassword, setUserPassword] = useState("");
   const [error, setError] = useState(null);
 
   const onSubmit = async () => {
-    const isCorrect = await isCorrectPassword(userData, password);
+    const isCorrect = await isCorrectPassword(userData, userPassword);
     if (shouldAddToVault) {
       if (!isCorrect) {
         setError("Incorrect user password");
@@ -32,10 +37,21 @@ export const NewRoom = () => {
       }
     }
 
+    const value = encrypt(roomPassword, "test-message");
+    console.log("creating new room using ", {
+      encryptedMessage: value,
+      roomPassword,
+    });
+
+    const testMessage = uuidv4();
+    const encryptedTestMessage = encrypt(roomPassword, testMessage);
+
     const { data, err } = await createNewRoom({
       roomName,
       visibility,
       ownerId: userData?._id,
+      testMessage,
+      encryptedTestMessage,
     });
 
     if (err) {
@@ -45,7 +61,7 @@ export const NewRoom = () => {
     }
 
     if (shouldAddToVault && isCorrect) {
-      const op = await addPasswordToVault(data._id, password, roomPassword);
+      const op = await addPasswordToVault(data._id, userPassword, roomPassword);
       if (op.err) {
         setError("Error adding to vault");
         setTimeout(() => setError(null, 5000));
@@ -54,7 +70,7 @@ export const NewRoom = () => {
     }
 
     if (data) {
-      saveRoomPasswordToLS(data._id, password);
+      saveRoomPasswordToLS(data._id, roomPassword);
       navigate(`/rooms/${data._id}`);
     }
   };
@@ -64,13 +80,13 @@ export const NewRoom = () => {
     roomName,
     visibility,
     shouldAddToVault,
-    password,
+    password: userPassword,
     roomPassword,
   });
 
   return (
     <Layout>
-      <div className="chatroom-room-settings-container">
+      <div className="new-chatroom-container">
         <FormInput
           placeholder="Enter room name"
           icon={"/img/group.svg"}
@@ -118,8 +134,8 @@ export const NewRoom = () => {
           }
           addToVault={shouldAddToVault}
           setAddToVault={setAddToVault}
-          password={password}
-          setPassword={setPassword}
+          password={userPassword}
+          setPassword={setUserPassword}
         />
 
         {roomName && (visibility === "public" || roomPassword) && (

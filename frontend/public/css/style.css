@@ -876,6 +876,10 @@ label {
   padding: 10 10 0 10;
 }
 
+.new-chatroom-container {
+  padding: 30 10 0 10;
+}
+
 .room-participants-container {
   text-align: center;
 }

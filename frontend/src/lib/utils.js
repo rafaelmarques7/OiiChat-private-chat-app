@@ -1,3 +1,4 @@
+import SimpleCrypto from "simple-crypto-js";
 import { URL_BACKEND } from "../config";
 import { getUserInfoFromBe } from "./backend";
 import { getRoomPasswordFromLS, getUserFromLS } from "./localstorage";
@@ -19,6 +20,11 @@ export const decryptSafe = (simpleCrypto, value) => {
   } catch (e) {
     return value;
   }
+};
+
+export const encrypt = (password, valueToEncrypt) => {
+  const simpleCrypto = new SimpleCrypto(password);
+  return simpleCrypto.encrypt(valueToEncrypt);
 };
 
 export const decryptEvents = (simpleCrypto, events) => {
@@ -133,5 +139,14 @@ export const isCorrectPassword = async (userData, password) => {
     encryptedPassword,
     isCorrect,
   });
+  return isCorrect;
+};
+
+export const isCorrectRoomPassword = (roomPassword, roomInfo) => {
+  const cc = new SimpleCrypto(roomPassword);
+
+  const valueDecrypted = decryptSafe(cc, roomInfo?.encryptedTestMessage);
+  const isCorrect = valueDecrypted === roomInfo?.testMessage;
+
   return isCorrect;
 };

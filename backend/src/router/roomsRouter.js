@@ -12,9 +12,11 @@ router.post("/create-room", async (req, res) => {
   }
 
   const newRoom = {
-    roomName: req.body.roomName,
-    visibility: req.body.visibility,
-    ownerId: req.body.ownerId || null,
+    testMessage: req.body?.testMessage,
+    encryptedTestMessage: req.body?.encryptedTestMessage,
+    roomName: req.body?.roomName,
+    visibility: req.body?.visibility,
+    ownerId: req.body?.ownerId || null,
     timestamp: Date.now(),
   };
 

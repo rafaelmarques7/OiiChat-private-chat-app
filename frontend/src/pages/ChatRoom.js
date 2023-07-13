@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
 import {
   isCorrectPassword,
+  isCorrectRoomPassword,
   loadRoomPassword,
   loadUserData,
   updateRoomInfo,
@@ -10,18 +11,24 @@ import { useParams } from "react-router-dom";
 import { ContainerMessages } from "../components/messages/ContainerMessages";
 import { RoomInfo } from "../components/rooms/RoomInfo";
 import { RoomParticipants } from "../components/rooms/RoomParticipants";
-import { getRoom } from "../lib/backend";
+import { addPasswordToVault, getRoom } from "../lib/backend";
 import Layout from "../components/Layout";
 import { RoomPasswordDecrypt } from "../components/rooms/RoomPasswordDecrypt";
 import { saveRoomPasswordToLS } from "../lib/localstorage";
+import { AddToVault } from "../components/vault/addToVault";
 
 export const PageChatRoom = () => {
   const { roomId } = useParams();
 
   const [roomInfo, setRoomInfo] = useState(null);
   const [userData, setUserData] = useState(null);
-  const [password, setPassword] = useState("");
+  const [passwordRoom, setPasswordRoom] = useState("");
   const [isEncrypted, setIsEncrypted] = useState(false);
+
+  const [passwordIsCorrect, setPasswordIsCorrect] = useState(false);
+  const [shouldAddToVault, setShouldAddToVault] = useState(true);
+  const [passwordUser, setPasswordUser] = useState("");
+  const [error, setError] = useState(null);
 
   // run once on page load
   useEffect(() => {
@@ -50,9 +57,11 @@ export const PageChatRoom = () => {
       );
 
       if (!password) {
-        setPassword("");
+        setPasswordRoom("");
       } else {
-        setPassword(password);
+        setPasswordRoom(password);
+        setPasswordIsCorrect(true);
+        setShouldAddToVault(false);
         setIsEncrypted(isEncrypted);
       }
     };
@@ -78,7 +87,7 @@ export const PageChatRoom = () => {
   console.log("rendering chat page: ", {
     roomInfo,
     userData,
-    password,
+    password: passwordRoom,
   });
 
   const handleUpdateRoomName = async (val) => {
@@ -88,15 +97,18 @@ export const PageChatRoom = () => {
     }
   };
 
-  const handleUpdatePassword = async (val) => {
-    const isCorrect = await isCorrectPassword(userData, val);
+  const handleUpdateRoomPassword = async (updatedRoomPass) => {
+    const isCorrect = isCorrectRoomPassword(updatedRoomPass, roomInfo);
     if (!isCorrect) {
-      console.log("user entered incorrect password");
+      console.log("user typed incorrect room password");
+      return;
     }
 
-    setPassword(val);
+    console.log("user typed correct room password");
+    setPasswordRoom(updatedRoomPass);
+    setPasswordIsCorrect(true);
     setIsEncrypted(false);
-    saveRoomPasswordToLS(roomId, val);
+    saveRoomPasswordToLS(roomId, updatedRoomPass);
   };
 
   const handleRoomPasswordDecryptEvent = async (res) => {
@@ -106,10 +118,34 @@ export const PageChatRoom = () => {
     }
 
     console.log("correct password: ", res.password);
-    setPassword(res.password);
+    setPasswordRoom(res.password);
+    setPasswordIsCorrect(true);
     setIsEncrypted(false);
     saveRoomPasswordToLS(roomId, res.password);
   };
+
+  const handleUserPasswordChange = async (updatedUserPass) => {
+    setPasswordUser(updatedUserPass);
+
+    const isCorrect = await isCorrectPassword(userData, updatedUserPass);
+    if (!isCorrect) {
+      console.log("user entered incorrect password");
+      return;
+    }
+
+    console.log("user typed correct password, calling backend");
+    const op = await addPasswordToVault(roomId, updatedUserPass, passwordRoom);
+    const msg = op.err ? "Error adding to vault" : "Added to vault";
+
+    setShouldAddToVault(false);
+    setError(msg);
+    setTimeout(() => setError(null, 5000));
+  };
+
+  const shouldRenderAddToVault =
+    userData?._id !== roomInfo?.ownerId &&
+    passwordIsCorrect &&
+    shouldAddToVault;
 
   return (
     <Layout>
@@ -117,10 +153,21 @@ export const PageChatRoom = () => {
         isOwner={roomInfo?.ownerId === userData?._id}
         visibility={roomInfo?.visibility || ""}
         roomName={roomInfo?.roomName || ""}
-        password={password || ""}
+        password={passwordRoom || ""}
+        isCorrectPassword={passwordIsCorrect}
         handleUpdateRoomName={handleUpdateRoomName}
-        handleUpdatePassword={handleUpdatePassword}
+        handleUpdatePassword={handleUpdateRoomPassword}
       />
+
+      <AddToVault
+        shouldRender={shouldRenderAddToVault}
+        addToVault={shouldAddToVault}
+        setAddToVault={setShouldAddToVault}
+        password={passwordUser}
+        setPassword={handleUserPasswordChange}
+      />
+
+      {error && <div className="error">{error}</div>}
 
       <RoomParticipants
         participants={roomInfo?.participants || []}
@@ -134,7 +181,7 @@ export const PageChatRoom = () => {
       />
 
       <ContainerMessages
-        password={password}
+        password={passwordRoom}
         username={userData?.username || ""}
       />
     </Layout>

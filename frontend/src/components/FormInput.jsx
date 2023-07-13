@@ -10,7 +10,6 @@ export const FormInput = ({
   disabled = false,
 }) => {
   const [value, setValue] = useState(initialValue || "");
-  console.log("form input", { initialValue, value });
 
   const onChange = (event) => {
     event.preventDefault();
