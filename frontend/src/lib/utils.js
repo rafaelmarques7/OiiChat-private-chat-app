@@ -106,7 +106,9 @@ export const loadUserData = async () => {
  * - if it doesn't exist in the vault, it returns null
  */
 export const loadRoomPassword = (idRoom, userData) => {
+  console.log("loadRoomPassword", { idRoom, userData });
   const passwordLs = getRoomPasswordFromLS(idRoom);
+  console.log("passwordLs", passwordLs);
   if (passwordLs) {
     return { password: passwordLs, isEncrypted: false };
   }

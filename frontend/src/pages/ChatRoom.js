@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
 import {
+  isCorrectPassword,
   loadRoomPassword,
   loadUserData,
-  loadUserDetails,
   updateRoomInfo,
 } from "../lib/utils";
 import { useParams } from "react-router-dom";
@@ -12,7 +12,6 @@ import { RoomInfo } from "../components/rooms/RoomInfo";
 import { RoomParticipants } from "../components/rooms/RoomParticipants";
 import { getRoom } from "../lib/backend";
 import Layout from "../components/Layout";
-import { PasswordValidationForm } from "../components/PasswordValidationForm";
 import { RoomPasswordDecrypt } from "../components/rooms/RoomPasswordDecrypt";
 import { saveRoomPasswordToLS } from "../lib/localstorage";
 
@@ -49,7 +48,6 @@ export const PageChatRoom = () => {
         roomId,
         opUserData.res
       );
-      console.log("here: ", { password, isEncrypted });
 
       if (!password) {
         setPassword("");
@@ -90,13 +88,26 @@ export const PageChatRoom = () => {
     }
   };
 
+  const handleUpdatePassword = async (val) => {
+    const isCorrect = await isCorrectPassword(userData, val);
+    if (!isCorrect) {
+      console.log("user entered incorrect password");
+    }
+
+    setPassword(val);
+    setIsEncrypted(false);
+    saveRoomPasswordToLS(roomId, val);
+  };
+
   const handleRoomPasswordDecryptEvent = async (res) => {
     if (!res?.isCorrect || !res?.password) {
       console.log("incorrect password");
       return;
     }
 
+    console.log("correct password: ", res.password);
     setPassword(res.password);
+    setIsEncrypted(false);
     saveRoomPasswordToLS(roomId, res.password);
   };
 
@@ -108,7 +119,7 @@ export const PageChatRoom = () => {
         roomName={roomInfo?.roomName || ""}
         password={password || ""}
         handleUpdateRoomName={handleUpdateRoomName}
-        handleUpdatePassword={setPassword}
+        handleUpdatePassword={handleUpdatePassword}
       />
 
       <RoomParticipants

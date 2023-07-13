@@ -7,6 +7,7 @@ import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
 import { addPasswordToVault, createNewRoom } from "../lib/backend";
 import { AddToVault } from "../components/vault/addToVault";
+import { saveRoomPasswordToLS } from "../lib/localstorage";
 
 export const NewRoom = () => {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ export const NewRoom = () => {
     }
 
     if (data) {
+      saveRoomPasswordToLS(data._id, password);
       navigate(`/rooms/${data._id}`);
     }
   };
