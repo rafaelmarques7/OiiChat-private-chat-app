@@ -1,6 +1,6 @@
 export const RoomParticipants = ({ participants, onlineUsers }) => {
-  const numP = participants ? participants.length : 1;
-  const numO = onlineUsers ? onlineUsers.length : 1;
+  const numP = participants?.length > 1 ? participants.length : 1;
+  const numO = onlineUsers?.length > 1 ? onlineUsers.length : 1;
 
   return (
     <div className="room-participants-container">

@@ -67,7 +67,7 @@ export const RoomInfo = ({
     <div className="chatroom-room-settings-container">
       {itemRoomName}
       {itemVisibility}
-      {itemPassword}
+      {visibility === "private" && itemPassword}
       {isAnonymous && itemUsername}
     </div>
   );

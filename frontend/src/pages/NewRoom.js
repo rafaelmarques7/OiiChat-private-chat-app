@@ -29,7 +29,7 @@ export const NewRoom = () => {
 
   const onSubmit = async () => {
     const isCorrect = await isCorrectPassword(userData, userPassword);
-    if (shouldAddToVault) {
+    if (visibility === "private" && shouldAddToVault) {
       if (!isCorrect) {
         setError("Incorrect user password");
         setTimeout(() => setError(null), 5000);
