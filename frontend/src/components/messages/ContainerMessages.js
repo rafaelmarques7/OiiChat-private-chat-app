@@ -17,28 +17,31 @@ export const ContainerMessages = ({ password, username }) => {
 
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
-
   const [usersTyping, setUsersTyping] = useState([]);
-  const [messagesEndRef, messagesTopRef] = [useRef(null), useRef(null)];
-  const prevPageRef = useRef();
 
+  const [messagesEndRef, messagesTopRef] = [useRef(null), useRef(null)];
+  const refPrevEvents = useRef();
+  const containerRef = useRef();
+
+  // handle scrolling to the correct place when new messages are added
   useEffect(() => {
-    if (prevPageRef.current !== page) {
-      console.log("scrolling to top");
-      messagesTopRef?.current?.scrollIntoView({ behavior: "smooth" });
+    const last_msg = events?.[events?.length - 1];
+    const prev_last_msg =
+      refPrevEvents?.current?.[refPrevEvents?.current?.length - 1];
+
+    const shouldScrollDown = last_msg?.timestamp > prev_last_msg?.timestamp;
+
+    if (shouldScrollDown) {
+      messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
-    if (messagesEndRef.current) {
-      console.log("scrolling to bottom");
-      messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [events, page]);
+    messagesTopRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [events]);
 
   // run once on page load
   useEffect(() => {
     console.log("running page load effect.");
-    prevPageRef.current = page;
 
     // fetch events from server and decrypt data
     const fetchData = async () => {
@@ -46,6 +49,7 @@ export const ContainerMessages = ({ password, username }) => {
       if (res) {
         setEvents(decryptEvents(simpleCrypto, res));
         res?.length < QUERY_SIZE && setCanLoadMore(false);
+        refPrevEvents.current = events;
       }
     };
     fetchData();
@@ -139,6 +143,8 @@ export const ContainerMessages = ({ password, username }) => {
       setEvents(updatedEvents);
       setPage(newPage);
       res?.length < QUERY_SIZE && setCanLoadMore(false);
+
+      refPrevEvents.current = events;
     }
   };
 
@@ -155,8 +161,7 @@ export const ContainerMessages = ({ password, username }) => {
         {canLoadMore ? "Load older messages" : "No older messages to load"}
       </div>
 
-      <div className="message-list-container">
-        <div ref={messagesTopRef} style={{ height: 0 }} />
+      <div ref={containerRef} className="message-list-container">
         <MessageList userId={username} messages={events} />
         <div ref={messagesEndRef} style={{ height: 0 }} />
       </div>
