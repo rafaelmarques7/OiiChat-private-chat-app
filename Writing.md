@@ -4,7 +4,8 @@ So, let's jump right in.
 
 ## Motivation
 
-WhatsApp is "end-to-end" encrypted. We've all heard this right?
+WhatsApp is end-to-end encrypted, right? So... does this mean that WhatsApp can't read your messages?
+
 
 So, then the question is: does this mean that WhatsApp can not read your messages? Or listen to your microphone?
 If that's the case, why are there so many people complaining about WhatsApp reading their messages and showing advertisements to things they only ever mentioned in WhatsApp?

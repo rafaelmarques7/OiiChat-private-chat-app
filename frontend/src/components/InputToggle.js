@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./InputToggle.css";
 
 export const InputToggle = ({ isChecked, onChange }) => {
