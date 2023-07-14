@@ -74,19 +74,18 @@ hr {
 #menu {
   padding: 1rem;
   transition: all 0.8s;
-  max-height: 7vh;
 }
 
 .chatroom-contents-container {
   height: 100vh;
-  margin-top: 8vh;
+  margin-top: 6vh;
 }
 
-/* @media (max-width: 700px) {
+@media (max-width: 600px) {
   .chatroom-contents-container {
-    padding-top: 8vh;
+    margin-top: 8.5vh;
   }
-} */
+}
 
 #menu.navbar-default {
   background-color: #fff;
