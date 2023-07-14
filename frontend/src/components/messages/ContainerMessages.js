@@ -30,6 +30,7 @@ export const ContainerMessages = ({ password, username }) => {
       refPrevEvents?.current?.[refPrevEvents?.current?.length - 1];
 
     const shouldScrollDown = last_msg?.timestamp > prev_last_msg?.timestamp;
+    console.log("received events, should scroll down: ", shouldScrollDown);
 
     if (shouldScrollDown) {
       messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -173,6 +174,7 @@ export const ContainerMessages = ({ password, username }) => {
           callbackSubmit={onMessageSubmit}
           callbackStartTyping={onStartTyping}
           callbackStopTyping={onStopTyping}
+          disabled={!username}
         />
       </div>
     </>

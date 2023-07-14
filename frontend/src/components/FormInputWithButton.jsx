@@ -67,9 +67,9 @@ export const FormInputWithButton = ({
 
         <div className="submit-message-button-container">
           <Button
+            disabled={!value}
             type="submit"
             colorScheme="white"
-            disabled={!value}
             className="submit-message-button"
             size={"lg"}
           >

@@ -3,7 +3,7 @@ import { Tooltip } from "react-tooltip";
 
 export const FormInput = ({
   initialValue,
-  callback,
+  callback = () => null,
   icon,
   placeholder = "Enter value",
   tooltipText = "tooltip",

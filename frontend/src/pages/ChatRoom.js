@@ -16,12 +16,15 @@ import Layout from "../components/Layout";
 import { RoomPasswordDecrypt } from "../components/rooms/RoomPasswordDecrypt";
 import { saveRoomPasswordToLS } from "../lib/localstorage";
 import { AddToVault } from "../components/vault/addToVault";
+import { FormInput } from "../components/FormInput";
 
 export const PageChatRoom = () => {
   const { roomId } = useParams();
 
-  const [roomInfo, setRoomInfo] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [username, setUsername] = useState(null); // this is used only if the userData is not set
+
+  const [roomInfo, setRoomInfo] = useState(null);
   const [passwordRoom, setPasswordRoom] = useState("");
   const [isEncrypted, setIsEncrypted] = useState(false);
 
@@ -146,6 +149,10 @@ export const PageChatRoom = () => {
     setTimeout(() => setError(null, 5000));
   };
 
+  const handleUpdateUsername = (val) => {
+    console.log("inside handleUpdateUsername: ", val);
+    setUsername(val);
+  };
   const shouldRenderAddToVault =
     userData?._id !== roomInfo?.ownerId &&
     passwordIsCorrect &&
@@ -161,6 +168,9 @@ export const PageChatRoom = () => {
         isCorrectPassword={passwordIsCorrect}
         handleUpdateRoomName={handleUpdateRoomName}
         handleUpdatePassword={handleUpdateRoomPassword}
+        isAnonymous={userData ? false : true}
+        username={username}
+        setUsername={handleUpdateUsername}
       />
 
       <AddToVault
@@ -186,7 +196,7 @@ export const PageChatRoom = () => {
 
       <ContainerMessages
         password={passwordRoom}
-        username={userData?.username || ""}
+        username={userData?.username || username}
       />
     </Layout>
   );

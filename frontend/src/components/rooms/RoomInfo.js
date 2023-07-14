@@ -8,8 +8,16 @@ export const RoomInfo = ({
   password,
   isCorrectPassword,
   handleUpdatePassword,
+  isAnonymous,
+  username,
+  setUsername,
 }) => {
-  console.log("rendering room info: ", { roomName, visibility, password });
+  console.log("rendering room info: ", {
+    roomName,
+    visibility,
+    password,
+    setUsername,
+  });
   const itemRoomName = isOwner ? (
     <FormInput
       initialValue={roomName}
@@ -46,11 +54,21 @@ export const RoomInfo = ({
     />
   );
 
+  const itemUsername = (
+    <FormInput
+      icon={"/img/username.svg"}
+      placeholder="Select username"
+      value={username}
+      callback={(val) => setUsername(val)}
+    />
+  );
+
   return (
     <div className="chatroom-room-settings-container">
       {itemRoomName}
       {itemVisibility}
       {itemPassword}
+      {isAnonymous && itemUsername}
     </div>
   );
 };
