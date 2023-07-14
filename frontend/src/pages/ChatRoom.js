@@ -34,36 +34,40 @@ export const PageChatRoom = () => {
   useEffect(() => {
     socket.emit("joinRoom", roomId, userData);
 
-    // 2 - get room info from server
+    // 2 - get room info, user data, and check room password
     const getInfo = async () => {
       const promiseGetRoom = getRoom(roomId);
       const promiseUserData = loadUserData();
 
-      const [opGetRoom, opUserData] = await Promise.all([
+      const [opGetRoom, opGetUserData] = await Promise.all([
         promiseGetRoom,
         promiseUserData,
       ]);
 
-      if (opGetRoom.err || opUserData.err) {
-        return;
+      if (opGetRoom.err || opGetUserData.err) {
+        console.log("error getting room info OR user data: ", {
+          err_1: opGetRoom.err,
+          err_2: opGetUserData.err,
+        });
       }
 
-      setUserData(opUserData.res);
-      setRoomInfo(opGetRoom.res);
+      opGetUserData.res && setUserData(opGetUserData.res);
+      opGetRoom.res && setRoomInfo(opGetRoom.res);
 
       const { password, isEncrypted } = loadRoomPassword(
         roomId,
-        opUserData.res
+        opGetUserData.res
       );
 
-      if (!password) {
+      if (!password || !isCorrectRoomPassword(password, opGetRoom.res)) {
         setPasswordRoom("");
-      } else {
-        setPasswordRoom(password);
-        setPasswordIsCorrect(true);
-        setShouldAddToVault(false);
-        setIsEncrypted(isEncrypted);
+        return;
       }
+
+      setPasswordRoom(password);
+      setPasswordIsCorrect(true);
+      setShouldAddToVault(false);
+      setIsEncrypted(isEncrypted);
     };
     getInfo();
 

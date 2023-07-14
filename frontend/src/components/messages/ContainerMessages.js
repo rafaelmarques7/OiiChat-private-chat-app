@@ -13,7 +13,7 @@ export const ContainerMessages = ({ password, username }) => {
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
   const [usersTyping, setUsersTyping] = useState([]);
-  const messagesEndRef = useRef(null);
+  const [messagesEndRef, messagesTopRef] = [useRef(null), useRef(null)];
 
   useEffect(() => {
     // When a message is received, scroll down to it
@@ -121,8 +121,8 @@ export const ContainerMessages = ({ password, username }) => {
   return (
     <>
       <div className="message-list-container">
+        <div ref={messagesTopRef} style={{ height: 0 }} />
         <MessageList userId={username} messages={events} />
-
         <div ref={messagesEndRef} style={{ height: 0 }} />
       </div>
 
