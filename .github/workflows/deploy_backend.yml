@@ -31,8 +31,10 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Install aws cli
-        run: sudo apt-get -q install -y awscli
-
+        run: |
+          sudo apt-get update 
+          sudo apt-get -q install -y awscli
+          
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
