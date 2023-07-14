@@ -58,7 +58,7 @@ export const FormInputWithButton = ({
       <form onSubmit={onSubmit} className="submit-message-form">
         <Textarea
           ref={ref}
-          style={{ fontSize: "1.5rem", border: "none" }}
+          style={{ fontSize: "18px", border: "none" }}
           placeholder={placeholder}
           onChange={(e) => handleSetValue(e.target.value)}
           value={value}
