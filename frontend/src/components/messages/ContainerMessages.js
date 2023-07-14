@@ -7,6 +7,7 @@ import MessageList from "..//messages/MessageList";
 import { useParams } from "react-router-dom";
 import { IsTyping } from "./IsTyping";
 import { getMessagesByRoom } from "../../lib/backend";
+import "./index.css";
 
 export const ContainerMessages = ({ password, username }) => {
   const { roomId } = useParams();
@@ -120,8 +121,9 @@ export const ContainerMessages = ({ password, username }) => {
 
   return (
     <>
+      <div className="load-messages-button">Load older messages</div>
+
       <div className="message-list-container">
-        <div ref={messagesTopRef} style={{ height: 0 }} />
         <MessageList userId={username} messages={events} />
         <div ref={messagesEndRef} style={{ height: 0 }} />
       </div>

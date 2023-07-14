@@ -1,8 +1,12 @@
 export const RoomParticipants = ({ participants, onlineUsers }) => {
+  const numP = participants ? participants.length : 1;
+  const numO = onlineUsers ? onlineUsers.length : 1;
+
   return (
     <div className="room-participants-container">
-      <p>Participants: {participants ? participants.length : 0}</p>
-      <p>Online: {onlineUsers ? onlineUsers.length : 0}</p>
+      <p>
+        {numP} users ({numO} online)
+      </p>
     </div>
   );
 };
