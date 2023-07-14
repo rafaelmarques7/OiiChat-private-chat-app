@@ -6,32 +6,46 @@ import { decryptEvent, decryptEvents } from "../../lib/utils";
 import MessageList from "..//messages/MessageList";
 import { useParams } from "react-router-dom";
 import { IsTyping } from "./IsTyping";
-import { getMessagesByRoom } from "../../lib/backend";
+import { getMessagesByRoom, safeGetReq } from "../../lib/backend";
+import { QUERY_SIZE, URL_MESSAGES_ROOM } from "../../config";
 import "./index.css";
 
 export const ContainerMessages = ({ password, username }) => {
   const { roomId } = useParams();
+  const [page, setPage] = useState(1);
+  const [canLoadMore, setCanLoadMore] = useState(true);
+
   const [events, setEvents] = useState([]);
   const [simpleCrypto, setSimpleCrypto] = useState(new SimpleCrypto(password));
+
   const [usersTyping, setUsersTyping] = useState([]);
   const [messagesEndRef, messagesTopRef] = [useRef(null), useRef(null)];
+  const prevPageRef = useRef();
 
   useEffect(() => {
-    // When a message is received, scroll down to it
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (prevPageRef.current !== page) {
+      console.log("scrolling to top");
+      messagesTopRef?.current?.scrollIntoView({ behavior: "smooth" });
+      return;
     }
-  }, [events]);
+
+    if (messagesEndRef.current) {
+      console.log("scrolling to bottom");
+      messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [events, page]);
 
   // run once on page load
   useEffect(() => {
     console.log("running page load effect.");
+    prevPageRef.current = page;
 
     // fetch events from server and decrypt data
     const fetchData = async () => {
       const { res } = await getMessagesByRoom(roomId);
       if (res) {
         setEvents(decryptEvents(simpleCrypto, res));
+        res?.length < QUERY_SIZE && setCanLoadMore(false);
       }
     };
     fetchData();
@@ -112,6 +126,22 @@ export const ContainerMessages = ({ password, username }) => {
     socket.emit("eventStopTyping", { idRoom: roomId, username: username });
   };
 
+  const handleLoadMoreMessages = async () => {
+    if (!canLoadMore) return;
+
+    const newPage = page + 1;
+    const url = `${URL_MESSAGES_ROOM}/${roomId}?page=${newPage}`;
+    const { res } = await safeGetReq(url);
+    if (res) {
+      const newEvents = decryptEvents(simpleCrypto, res);
+      const updatedEvents = [...newEvents, ...events];
+
+      setEvents(updatedEvents);
+      setPage(newPage);
+      res?.length < QUERY_SIZE && setCanLoadMore(false);
+    }
+  };
+
   console.log("rendering chat: ", {
     events,
     usersTyping,
@@ -121,9 +151,12 @@ export const ContainerMessages = ({ password, username }) => {
 
   return (
     <>
-      <div className="load-messages-button">Load older messages</div>
+      <div className="load-messages-button" onClick={handleLoadMoreMessages}>
+        {canLoadMore ? "Load older messages" : "No older messages to load"}
+      </div>
 
       <div className="message-list-container">
+        <div ref={messagesTopRef} style={{ height: 0 }} />
         <MessageList userId={username} messages={events} />
         <div ref={messagesEndRef} style={{ height: 0 }} />
       </div>

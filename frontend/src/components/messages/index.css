@@ -4,3 +4,19 @@
   color: rgb(35, 35, 142);
   font-size: 16px;
 }
+
+.message-list-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5vh;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 10 10 10;
+  padding-bottom: 7vh;
+}
+
+@media (max-width: 700px) {
+  .message-list-container {
+    padding-bottom: 10vh;
+  }
+}
