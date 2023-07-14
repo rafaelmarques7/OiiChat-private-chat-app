@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
 import {
   isCorrectPassword,
@@ -16,7 +16,6 @@ import Layout from "../components/Layout";
 import { RoomPasswordDecrypt } from "../components/rooms/RoomPasswordDecrypt";
 import { saveRoomPasswordToLS } from "../lib/localstorage";
 import { AddToVault } from "../components/vault/addToVault";
-import { FormInput } from "../components/FormInput";
 
 export const PageChatRoom = () => {
   const { roomId } = useParams();
@@ -35,9 +34,7 @@ export const PageChatRoom = () => {
 
   // run once on page load
   useEffect(() => {
-    socket.emit("joinRoom", roomId, userData);
-
-    // 2 - get room info, user data, and check room password
+    //  get room info, user data, and check room password
     const getInfo = async () => {
       const promiseGetRoom = getRoom(roomId);
       const promiseUserData = loadUserData();
@@ -54,8 +51,9 @@ export const PageChatRoom = () => {
         });
       }
 
-      opGetUserData.res && setUserData(opGetUserData.res);
       opGetRoom.res && setRoomInfo(opGetRoom.res);
+      opGetUserData.res && setUserData(opGetUserData.res);
+      socket.emit("joinRoom", roomId, opGetUserData.res);
 
       const { password, isEncrypted } = loadRoomPassword(
         roomId,
