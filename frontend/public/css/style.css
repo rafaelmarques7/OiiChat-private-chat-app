@@ -94,10 +94,11 @@ hr {
 }
 #menu a.navbar-brand {
   font-family: "Raleway", sans-serif;
-  font-size: 24px;
+  font-size: 40px;
   font-weight: 700;
   color: #333;
-  /* text-transform: uppercase; */
+  /* so that its closer to the icon on the left */
+  margin-left: -10px;
 }
 #menu.navbar-default .navbar-nav > li > a {
   font-family: "Lato", sans-serif;
@@ -920,4 +921,14 @@ label {
   input {
     font-size: 18px;
   }
+}
+.logo {
+  max-width: 40px;
+  max-height: 40px;
+  /* padding-left: 1px; */
+}
+
+.navbar-logo-wrapper {
+  display: flex;
+  align-items: center;
 }

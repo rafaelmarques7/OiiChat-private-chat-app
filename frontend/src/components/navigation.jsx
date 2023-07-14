@@ -19,9 +19,12 @@ export const Navigation = () => {
             <span className="icon-bar"></span>{" "}
             <span className="icon-bar"></span>{" "}
           </button>
-          <a className="navbar-brand page-scroll" href="#page-top">
-            Oii Chat
-          </a>{" "}
+          <div className="navbar-logo-wrapper">
+            <img src="/img/logo_oii.svg" alt="logo" className="logo" />
+            <a className="navbar-brand page-scroll" href="#page-top">
+              Chat
+            </a>
+          </div>
         </div>
 
         <div
