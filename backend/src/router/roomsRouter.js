@@ -70,8 +70,8 @@ router.put("/:idRoom", async (req, res) => {
   }
 });
 
-// Read all with pagination
-router.get("/", async (req, res) => {
+// @TODO: refactor other queries to use this function. DRY
+const getWithPagination = async (req, tableName) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
@@ -80,15 +80,54 @@ router.get("/", async (req, res) => {
     await client.connect();
     const db = client.db(dbName);
     const docs = await db
-      .collection("rooms")
+      .collection(tableName)
       .find()
       .sort({ timestamp: 1 })
       .skip(skip)
       .limit(limit)
       .toArray();
-    res.json(docs.reverse());
+    return { res: docs.reverse(), err: null };
   } catch (err) {
-    res.status(500).send(err);
+    return { res: null, err };
+  }
+};
+
+router.get("/", async (req, res) => {
+  try {
+    const opGet = await getWithPagination(req, "rooms");
+
+    if (opGet.err) {
+      res.status(500).send(opGet.err);
+    }
+
+    const data = opGet.res;
+
+    // Get metadata for each room, participants and onlineParticipants
+    await client.connect();
+    const db = client.db(dbName);
+
+    const pColl = db.collection("roomParticipants");
+    const oColl = db.collection("roomOnlineUsers");
+
+    const promisePList = data.map((roomDoc) =>
+      pColl.countDocuments({ idRoom: roomDoc._id })
+    );
+    const promiseOList = data.map((roomDoc) =>
+      oColl.countDocuments({ idRoom: roomDoc._id })
+    );
+
+    const pList = await Promise.all(promisePList);
+    const oList = await Promise.all(promiseOList);
+
+    const dataWithMetadata = data.map((roomDoc, index) => ({
+      ...roomDoc,
+      numParticipants: pList[index],
+      numOnlineParticipants: oList[index],
+    }));
+
+    res.json(dataWithMetadata.reverse());
+  } catch (e) {
+    res.status(500).send(e);
   }
 });
 

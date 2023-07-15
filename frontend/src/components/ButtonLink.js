@@ -15,11 +15,12 @@ export const ButtonLink = ({ label, targetUrl }) => {
   );
 };
 
-export const ButtonAction = ({ label, callback }) => {
+export const ButtonAction = ({ label, callback, disabled = false }) => {
   return (
     <>
       <button
         onClick={() => callback()}
+        disabled={disabled}
         className="btn btn-custom btn-lg page-scroll"
       >
         {label}

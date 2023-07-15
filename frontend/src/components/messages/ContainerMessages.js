@@ -6,11 +6,7 @@ import { decryptEvent, decryptEvents } from "../../lib/utils";
 import MessageList from "..//messages/MessageList";
 import { useParams } from "react-router-dom";
 import { IsTyping } from "./IsTyping";
-import {
-  getMessagesByRoom,
-  safeGetReq,
-  safeGetWithPagination,
-} from "../../lib/backend";
+import { getMessagesByRoom, safeGetWithPagination } from "../../lib/backend";
 import { QUERY_SIZE, URL_MESSAGES_ROOM } from "../../config";
 import "./index.css";
 
@@ -165,6 +161,7 @@ export const ContainerMessages = ({ password, username }) => {
 
   return (
     <>
+      {/* @TOOD: refactor, use component */}
       <div className="load-messages-button" onClick={handleLoadMoreMessages}>
         {canLoadMore ? "Load older messages" : "No older messages to load"}
       </div>

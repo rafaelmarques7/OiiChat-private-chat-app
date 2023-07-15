@@ -1,5 +1,6 @@
 import SimpleCrypto from "simple-crypto-js";
 import {
+  QUERY_SIZE,
   URL_BACKEND,
   URL_GET_PRIVATE_ROOMS,
   URL_GET_PUBLIC_ROOMS,
@@ -32,7 +33,11 @@ export const safeGetReq = async (url) => {
   }
 };
 
-export const safeGetWithPagination = async (baseUrl, page, query_size) => {
+export const safeGetWithPagination = async (
+  baseUrl,
+  page,
+  query_size = QUERY_SIZE
+) => {
   const reqUrl = `${baseUrl}?page=${page}&limit=${query_size}`;
 
   const { res, err } = await safeGetReq(reqUrl);

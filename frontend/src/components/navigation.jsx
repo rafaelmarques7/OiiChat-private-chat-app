@@ -38,7 +38,7 @@ export const Navigation = () => {
                   <a href={`/profile/${userData?._id}`}>{userData?.username}</a>
                 </li>
                 <li>
-                  <a href="/rooms/my-rooms">See my conversations</a>
+                  <a href="/rooms/my-rooms">My conversations</a>
                 </li>
               </>
             ) : (
@@ -50,7 +50,7 @@ export const Navigation = () => {
             )}
             <li>
               <a href="/rooms/public-rooms" className="page-scroll">
-                See public rooms
+                Public rooms
               </a>
             </li>
             <li>

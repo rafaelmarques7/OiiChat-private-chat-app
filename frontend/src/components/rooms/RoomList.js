@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./index.css";
 
 const formatDate = (timestamp) => {
   const options = { day: "numeric", month: "long", year: "numeric" };
@@ -8,15 +9,17 @@ const formatDate = (timestamp) => {
 };
 
 const RoomInfo = ({ room }) => {
+  const navigate = useNavigate();
+
   const { _id, roomName, timestamp } = room;
 
   return (
-    <div className="public-rooms-item">
+    <div
+      onClick={() => navigate(`/rooms/${_id}`)}
+      className="public-rooms-item"
+    >
       <div className="public-rooms-item-date">- {formatDate(timestamp)} -</div>
       <div className="public-rooms-item-title">{roomName}</div>
-      <Link to={`/rooms/${_id}`}>
-        <button>> Enter Room</button>
-      </Link>
     </div>
   );
 };
