@@ -29,7 +29,7 @@ export const safeGetReq = async (url) => {
     }
   } catch (e) {
     console.error("error: ", { url, e });
-    return { err: e };
+    return { err: e, res: null };
   }
 };
 
@@ -40,9 +40,9 @@ export const safeGetWithPagination = async (
 ) => {
   const reqUrl = `${baseUrl}?page=${page}&limit=${query_size}`;
 
-  const { res, err } = await safeGetReq(reqUrl);
-  const hasMoreToLoad = res?.length === query_size;
-  return { res, err, hasMoreToLoad };
+  const opGet = await safeGetReq(reqUrl);
+  const hasMoreToLoad = opGet?.res?.length === query_size;
+  return { res: opGet?.res, err: opGet?.err, hasMoreToLoad };
 };
 
 export const safePostPutReq = async (url, method, payload) => {

@@ -99,10 +99,10 @@ const injectRoomMetadata = async (db, data) => {
     const oColl = db.collection("roomOnlineUsers");
 
     const promisePList = data.map((roomDoc) =>
-      pColl.countDocuments({ idRoom: roomDoc._id })
+      pColl.countDocuments({ idRoom: String(roomDoc._id) })
     );
     const promiseOList = data.map((roomDoc) =>
-      oColl.countDocuments({ idRoom: roomDoc._id })
+      oColl.countDocuments({ idRoom: String(roomDoc._id) })
     );
 
     const pList = await Promise.all(promisePList);
@@ -165,6 +165,9 @@ router.get("/public-rooms", async (req, res) => {
 
 router.get("/private-rooms/:idUser", async (req, res) => {
   const idUser = req.params.idUser;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
 
   try {
     console.log("trying to match rooms with user", { idUser });
@@ -175,6 +178,8 @@ router.get("/private-rooms/:idUser", async (req, res) => {
     const roomParticipantDocs = await db
       .collection("roomParticipants")
       .find({ idUser: idUser })
+      .skip(skip)
+      .limit(limit)
       .toArray();
 
     console.log("found participant rooms", roomParticipantDocs);

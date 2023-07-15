@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { RoomsList } from "../components/rooms/RoomList";
 import { loadUserDetails } from "../lib/utils";
-import Layout from "../components/Layout";
-import { getPrivateRooms } from "../lib/backend";
+import { WrapperPagination } from "./WrapperPagination";
+import { URL_GET_PRIVATE_ROOMS } from "../config";
 
 export const PagePrivateRooms = () => {
-  const [rooms, setRooms] = useState([]);
   const { userData } = loadUserDetails();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { res } = await getPrivateRooms(userData?._id);
-      if (res) {
-        setRooms(res);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
-    <Layout>
-      <RoomsList rooms={rooms} label="My conversations" />
-    </Layout>
+    <WrapperPagination
+      url={`${URL_GET_PRIVATE_ROOMS}/${userData?._id}`}
+      render={(data) => <RoomsList rooms={data} label="My Conversations" />}
+    />
   );
 };

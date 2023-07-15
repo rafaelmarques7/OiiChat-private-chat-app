@@ -12,6 +12,9 @@ const RoomInfo = ({ room }) => {
   const navigate = useNavigate();
 
   const { _id, roomName, timestamp } = room;
+  const strParticipants = `${room?.numParticipants || 1} users (${
+    room?.numOnlineParticipants || 0
+  } online now)`;
 
   return (
     <div
@@ -20,7 +23,7 @@ const RoomInfo = ({ room }) => {
     >
       <div className="public-rooms-item-date">- {formatDate(timestamp)} -</div>
       <div className="public-rooms-item-title">{roomName}</div>
-      <div className="public-rooms-item-participants">{`${room?.numParticipants} users (${room?.numOnlineParticipants} online now)`}</div>
+      <div className="public-rooms-item-participants">{strParticipants}</div>
     </div>
   );
 };
