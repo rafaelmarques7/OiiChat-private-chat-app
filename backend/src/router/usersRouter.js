@@ -25,12 +25,35 @@ router.post("/sign-up", async (req, res) => {
 });
 
 router.post("/sign-in", async (req, res) => {
+  console.log("trying to get user");
   try {
-    console.log("trying to get user");
     await client.connect();
     const db = client.db(dbName);
     const doc = await db.collection("users").findOne({ ...req.body });
-    console.log("user found", doc._id);
+    if (!doc) {
+      res.status(404).send({ message: "User not found" });
+    } else {
+      console.log("user found", doc?._id);
+      res.json(doc);
+    }
+  } catch (err) {
+    console.log("user signin query error", err);
+    res.status(500).send(err);
+  }
+});
+
+router.get("/salt", async (req, res) => {
+  const username = req?.query?.username;
+  console.log("trying to get users salt", { username });
+
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const doc = await db
+      .collection("users")
+      .findOne({ username }, { projection: { _id: 0, username: 1, salt: 1 } });
+
+    console.log("user salt found", doc._id);
     if (!doc) {
       res.status(404).send("User not found");
     } else {

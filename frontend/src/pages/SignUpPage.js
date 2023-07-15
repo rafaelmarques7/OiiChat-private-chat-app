@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sha256Hash } from "../lib/utils";
+import { createSalt, sha256Hash } from "../lib/utils";
 import { URL_USER_SIGN_UP } from "../config";
 import Layout from "../components/Layout";
 
@@ -23,9 +23,13 @@ export const SignUpPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const salt = createSalt();
+    const passwordSalted = `${password}${salt}`;
+
     const signUpData = {
       username,
-      password: await sha256Hash(password),
+      salt,
+      password: await sha256Hash(passwordSalted),
       timestamp: Date.now(),
     };
 

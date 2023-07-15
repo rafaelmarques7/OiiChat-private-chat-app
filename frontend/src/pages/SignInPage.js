@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sha256Hash } from "../lib/utils";
-import { URL_USER_SIGN_IN } from "../config";
+import { URL_USER_SALT, URL_USER_SIGN_IN } from "../config";
 import Layout from "../components/Layout";
+import { checkLoginDetails, getUserSalt } from "../lib/backend";
 
 export const SignInPage = () => {
   const navigate = useNavigate();
@@ -23,44 +24,38 @@ export const SignInPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const signUpData = {
-      username,
-      password: await sha256Hash(password),
-    };
+    const opGet = await getUserSalt(username);
+    if (opGet?.err) {
+      setError(opGet.err);
+      setTimeout(() => {
+        setError("");
+      }, 5000);
 
-    fetch(URL_USER_SIGN_IN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signUpData),
-    })
-      .then((response) => {
-        if (response.status === 404) {
-          throw new Error("User details not found");
-        }
-        if (!response.ok) {
-          throw new Error("Sign-In failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Save metadata for the rest of the app to use
-        console.log("adding userdata to local storage", data);
-        localStorage.setItem("ChatAppUserData", JSON.stringify(data));
+      return;
+    }
+    const salt = opGet?.res;
 
-        // this will trigger a redirect after 2 seconds
-        setSuccess(true);
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setTimeout(() => {
-          setError("");
-        }, 5000);
-      });
+    const opLogin = await checkLoginDetails(username, password, salt);
+    console.log("opLogin", opLogin);
+    if (opLogin?.err) {
+      setError(opLogin.err);
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+
+      return;
+    }
+
+    const data = opLogin.res;
+    // Save metadata for the rest of the app to use
+    console.log("adding user data to local storage", data);
+    localStorage.setItem("ChatAppUserData", JSON.stringify(data));
+
+    // this will trigger a redirect after 2 seconds
+    setSuccess(true);
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
   };
 
   return (

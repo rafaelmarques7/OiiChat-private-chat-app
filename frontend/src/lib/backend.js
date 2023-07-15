@@ -6,8 +6,10 @@ import {
   URL_GET_PUBLIC_ROOMS,
   URL_MESSAGES_ROOM,
   URL_NEW_ROOM,
+  URL_USER_SALT,
+  URL_USER_SIGN_IN,
 } from "../config";
-import { loadUserDetails } from "./utils";
+import { loadUserDetails, sha256Hash } from "./utils";
 
 export const safeGetReq = async (url) => {
   try {
@@ -125,4 +127,57 @@ export const addPasswordToVault = async (idRoom, userPass, roomPass) => {
     passwordRoom: encryptedPassword,
   });
   return { res, err };
+};
+
+export const getUserSalt = async (username) => {
+  const url = `${URL_USER_SALT}?username=${username}`;
+  console.log("GET ", url);
+
+  try {
+    const response = await fetch(url);
+
+    if (response.status === 404) {
+      return { err: new Error("User details not found") };
+    }
+    if (response.status !== 200) {
+      return { err: new Error("Get request failed") };
+    }
+
+    const data = await response.json();
+    return { res: data?.salt };
+  } catch (error) {
+    console.log("error: ", { error, url });
+    return { err: error };
+  }
+};
+
+export const checkLoginDetails = async (username, password, salt) => {
+  try {
+    const passwordSalted = `${password}${salt}`;
+
+    const signInData = {
+      username,
+      password: await sha256Hash(passwordSalted),
+    };
+    console.log("sign in data", { salt, signInData, passwordSalted });
+
+    const res = await fetch(URL_USER_SIGN_IN, {
+      method: "POST",
+      body: JSON.stringify(signInData),
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.status === 404) {
+      return { err: "User details do not match" };
+    }
+
+    const data = await res.json();
+    return { res: data };
+  } catch (e) {
+    console.error(e);
+    return { err: e };
+  }
 };

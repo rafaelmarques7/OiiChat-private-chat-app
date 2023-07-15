@@ -36,6 +36,10 @@ export const decryptEvent = (simpleCrypto, event) => ({
   text: decryptSafe(simpleCrypto, event?.text),
 });
 
+export const createSalt = () => {
+  return SimpleCrypto.generateRandom(256);
+};
+
 export const updateRoomInfo = async (roomId, { roomName, visibility }) => {
   try {
     const url = `${URL_BACKEND}/rooms/${roomId}`;
