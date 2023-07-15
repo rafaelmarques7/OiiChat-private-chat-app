@@ -6,7 +6,11 @@ import { decryptEvent, decryptEvents } from "../../lib/utils";
 import MessageList from "..//messages/MessageList";
 import { useParams } from "react-router-dom";
 import { IsTyping } from "./IsTyping";
-import { getMessagesByRoom, safeGetReq } from "../../lib/backend";
+import {
+  getMessagesByRoom,
+  safeGetReq,
+  safeGetWithPagination,
+} from "../../lib/backend";
 import { QUERY_SIZE, URL_MESSAGES_ROOM } from "../../config";
 import "./index.css";
 
@@ -135,15 +139,18 @@ export const ContainerMessages = ({ password, username }) => {
     if (!canLoadMore) return;
 
     const newPage = page + 1;
-    const url = `${URL_MESSAGES_ROOM}/${roomId}?page=${newPage}`;
-    const { res } = await safeGetReq(url);
+    const { res, hasMoreToLoad } = await safeGetWithPagination(
+      `${URL_MESSAGES_ROOM}/${roomId}`,
+      newPage,
+      QUERY_SIZE
+    );
     if (res) {
       const newEvents = decryptEvents(simpleCrypto, res);
       const updatedEvents = [...newEvents, ...events];
 
       setEvents(updatedEvents);
       setPage(newPage);
-      res?.length < QUERY_SIZE && setCanLoadMore(false);
+      setCanLoadMore(hasMoreToLoad);
 
       refPrevEvents.current = events;
     }
