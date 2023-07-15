@@ -3,7 +3,7 @@ import { Vault } from "../vault/Vault";
 import "./Profile.css";
 import {
   decryptSafe,
-  isCorrectPassword,
+  isCorrectUserPassword,
   loadUserDetails,
 } from "../../lib/utils";
 import SimpleCrypto from "simple-crypto-js";
@@ -27,7 +27,11 @@ export const Profile = ({ userInfo }) => {
 
   useEffect(() => {
     const update = async () => {
-      const isCorrect = await isCorrectPassword(userData, password);
+      const isCorrect = await isCorrectUserPassword(
+        userData,
+        password,
+        userData?.salt
+      );
       if (isCorrect) {
         const currVault = vault || userInfo.vault || [];
         const newVault = await decryptVault(currVault, password);

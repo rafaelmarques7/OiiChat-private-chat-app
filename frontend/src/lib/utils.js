@@ -133,13 +133,15 @@ export const loadRoomPassword = (idRoom, userData) => {
   return { password: null, isEncrypted: false };
 };
 
-export const isCorrectPassword = async (userData, password) => {
-  const encryptedPassword = await sha256Hash(password);
+export const isCorrectUserPassword = async (userData, password, salt) => {
+  const passwordWithSalt = password + salt;
+  const encryptedPassword = await sha256Hash(passwordWithSalt);
   const isCorrect = userData.password === encryptedPassword;
 
-  console.log("isCorrectPassword", {
+  console.log("isCorrectUserPassword", {
     userData,
     password,
+    passwordWithSalt,
     encryptedPassword,
     isCorrect,
   });

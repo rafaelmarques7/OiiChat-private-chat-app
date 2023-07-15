@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isCorrectPassword } from "../lib/utils";
+import { isCorrectUserPassword } from "../lib/utils";
 import "./PasswordValidationForm.css";
 
 export const PasswordValidationForm = ({ userData, callback }) => {
@@ -7,7 +7,11 @@ export const PasswordValidationForm = ({ userData, callback }) => {
 
   useEffect(() => {
     const update = async () => {
-      const isCorrect = await isCorrectPassword(userData, password);
+      const isCorrect = await isCorrectUserPassword(
+        userData,
+        password,
+        userData?.salt
+      );
       callback({ isCorrect, password });
     };
     update();

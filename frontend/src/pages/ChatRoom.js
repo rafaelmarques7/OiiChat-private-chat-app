@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { socket } from "../lib/socket";
 import {
-  isCorrectPassword,
+  isCorrectUserPassword,
   isCorrectRoomPassword,
   loadRoomPassword,
   loadUserData,
@@ -132,7 +132,11 @@ export const PageChatRoom = () => {
   const handleUserPasswordChange = async (updatedUserPass) => {
     setPasswordUser(updatedUserPass);
 
-    const isCorrect = await isCorrectPassword(userData, updatedUserPass);
+    const isCorrect = await isCorrectUserPassword(
+      userData,
+      updatedUserPass,
+      userData?.salt
+    );
     if (!isCorrect) {
       console.log("user entered incorrect password");
       return;
@@ -152,6 +156,7 @@ export const PageChatRoom = () => {
     setUsername(val);
   };
   const shouldRenderAddToVault =
+    userData &&
     userData?._id !== roomInfo?.ownerId &&
     passwordIsCorrect &&
     shouldAddToVault;

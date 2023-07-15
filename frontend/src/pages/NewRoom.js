@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
 import {
   encrypt,
-  isCorrectPassword,
+  isCorrectUserPassword,
   loadUserDetails,
   sha256Hash,
 } from "../lib/utils";
@@ -28,8 +28,12 @@ export const NewRoom = () => {
   const [error, setError] = useState(null);
 
   const onSubmit = async () => {
-    const isCorrect = await isCorrectPassword(userData, userPassword);
-    if (visibility === "private" && shouldAddToVault) {
+    const isCorrect = await isCorrectUserPassword(
+      userData,
+      userPassword,
+      userData?.salt
+    );
+    if (visibility === "private" && shouldAddToVault && userData?._id) {
       if (!isCorrect) {
         setError("Incorrect user password");
         setTimeout(() => setError(null), 5000);
