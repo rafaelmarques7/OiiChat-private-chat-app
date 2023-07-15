@@ -29,7 +29,12 @@ const io = new Server(server, {
   },
 });
 
-app.use(cors());
+const corsOptions = {
+  origin: ALLOWED_ORIGINS,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
