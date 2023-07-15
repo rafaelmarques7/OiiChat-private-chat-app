@@ -20,6 +20,7 @@ const RoomInfo = ({ room }) => {
     >
       <div className="public-rooms-item-date">- {formatDate(timestamp)} -</div>
       <div className="public-rooms-item-title">{roomName}</div>
+      <div className="public-rooms-item-participants">{`${room?.numParticipants} users (${room?.numOnlineParticipants} online now)`}</div>
     </div>
   );
 };

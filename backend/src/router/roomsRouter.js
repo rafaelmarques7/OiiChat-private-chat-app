@@ -92,20 +92,9 @@ const getWithPagination = async (req, tableName) => {
   }
 };
 
-router.get("/", async (req, res) => {
+const injectRoomMetadata = async (db, data) => {
   try {
-    const opGet = await getWithPagination(req, "rooms");
-
-    if (opGet.err) {
-      res.status(500).send(opGet.err);
-    }
-
-    const data = opGet.res;
-
-    // Get metadata for each room, participants and onlineParticipants
-    await client.connect();
-    const db = client.db(dbName);
-
+    // Get metadata for each room
     const pColl = db.collection("roomParticipants");
     const oColl = db.collection("roomOnlineUsers");
 
@@ -124,6 +113,25 @@ router.get("/", async (req, res) => {
       numParticipants: pList[index],
       numOnlineParticipants: oList[index],
     }));
+
+    return dataWithMetadata;
+  } catch (e) {
+    return data;
+  }
+};
+
+router.get("/", async (req, res) => {
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+
+    const opGet = await getWithPagination(req, "rooms");
+    if (opGet.err) {
+      res.status(500).send(opGet.err);
+    }
+
+    const data = opGet.res;
+    const dataWithMetadata = await injectRoomMetadata(db, data);
 
     res.json(dataWithMetadata.reverse());
   } catch (e) {
@@ -146,7 +154,10 @@ router.get("/public-rooms", async (req, res) => {
       .skip(skip)
       .limit(limit)
       .toArray();
-    res.json(docs.reverse());
+
+    const dataWithMetadata = await injectRoomMetadata(db, docs);
+
+    res.json(dataWithMetadata.reverse());
   } catch (err) {
     res.status(500).send(err);
   }
