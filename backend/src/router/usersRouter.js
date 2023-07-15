@@ -4,6 +4,8 @@ const { client, dbName } = require("../config");
 const router = express.Router();
 
 router.post("/sign-up", async (req, res) => {
+  const username = req?.body?.username;
+
   try {
     console.log("trying to create a new user");
     const db = client.db(dbName);
@@ -12,6 +14,12 @@ router.post("/sign-up", async (req, res) => {
       ...req.body,
       vault: [],
     };
+
+    const existingUser = await db.collection("users").findOne({ username });
+    if (existingUser) {
+      res.status(400).send({ message: "User already exists" });
+      return;
+    }
 
     const op = await db.collection("users").insertOne(payload);
     const doc = await db.collection("users").findOne({ _id: op.insertedId });

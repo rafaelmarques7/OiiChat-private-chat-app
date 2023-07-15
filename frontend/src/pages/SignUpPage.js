@@ -41,6 +41,9 @@ export const SignUpPage = () => {
       body: JSON.stringify(signUpData),
     })
       .then((response) => {
+        if (response.status === 400) {
+          throw new Error("Username already exists");
+        }
         if (!response.ok) {
           throw new Error("Sign-up failed");
         }
@@ -50,7 +53,7 @@ export const SignUpPage = () => {
         console.log("sign up successful. adding metadata to local storage");
         localStorage.setItem("ChatAppUserData", JSON.stringify(data));
 
-        // this will trigger a redirect after 2 seconds
+        // trigger redirect after 2 seconds
         setSuccess(true);
         setTimeout(() => {
           navigate("/");

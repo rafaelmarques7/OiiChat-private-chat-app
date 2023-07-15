@@ -10,7 +10,7 @@ export const WrapperPagination = ({ url, render }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const querySize = 2 * page;
+      const querySize = 3;
       const { res, err, hasMoreToLoad } = await safeGetWithPagination(
         url,
         page,

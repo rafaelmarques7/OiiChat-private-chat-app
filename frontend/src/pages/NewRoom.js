@@ -112,6 +112,7 @@ export const NewRoom = () => {
               size={"md"}
               border={"none"}
               fontSize={14}
+              textAlign={"center"}
             >
               <option value="public">Public</option>
               <option value="private">Private</option>
@@ -123,7 +124,7 @@ export const NewRoom = () => {
           <FormInput
             initialValue={roomPassword}
             icon={"/img/lock.svg"}
-            placeholder="Room roomPassword"
+            placeholder="Room Password"
             callback={(val) => setRoomPassword(val)}
             tooltipText="Password used to encrypt messages"
           />
