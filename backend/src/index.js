@@ -10,7 +10,6 @@ const cors = require("cors");
 const {
   insertMessageToDb,
   updateRoomParticipants,
-  updateRoomAfterUserDisconnect,
   updateRoomOnlineUsers,
   getRoomInfo,
   removeRoomOnlineUsers,
