@@ -100,6 +100,8 @@ Upon navigating to my profile:
   * all rooms passwords are encrypted
   * the user must type their own password in order to decrypt the rooms passwords
 
+---
+
 ## How it works, deep dive
 
 Let's start with a simple one:
@@ -108,12 +110,64 @@ Let's start with a simple one:
 
 As above, the user journey is (copy paste):
 
-* a User clicks on a button to "Sign Up"
-  * the user is redirected to a new page
 * the user selects a username and password
   * if successful, the user has now signed up, is logged in, and is redirected to the home page
   * if there is an error, the app displays an error message
 
+**Now, what happens under the hood?**
+
+* the app creates a payload
+  * the username is used as is
+  * the password is *salted* **and** *hashed*
+    ```javascript
+        const salt = createSalt();
+        const passwordSalted = `${password}${salt}`;
+        
+        const signUpData = {
+            username,
+            salt,
+            password: await sha256Hash(passwordSalted),
+            timestamp: Date.now(),
+        };
+    ```
+
+* The app makes a POST request to the server to create a new user, using the above payload
+  * If there is an error, the app displays the error
+* If successful,
+  * the app receives a response that contains the user details
+  * the user details are added to the browsers localstorage
+    * this allows the client app to know that the user is logged in
+    ```js
+    localStorage.setItem("ChatAppUserData", JSON.stringify(data));
+    ```
+
+
+Notice that:
+- do NOT store your password! 
+- We only store a salted and hashed version of your password. 
+- And because the hashing method can not be reverted, this means that we can not recreate your original password from the salted and hashed version of it. 
+  - this is also why we add a `salt`. A `salt` is just a fancy word for "random and unique large string", and it allows the hashed password to be unique, even if it's not. For example, if your password is "`password`" and we did not use a salt, a hacker could easily decipher it - even if it's hashed - using a rainbow table (which is just a fancy word for "list of common passwords and their respective hashes").  But, if it's saled, the hashed password would actually be something like "`password%jkasbdjkan0-1@{]ro1[rk`, which would not be available in rainbow tables, and which would be a lot harder (close to impossible I believe) for a hacker to decipher.  
+
+**TLDR:** Password is salted and hashed before being sent to the server. We do not store your password.
+
+---
+
+### Journey 4.1 - Sign In
+
+I omitted the Sing In journey on the high level overview, because it was obvious. But, for the deep dive, it is relevant to talk about.
+
+**This is what happens under the hood:**
+
+* the user types the username and password
+  * the client app uses the `username` to make a request to the server to get the users `salt`
+  * the app adds the `salt` to the typed `password`, resulting in a `saltedPassword` 
+* the app makes a request to the backend to check if the `username` and `saltedPassword` match a user in the database
+  * if it does not, the app displays an error message 
+  * if it does, the request is successful and the app logs in the user
+
+**TLDR:** The app makes two requests to the backend: one to get the user `salt`, and a second to validate the login using the `saltedAndHashedPassword`.  
+
+---
 
 ### Journey 1 - Create a chat Room
 
@@ -129,6 +183,8 @@ As above, the user journey is (copy paste):
 
 On the client side (the users browser), the app does the following:
 * the `room password` is used to encrypt a `testMessage`, resulting in an `encryptedTestMessage`
+  * the `testMessage` is unique to each room and generated at run time using `uuidv4`
+  * it's important that each `testMessage` is unique, because if it was not, it could be used to 
 * the app creates a payload to be sent to the server:
     ```javascript
     const payloadNewRoom = {
@@ -148,3 +204,4 @@ On the client side (the users browser), the app does the following:
 Note that:
 * the above payload does NOT include the rooms password
 * the payload above is sent for both public and private rooms (although the `testMessage` and the `encryptedTestMessage` have no use for the public rooms)
+
