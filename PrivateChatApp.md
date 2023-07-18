@@ -322,13 +322,23 @@ Now, I am not an expert in security, so you should take my words which a pinch o
 
 ## How can you trust me? (Hint, you don't)
 
-At any point reading this, you may ask yourself: ?why would I trust you? As far as I know, you could be saying one thing and doing another?". And you are absolutely right. That is exactly my argument against WhatsApp. The answer is: you should not trust me, you should verify this by yourself. 
+At any point reading this, you may ask yourself: "why would I trust you? As far as I know, you could be saying one thing and doing another?". And you are absolutely right. That is exactly my argument against WhatsApp. The answer is: you should not trust me, you should verify by yourself that this app is safe and truly private. How? Let's see!
 
-Of course, most people don't want to do this, but the point is that you could. You can verify for yourself if this app is doing what is says it does. (Unfortunately, you can't do this for WhatsApp, more on this later).
+The key to verifying this apps safety, and that my claims about it's encryption are true, is to use the browsers console.Every request made between a browser and a server is registered through the browsers console. For you, this is quite useful, because it allows you to see exactly what data this chat app is sending to the server. 
 
-So, how do you verify for yourself if this app is abusing your trust? If this app is able to read your messages? Simple: You use the browsers console.
+In particular, the user that wants to be sure that this app is not able to decrypt their messages, should do the following:
+  1. verify that messages sent to the server, in a private room, are encrypted using the rooms encryption key (@TODO link section)
+  2. verify that, upon creating a private room, the request to the server does not include the rooms password (@TODO link section)
 
-Every request made between a browser and a server is registered through the browsers console. For us, this is quite useful, because it allows the user to see exactly what is being sent to the server. 
+
+That's it. These are the two only requirements. With this, you can be certain that the server does not have access to the encryption key, and that because of this, the service provider can not read the users messages.
+
+These are two easily verifiable claims. Most technical users can do this by themselves, but for those who don't, I will now show how to easily do this by yourself. 
+
+
+
+
+
 
 For example, when you are signing up and clicking on the submit button, you can use the browsers console to see what data was sent to the server (in this case, data is sent using a GET request), and what response the server sent back. If you do this, you will see that the password that you submitted was not sent to the server. Instead, the payload sent to the server only includes the salted and hashed version of the password that you typed, which is theoretically impossible to decipher by itself. 
 
