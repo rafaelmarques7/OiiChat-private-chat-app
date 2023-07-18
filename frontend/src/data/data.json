@@ -1,7 +1,7 @@
 {
     "Header": {
         "title": "Be in control",
-        "paragraph": "This is a truly private chat app, where you control the encryption. Create public and private rooms, and chat with friends."
+        "paragraph": "This is a truly private chat app, where you control the encryption. Create public and private rooms, and enjoy conversations with friends safely."
     },
     "About": {
         "paragraph": "In the background, we will encrypt the message directly on your phone or computer, and our servers will only store the encrypted message. We also do not store the room private password. All this is transparent and can be inspected in the browsers console. This way, you are in control of your privacy.",
