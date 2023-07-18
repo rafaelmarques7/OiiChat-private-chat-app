@@ -24,7 +24,9 @@ export const SignInPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    console.log("getting user salt");
     const opGet = await getUserSalt(username);
+    console.log({ opGet });
     if (opGet?.err) {
       setError(opGet.err);
       setTimeout(() => {
@@ -35,8 +37,8 @@ export const SignInPage = () => {
     }
     const salt = opGet?.res;
 
+    console.log("checking login details");
     const opLogin = await checkLoginDetails(username, password, salt);
-    console.log("opLogin", opLogin);
     if (opLogin?.err) {
       setError(opLogin.err);
       setTimeout(() => {

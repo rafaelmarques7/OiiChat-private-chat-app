@@ -61,13 +61,15 @@ router.get("/salt", async (req, res) => {
       .collection("users")
       .findOne({ username }, { projection: { _id: 0, username: 1, salt: 1 } });
 
-    console.log("user salt found", doc._id);
     if (!doc) {
+      console.log("user salt not found");
       res.status(404).send("User not found");
     } else {
+      console.log("user salt found", doc._id);
       res.json(doc);
     }
   } catch (err) {
+    console.log("user salt query error", err);
     res.status(500).send(err);
   }
 });

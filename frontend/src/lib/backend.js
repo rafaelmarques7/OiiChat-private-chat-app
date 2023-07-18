@@ -136,11 +136,8 @@ export const getUserSalt = async (username) => {
   try {
     const response = await fetch(url);
 
-    if (response.status === 404) {
-      return { err: new Error("User details not found") };
-    }
     if (response.status !== 200) {
-      return { err: new Error("Get request failed") };
+      return { err: null, res: null };
     }
 
     const data = await response.json();
