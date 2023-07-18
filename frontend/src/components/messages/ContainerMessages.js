@@ -112,6 +112,7 @@ export const ContainerMessages = ({ password, username }) => {
     };
 
     console.log("sending message: ", {
+      value,
       payload,
       roomId,
       password,
