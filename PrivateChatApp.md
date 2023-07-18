@@ -1,16 +1,18 @@
-I want to build two documents: TLDR version, 3 min read; and full version, 20-30 min read
+The goal of this document is to explain why I built this project, and to detail exactly how it works, particularly when it comes to the encryption feature, which is the main difference between this app and most other chat apps out there.
+
+So, let's jump right in.
+
+**Table of contents:**
 
 - [Motivation](#motivation)
-- [What I build](#what-i-build)
-- [How it works, high level over](#how-it-works-high-level-over)
+- [What I built](#what-i-built)
+- [How it works, high level overview](#how-it-works-high-level-overview)
   - [Journey 1 - Create a chat Room](#journey-1---create-a-chat-room)
   - [Journey 2 - Inviting someone to a Chat](#journey-2---inviting-someone-to-a-chat)
     - [Private Rooms:](#private-rooms)
     - [Public Rooms:](#public-rooms)
   - [Journey 3 - Sending messages](#journey-3---sending-messages)
   - [Journey 4 - Sign up](#journey-4---sign-up)
-  - [Journey 5 - "My conversations"](#journey-5---my-conversations)
-  - [Journey 6 - "My vault"](#journey-6---my-vault)
 - [How it works, deep dive](#how-it-works-deep-dive)
   - [Journey 1 - Create a chat Room](#journey-1---create-a-chat-room-1)
   - [Journey 3 - Sending and receiving messages](#journey-3---sending-and-receiving-messages)
@@ -19,13 +21,13 @@ I want to build two documents: TLDR version, 3 min read; and full version, 20-30
   - [Journey 3.3 - Receiving messages](#journey-33---receiving-messages)
   - [Journey 4 - Sign up](#journey-4---sign-up-1)
   - [Journey 4.1 - Sign In](#journey-41---sign-in)
-- [Notes on Security](#notes-on-security)
 - [How can you trust me? (Hint, you don't)](#how-can-you-trust-me-hint-you-dont)
+  - [Verify that PASSWORDS\_ARE\_NOT\_STORED](#verify-that-passwords_are_not_stored)
+  - [Verify that MESSAGES\_ARE\_ENCRYPTED\_USING\_YOUR\_KEY](#verify-that-messages_are_encrypted_using_your_key)
+- [Notes on Security](#notes-on-security)
+- [What's next](#whats-next)
 
-
-The goal of this document is to explain why I built this project, and to detail exactly how it works, particularly when it comes to the encryption feature, which is the main difference between this app and most other chat apps out there.
-
-So, let's jump right in.
+---
 
 ## Motivation
 
@@ -41,7 +43,9 @@ After thinking some more, I also realized that: "While this may be true, **if th
 
 And so, I realized, it is possible to build a chat app that can **not** be abused by the chat service provider. And thus, this project was born. So, now, let's explore exactly what I build, how it is different from most chat apps, and how you can easily verify it's security by yourself.
 
-## What I build
+---
+
+## What I built
 
 * Chat App built using:
   * React and JavaScript for the frontend
@@ -49,7 +53,7 @@ And so, I realized, it is possible to build a chat app that can **not** be abuse
   * NodeJs, Express and Socket.IO for the backend
   * MongoDb for the database
 * Unique features:
-  * Messages are encrypted, on the client side, using a user provided encryption key (we will just call these rooms' *passwords*)
+  * Messages are encrypted, on the client side, using a user provided encryption key (we will just call these rooms *passwords*)
 * Other features:
   * Real time chat
   * Public (not encrypted) and Private (encrypted) rooms
@@ -60,7 +64,7 @@ And so, I realized, it is possible to build a chat app that can **not** be abuse
   * Signup and Login
   * User vault (to store all the rooms passwords (encrypted))
   
-## How it works, high level over
+## How it works, high level overview
 
 To explain how this app works, on a high level, I will now explain the user journeys. In the section below I will recap these user journeys and explain in more details exactly what happens at each step of each.
 
@@ -103,28 +107,6 @@ To explain how this app works, on a high level, I will now explain the user jour
 * the user selects a username and password
   * if successful, the user has now signed up, is logged in, and is redirected to the home page
   * if there is an error, the app displays an error message
-
-### Journey 5 - "My conversations"
-
-This feature is only available for users that have signed up and are logged in.
-
-* a User navigates to "My conversations" page
-* the app displays a list of all conversations that this user has joined in the past
-
-### Journey 6 - "My vault"
-
-This feature is only available for users that have signed up and are logged in.
-
-Upon joining a room:
-* the user types the correct room password
-* the app asks the user if they want to "add the room password to My Vault"
-  * if they do, the user must type their password (which is used to encrypt the room password before storing it)
-  
-Upon navigating to my profile:
-* the app displays a list of all conversations that this user has joined in the past
-* this list includes the rooms passwords
-  * all rooms passwords are encrypted
-  * the user must type their own password in order to decrypt the rooms passwords
 
 ---
 
@@ -311,42 +293,93 @@ Notice that:
 
 ---
 
-## Notes on Security
-
-One important thing to note is: I state here that this app is built in such a way that your messages can not be read by chat service provider. That, I believe, is true. Now, does this mean that your messages are absolutely safe, and that they can not be decrypted by a hacker? That, I believe, deserves a quick conversation.
-
-Messages in this app are encrypted before being sent to the server. The encryption algorithm used is AES-CBC. Now, when you encrypt something, does this mean that no one can decrypt it? Not necessarily. If you select a weak password (like password, or 1234), then hackers will be able to decrypt it easily. However, if you select a strong password (like `7ahSy0n@1N%6l&6B`), it is theoretically impossible for a hacker to decrypt your message. This is why, upon creating a room, we automatically suggest a strong password for it (@TODO!!!!). 
-
-Now, I am not an expert in security, so you should take my words which a pinch of salt (that is, after all, why I am publishing this, to get feedback and see if what I'm saying is not exactly right and should be corrected), and more importantly, you should research this for yourself. But, as far as I know, encryption is currently basically unbreakable, unless you select a weak encryption key.  
-
-
 ## How can you trust me? (Hint, you don't)
 
 At any point reading this, you may ask yourself: "why would I trust you? As far as I know, you could be saying one thing and doing another?". And you are absolutely right. That is exactly my argument against WhatsApp. The answer is: you should not trust me, you should verify by yourself that this app is safe and truly private. How? Let's see!
 
-The key to verifying this apps safety, and that my claims about it's encryption are true, is to use the browsers console.Every request made between a browser and a server is registered through the browsers console. For you, this is quite useful, because it allows you to see exactly what data this chat app is sending to the server. 
+The key to verifying this apps safety, and that my claims about it's encryption are true, is to use the browsers console. **Every request made between a browser and a server is registered through the browsers console**. For you, this is quite useful, because it allows you to see exactly what data this chat app is sending to the server. 
 
 In particular, the user that wants to be sure that this app is not able to decrypt their messages, should do the following:
-  1. verify that messages sent to the server, in a private room, are encrypted using the rooms encryption key (@TODO link section)
-  2. verify that, upon creating a private room, the request to the server does not include the rooms password (@TODO link section)
-
+  1. MESSAGES_ARE_ENCRYPTED_USING_YOUR_KEY - verify that messages sent to the server, in a private room are encrypted using the rooms encryption key (see Disclaimer below) (to see proof, go to [Verify that MESSAGES\_ARE\_ENCRYPTED\_USING\_YOUR\_KEY](#verify-that-messages_are_encrypted_using_your_key) section) 
+  2. PASSWORDS_ARE_NOT_STORED - verify that, upon creating a private room, the request to the server does not include the rooms password (to see proof, go to [Verify that PASSWORDS\_ARE\_NOT\_STORED](#verify-that-passwords_are_not_stored) section)
 
 That's it. These are the two only requirements. With this, you can be certain that the server does not have access to the encryption key, and that because of this, the service provider can not read the users messages.
 
 These are two easily verifiable claims. Most technical users can do this by themselves, but for those who don't, I will now show how to easily do this by yourself. 
 
+Disclaimer:
+* Regarding proof MESSAGES_ARE_ENCRYPTED_USING_YOUR_KEY:
+   * What I proposed was: verify that the message was encrypted using your rooms password. 
+   * However, this is not technically possible. 
+   * What is possible is the reverse: to prove that the resulting encrypted value can be decrypted using your password.  
+     * This is because the AES-CBC algorithm adds a unique salt to each message. In practice, this means that the same string, encrypted twice, results in two different encrypted values.
+     * In the example above, the two different encrypted values would both decrypt to the same original message
+   * Because of this, we can prove 1. by proving that we can decrypt the encrypted message using the rooms password
+     * Note also that basic encryption protocols prevent the same encrypted message to have originated from two different encryption keys. So, this proves that the encrypted message was generated using your key, and your key only. 
+* Regarding these proofs in general:
+  * To be precise, a malicious app could be trying to send the rooms password to the server using another request at any other point in time. 
+  * However, the principle stands: this is something that the user can verify by themselves, by inspecting every request made to the server. 
+    * Because this is verifiable by the user, there can be trust in the process. 
+    * The same, unfortunately, can not be said for mobile applications like WhatsApp, where the user can not do this verification by themselves.
+
+### Verify that PASSWORDS_ARE_NOT_STORED
+
+**Now, let's see how we can validate the encryption of the app.**
+* First, navigate to New Room page
+* Now, open the browsers console by right clicking on the page, and selecting "Inspect". Now navigate to the "Network" tab and select "Fetch/XHR". 
+  * This is what allows you to inspect all the requests being made. 
+* Now, fill in the details and create a new room
+  * When you click on the submit button, you should see a request called "create-room"
+  * If you click on the "Payload" tab, you can see what data was sent to the server (see Image: create room payload)
+    * More importantly, you will see that the rooms password was **not** sent the server
+    * **This proves point (2. PASSWORDS_ARE_NOT_STORED)**
+
+Image: create room payload
+![img](./imgs/create_room_payload.jpeg)
 
 
+### Verify that MESSAGES_ARE_ENCRYPTED_USING_YOUR_KEY
+
+* Now, you should be on the previously created private room, so type anything and click send
+* Now, switch to the "WS" tab in the Network Inspector, and look for an event called "EventChatMessage" (see Image: sending encrypted messages)
+  * if you click on this event, you can see the payload that is sent to the server
+    * More importantly, you will see that this payload does not include the original message, nor does it include the rooms passwords, it simply includes the encrypted message
+
+Image: sending encrypted messages
+![img](./imgs/sending_encrypted_messages.jpeg)
+
+* Finally, you can verify that the message can be decrypted using your rooms password
+  * To do this, open the same chat room using an incognito window or a different browser, and you will see encrypted messages (see Image: Encrypted messages)
+  * Now, if you enter the rooms password, the app will automatically decrypt the messages for you (see Image: Decrypted messages)
+  * **This proves points 2. MESSAGES_ARE_ENCRYPTED_USING_YOUR_KEY**
 
 
+Image: Encrypted messages (Notice that when the rooms password is not set, the user (and the server) only have access to the encrypted messages)
+<div style="text-align:center">
+  <img src="./imgs/encr_message.jpeg" alt="img" height="500"/>
+</div>
 
-For example, when you are signing up and clicking on the submit button, you can use the browsers console to see what data was sent to the server (in this case, data is sent using a GET request), and what response the server sent back. If you do this, you will see that the password that you submitted was not sent to the server. Instead, the payload sent to the server only includes the salted and hashed version of the password that you typed, which is theoretically impossible to decipher by itself. 
+Image: Decrypted messages (Notice that the encrypted messages are only available after typing the correct room password)
 
-Similarly, when the users types a message, the app communicates with the server using sockets. Sockets, just like HTTP requests, are also registered by the browsers console, and can also be inspected. So, once again, a user can verify that the message that they typed was never sent to the server, and instead, that only an encrypted message was sent.
-
-More, at this point, the user should also verify that, not only was a message encrypted before being sent, but also, that the messages was encrypted using the exact rooms password, and nothing else. If this was not the case, it would mean that the app would instead be using a different encryption key to the one you selected, and because of this, the app could exploit this to read your messages. This is not the case, and users can verify  by themselves that the messages are being encrypted using the room password. How? There are online tools which allow you to encrypt and decrypt values (for example [this one](https://www.devglan.com/online-tools/aes-encryption-decryption)). The encryption algorithm used by this app is `AES-CBC`. So, the user can simply go to an encryption-tool website, like the one linked, select the AES-CBC algorithm, and copy the message they sent through the chat app. The resulting cipher can then be compared to the one sent to the server. If they do not match, then this mean that some other encryption key was used, and you can not trust the app. However, if they match (and they will), then you know for a fact that the app is encrypted your message using your room password, and because of this, it can not be read the server. 
-
-
+<div style="text-align:center">
+  <img src="./imgs/decr_message.jpeg" alt="img" height="500"/>
+</div>
 
 
+---
+
+## Notes on Security
+
+Finally, a word on security.
+
+One important thing to note is: I state here that this app is built in such a way that your messages can not be read by chat service provider. This, I believe, is true. Now, does this mean that your messages are absolutely safe, and that they can not be decrypted by a malicious hacker? That, I believe, deserves a quick words.
+
+Messages in this app are encrypted before being sent to the server. The encryption algorithm used is AES-CBC. Now, when you encrypt something, does this mean that no one can decrypt it? Not necessarily. If you select a weak password (like password, or 1234), then hackers will be able to decrypt it easily. However, if you select a strong password (like `24ee6bacc4df68bfb4e1ea243b9ac5e5`), it is theoretically impossible for a hacker to decrypt your message. This is why, upon creating a room, we automatically suggest a strong password for it.
+
+
+## What's next
+
+I don't believe I will be working on this app any longer. However, this app is publicly available for anyone to use (https://oiichat.net), and it's source code is also publicly available (https://github.com/rafaelmarques7/chat-app).
+
+Although I don't intend to spend any more time working on this app, I would be very happy to receive some feedback and a discussion around this topic. Messaging is the main thing people do on the internet. It saddens me deeply that we can not talk privately with confidence, because *we know that they are listening*. So, does my app prevent them from listening? I believe so, but what do you think? Can you find any flaws in my premise or execution? If so, please reach out (rafaelmarques76076@gmail.com).
 
