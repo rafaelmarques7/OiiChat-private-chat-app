@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormInput } from "../components/FormInput";
-import {
-  encrypt,
-  isCorrectUserPassword,
-  loadUserDetails,
-  sha256Hash,
-} from "../lib/utils";
+import { encrypt, isCorrectUserPassword, loadUserDetails } from "../lib/utils";
 import { Select } from "@chakra-ui/react";
 import { ButtonAction } from "../components/ButtonLink";
 import Layout from "../components/Layout";
@@ -14,6 +9,7 @@ import { addPasswordToVault, createNewRoom } from "../lib/backend";
 import { AddToVault } from "../components/vault/addToVault";
 import { saveRoomPasswordToLS } from "../lib/localstorage";
 import { v4 as uuidv4 } from "uuid";
+import { FormRoomPassword } from "../components/FormRoomPassword";
 
 export const NewRoom = () => {
   const navigate = useNavigate();
@@ -121,7 +117,7 @@ export const NewRoom = () => {
         )}
 
         {roomName && visibility === "private" && (
-          <FormInput
+          <FormRoomPassword
             initialValue={roomPassword}
             icon={"/img/lock.svg"}
             placeholder="Room Password"

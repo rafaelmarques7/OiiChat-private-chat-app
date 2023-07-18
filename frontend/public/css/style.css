@@ -258,8 +258,8 @@ a:focus,
   margin-bottom: 60px;
 }
 header .intro-text {
-  padding-top: 20rem;
-  padding-bottom: 20rem;
+  padding-top: 17rem;
+  padding-bottom: 17rem;
   text-align: center;
 }
 
@@ -897,4 +897,7 @@ label {
   /* display: flex; */
   /* justify-content: center; */
   /* margin: 1rem 0; */
+}
+
+.form-room-password-container {
 }
