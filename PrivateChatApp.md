@@ -35,11 +35,11 @@ Honestly, this is a question that I would like someone a lot smarter than me to 
 
 So, the question that followed after this was: is it even possible to build a ChatApp that that is encrypted **and whose messages can not not be read by the chat service provider**? And if so, what would that look like?
 
-Initially, thinking about this, I thought that: "no, it is not possible to build such an app". I though that, "even if the app allows the user to select their own encryption key, the user still has to type this password inside a form that is controlled by the chat service provider, and this means that the chat service provider can read this encryption key, and abuse it, if they so desire".
+Initially, thinking about this, I thought that: "no, this isn't possible. Even if the app allows the user to select their own encryption key, the user still has to type this password inside a form that is controlled by the chat service provider, and this means that the chat service provider can read this encryption key, and abuse it, if they so desire".
 
-After thinking some more, I also realized that: "While this may be true, if the user can verify that their encryption key is not being sent to the server, then they can be sure that the chat service provider is not able to read the encrypted messages". (more on this in a minute)
+After thinking some more, I also realized that: "While this may be true, **if the user can verify that their encryption key is not being sent to the server, then they can be sure that the chat service provider is not able to read the encrypted messages**" (see [this section](#how-can-you-trust-me-hint-you-dont) for more on this).
 
-And so, I realized, it is possible to build a chat app that can **not** be abused by the chat service provider. And thus, this project was born. So, now, let's explore exactly what I build, how it is different from most chat apps, and how you can verify by yourself that this chat app is safe and its messages can not be ready by me, the chat service provider (nor by WhatsApp in this case!).
+And so, I realized, it is possible to build a chat app that can **not** be abused by the chat service provider. And thus, this project was born. So, now, let's explore exactly what I build, how it is different from most chat apps, and how you can easily verify it's security by yourself.
 
 ## What I build
 
