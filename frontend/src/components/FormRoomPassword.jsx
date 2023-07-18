@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tooltip } from "react-tooltip";
 import "./FormRoomPassword.css";
-import { v4 as uuidv4 } from "uuid";
+import { generateEncKey } from "../lib/utils";
 
 export const FormRoomPassword = ({
   initialValue,
@@ -21,7 +21,7 @@ export const FormRoomPassword = ({
   };
 
   const handleSuggestPassword = () => {
-    const suggestPwd = uuidv4();
+    const suggestPwd = generateEncKey();
     setValue(suggestPwd);
     callback(suggestPwd);
   };

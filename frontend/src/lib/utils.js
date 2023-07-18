@@ -22,6 +22,11 @@ export const decryptSafe = (simpleCrypto, value) => {
   }
 };
 
+export const generateEncKey = () => {
+  const key = SimpleCrypto.generateRandom(128);
+  return key;
+};
+
 export const encrypt = (password, valueToEncrypt) => {
   const simpleCrypto = new SimpleCrypto(password);
   return simpleCrypto.encrypt(valueToEncrypt);
