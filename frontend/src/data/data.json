@@ -15,7 +15,7 @@
         {
             "icon": "fa fa-comments-o",
             "title": "Talk with privacy",
-            "text": "Unlike other chat providers, who can read your encrypted messages, in this app you control the encryption key, and we never store it on our servers, which means we can never read your messages. (Please read more about that here: @todo: link)."
+            "text": "Unlike other chat providers, who can read your encrypted messages, in this app you control the encryption key, and we never store it on our servers, which means we can never read your messages. (Read more about this here: https://github.com/rafaelmarques7/chat-app/blob/main/PrivateChatApp.md)"
         },
         {
             "icon": "fa fa-magic",
@@ -25,7 +25,7 @@
         {
             "icon": "fa fa-group",
             "title": "Share with friends",
-            "text": "Talk with friends or strangers, and create as many rooms as you want. All your private rooms passwords can be stored securely (encrypted) in your vault (this os optional) (Please read more about it here @todo: link)"
+            "text": "Talk with friends or strangers, and create as many rooms as you want. All your private rooms passwords can be stored securely (encrypted) in your vault (optional)"
         }
     ]
 }

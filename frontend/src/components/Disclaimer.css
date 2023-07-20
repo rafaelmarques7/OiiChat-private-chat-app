@@ -1,0 +1,19 @@
+.container-disclaimer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  min-height: 30vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.disclaimer-title {
+  font-size: 4rem;
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+.disclaimer-content {
+  max-width: 400px;
+  margin: 0 1rem;
+}
