@@ -15,7 +15,7 @@
         {
             "icon": "fa fa-comments-o",
             "title": "Talk with privacy",
-            "text": "Unlike other chat providers, who can read your encrypted messages, in this app you control the encryption key, and we never store it on our servers, which means we can never read your messages. (Read more about this here: https://github.com/rafaelmarques7/chat-app/blob/main/PrivateChatApp.md)"
+            "text": "Unlike other chat providers, who can read your encrypted messages, in this app you control the encryption key, and we never store it on our servers, which means we can never read your messages. (Read more about this <a className='features-link' href=https://github.com/rafaelmarques7/chat-app/blob/main/PrivateChatApp.md>here</a>)"
         },
         {
             "icon": "fa fa-magic",

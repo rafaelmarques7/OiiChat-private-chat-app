@@ -894,10 +894,8 @@ label {
 
 .button-load-more {
   text-align: center;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* margin: 1rem 0; */
 }
 
-.form-room-password-container {
+.container a {
+  color: #608dfd;
 }
