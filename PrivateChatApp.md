@@ -1,9 +1,28 @@
-The goal of this document is to explain why I built this project, and to detail exactly how it works, particularly when it comes to the encryption feature, which is the main difference between this app and most other chat apps out there.
+## TLDR - Too Long; Didn't Read
 
+* This is a chat app that makes it impossible for the server to read your messages
+* How? Because it's the user who chooses the encryption key
+  * Also, because the code is publicly available, you can double check that the encryption key that you defined is never sent to the server 
+  * This is what makes it impossible for the server to read your messages. Without the encryption key, and as long as you choose a strong password, it is virtually impossible to decrypt the messages
+* So, how does it work:
+  * users creates a new chat room (public or private)
+  * user chooses their own encryption key for the room (for private rooms only)
+  * user can then send messages which are encrypted, on your computer/phone, using your encryption key, before being sent to the server
+  * user can then share a link to the chat room
+    * any user who joins this room will only see encrypted messages, because this is how they are stored in the server
+    * to decrypt those messages and read their contents, the user needs the rooms password, which is used to decrypt the messages on your phone
+
+---
+
+## Long Story Long
+
+Below I explain why I built this project, and I detail exactly how it works, particularly when it comes to the encryption feature, which is the main difference between this app and most other chat apps out there.
 So, let's jump right in.
 
 **Table of contents:**
 
+- [TLDR - Too Long; Didn't Read](#tldr---too-long-didnt-read)
+- [Long Story Long](#long-story-long)
 - [Motivation](#motivation)
 - [What I built](#what-i-built)
 - [How it works, high level overview](#how-it-works-high-level-overview)
