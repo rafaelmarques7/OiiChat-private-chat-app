@@ -19,6 +19,7 @@ const { ALLOWED_ORIGINS } = require("./config");
 const messagesRouter = require("./router/messagesRouter");
 const roomsRouter = require("./router/roomsRouter");
 const usersRouter = require("./router/usersRouter");
+const statsRouter = require("./router/statsRouter");
 
 const app = express();
 const server = http.createServer(app);
@@ -43,6 +44,7 @@ app.get("/", (req, res) => {
 app.use("/messages", messagesRouter);
 app.use("/rooms", roomsRouter);
 app.use("/users", usersRouter);
+app.use("/stats", statsRouter);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
