@@ -1,9 +1,16 @@
 # (Private!) Chat app
 
-This app is live: https://oiichat.net. However, this is a personal project, not a commercial one. Use it at your own discretion.
+This app is live: https://oiichat.net (**note: the server has been turned off, due to the associated cost**). However, this is a personal project, not a commercial one. Use it at your own discretion.
 
-Table of contents:
+<div align="center">
+<img src="./public/ui.png" alt="alt text" width="600"/>
+</div>
+
+
+### Table of contents:
+
 - [(Private!) Chat app](#private-chat-app)
+    - [Table of contents:](#table-of-contents)
     - [Features](#features)
   - [Tech Stack](#tech-stack)
   - [Read more](#read-more)
